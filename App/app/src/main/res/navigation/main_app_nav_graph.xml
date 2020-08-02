@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_app_nav_graph"
+    app:startDestination="@id/userPrefFragment">
+
+    <fragment
+        android:id="@+id/userPrefFragment"
+        android:name="com.mars_tech.shehriyar.top5.view.main.UserPrefFragment"
+        android:label="UserPrefFragment"
+        tools:layout="@layout/fragment_user_pref" >
+        <action
+            android:id="@+id/action_userPrefFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/browseFragment"
+        android:name="com.mars_tech.shehriyar.top5.view.main.BrowseFragment"
+        android:label="BrowseFragment"
+        tools:layout="@layout/fragment_browse" >
+        <action
+            android:id="@+id/action_browseFragment_to_filtersFragment"
+            app:destination="@id/filtersFragment" />
+        <action
+            android:id="@+id/action_browseFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.mars_tech.shehriyar.top5.view.main.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_filtersFragment"
+            app:destination="@id/filtersFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/filtersFragment"
+        android:name="com.mars_tech.shehriyar.top5.view.main.FiltersFragment"
+        android:label="FiltersFragment"
+        tools:layout="@layout/fragment_filters" >
+        <action
+            android:id="@+id/action_filtersFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.mars_tech.shehriyar.top5.view.main.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_filters" >
+        <action
+            android:id="@+id/action_profileFragment_to_filtersFragment"
+            app:destination="@id/filtersFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_credentialsActivity"
+            app:destination="@id/credentialsActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/credentialsActivity"
+        android:name="com.mars_tech.shehriyar.top5.view.credentials.CredentialsActivity"
+        android:label="CredentialsActivity"
+        tools:layout="@layout/activity_credentials" />
+</navigation>
