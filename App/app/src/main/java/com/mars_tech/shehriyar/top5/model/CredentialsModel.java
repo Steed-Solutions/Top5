@@ -91,7 +91,7 @@ public class CredentialsModel {
                                     user.isNew = true;
                                     authResponse.user = user;
 
-                                    firebaseDatabase.child("users").child(user.uid).setValue(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    firebaseDatabase.child("users").child("regularUsers").child(user.uid).setValue(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {

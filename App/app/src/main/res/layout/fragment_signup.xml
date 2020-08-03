@@ -252,7 +252,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:hint="@string/hint_password"
                 android:includeFontPadding="false"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:textColorHint="@color/colorHint"
                 android:textSize="12sp"
                 app:autoSizeMaxTextSize="12sp"
@@ -388,7 +388,6 @@
             app:layout_constraintTop_toBottomOf="@+id/existing_acc_top_space" />
 
 
-
         <FrameLayout
             android:id="@+id/progressBarHolder"
             android:layout_width="match_parent"
@@ -396,9 +395,9 @@
             android:alpha="0.4"
             android:animateLayoutChanges="true"
             android:background="#000000"
-            android:visibility="gone"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+            android:visibility="gone">
 
             <ProgressBar
                 style="?android:attr/progressBarStyleLarge"

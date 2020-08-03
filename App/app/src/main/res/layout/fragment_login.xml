@@ -167,7 +167,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:hint="@string/hint_password"
                 android:includeFontPadding="false"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:textColorHint="@color/colorHint"
                 android:textSize="12sp"
                 app:autoSizeMaxTextSize="12sp"

@@ -84,7 +84,7 @@ public class MainModel {
             categoryMap.put(categoryID, "categoryID");
         }
 
-        firebaseDatabase.child("users").child(userSingleton.currentUser.uid).child("preferences").child("categories").setValue(categoryMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("preferences").child("categories").setValue(categoryMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 SaveResponse saveResponse = new SaveResponse();
@@ -115,7 +115,7 @@ public class MainModel {
         map.put("categories", categoryMap);
 
 
-        firebaseDatabase.child("users").child(userSingleton.currentUser.uid).child("preferences").setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("preferences").setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 SaveResponse saveResponse = new SaveResponse();
@@ -142,7 +142,7 @@ public class MainModel {
             categoryIDToCategory.put(category.id, category);
         }
 
-        firebaseDatabase.child("users").child(userSingleton.currentUser.uid).child("preferences").child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("preferences").child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot categorySnapshot) {
                 final PostsResponse postsResponse = new PostsResponse();
@@ -159,7 +159,8 @@ public class MainModel {
                                                     post.getKey(),
                                                     post.child("type").getValue().toString(),
                                                     post.child("name").getValue().toString(),
-                                                    post.child("content").getValue().toString(),
+                                                    !post.child("type").getValue().toString().equals("txt") ? post.child("link").getValue().toString() : "",
+                                                    post.child("text").getValue().toString(),
                                                     categoryIDToCategory.get(category.getKey())
 
                                             )
@@ -202,7 +203,7 @@ public class MainModel {
             categoryIDToCategory.put(category.id, category);
         }
 
-        firebaseDatabase.child("users").child(userSingleton.currentUser.uid).child("preferences").addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("preferences").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 FiltersResponse filtersResponse = new FiltersResponse();
@@ -237,7 +238,7 @@ public class MainModel {
             categoryIDToCategory.put(category.id, category);
         }
 
-        firebaseDatabase.child("users").child(userSingleton.currentUser.uid).child("preferences").child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("preferences").child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Category> selectedCategories = new ArrayList<>();
