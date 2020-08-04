@@ -1,0 +1,123 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'css/myDash.css' %}" />
+  </head>
+  <body>
+    <div id="main_dashboard">
+      <div class="personal_info">
+        <div class="sec_header">
+          <p>Personal Inforamtion</p>
+          <span id="personalInfoEditBtn" class="Edit_btn">Edit</span>
+        </div>
+        <div class="user_info">
+          <p>Username</p>
+          <p>Email</p>
+          <p>Password</p>
+          <p id="infoUsername" name="personal_info_field">{{ user.name }}</p>
+          <p id="infoEmail" name="personal_info_field">{{ user.email }}</p>
+          <p id="infoPassword" name="personal_info_field">******</p>
+        </div>
+      </div>
+      <div class="Categories_sec">
+        <div class="sec_header">
+          <p>Categories to Post</p>
+          <span class="Edit_btn">Edit</span>
+        </div>
+        <div class="categories_boxes"></div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(() => {
+        let user = "{{ user | safe }}";
+        user = user.replace(/'/g, '"');
+        user = JSON.parse(user);
+
+        let categories = "{{ categories | safe }}";
+        categories = categories.replace(/'/g, '"');
+        categories = JSON.parse(categories);
+
+        let categoryIDs = Object.keys(categories);
+
+        categoryIDs.forEach((id) => {
+          $(".categories_boxes").append(
+            "<div class='cat_box' name='" +
+              id +
+              "' style='background-color: " +
+              categories[id].color +
+              "'><img src='" +
+              categories[id].imgURL +
+              "' alt='icon' class='box_icon'/><p>" +
+              categories[id].name +
+              "</p></div>"
+          );
+          $("[name='" + id + "']").click(() => {
+            foodDashboard(id);
+          });
+        });
+
+        $("#loaderPercen").hide();
+
+        $("#personalInfoEditBtn").click(() => {
+          if ($("#personalInfoEditBtn").text() == "Edit") {
+            $("#personalInfoEditBtn").text("Save");
+            $("[name='personal_info_field']").attr("contenteditable", true);
+            $("#infoPassword").text("");
+          } else {
+            $("#loader").css("display", "flex");
+            savePersonalInfo();
+          }
+        });
+
+        function savePersonalInfo() {
+          $.ajax({
+            type: "POST",
+            url: "{% url 'myDash' %}",
+            data: {
+              username: $("#infoUsername").text(),
+              email: $("#infoEmail").text(),
+              password: $("#infoPassword").text(),
+              isNameUpdated: $("#infoUsername").text() != user.name,
+              isEmailUpdated: $("#infoEmail").text() != user.email,
+              isPasswordUpdated: $("#infoPassword").text().length > 0,
+              csrfmiddlewaretoken: "{{ csrf_token }}",
+            },
+            success: (response) => {
+              $("#loader").hide();
+              if (response.result == "success") {
+                user.name = $("#infoUsername").text();
+                user.email = $("#infoEmail").text();
+
+                $(".profile_name").text(user.name);
+                $(".profile_email").text(user.email);
+
+                $("#personalInfoEditBtn").text("Edit");
+                $("[name='personal_info_field']").attr(
+                  "contenteditable",
+                  false
+                );
+                $("#infoPassword").text("******");
+              } else {
+                $("#infoUsername").text(user.name);
+                $("#infoEmail").text(user.email);
+              }
+              $("#loader").hide();
+            },
+            error: (xhr, errmsg, err) => {
+              $("#loader").hide();
+              alert("Failed to update info!");
+              console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            },
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
