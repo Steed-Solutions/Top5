@@ -72,6 +72,7 @@ def credentials(request):
                     user = auth.create_user_with_email_and_password(
                         request.POST['email'], request.POST['password'])
 
+                    user_id = user['idToken']
                     uid = user['localId']
 
                     request.session['user'] = user_id
@@ -83,7 +84,8 @@ def credentials(request):
                     })
 
                     return JsonResponse({"result": "success"})
-                except:
+                except Exception as e:
+                    print(e)
                     return JsonResponse({"result": "failure"})
         elif 'recoveryEmail' in request.POST:
             try:
