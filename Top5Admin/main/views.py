@@ -40,8 +40,6 @@ storage = firebase.storage()
 
 
 def credentials(request):
-    #     print(request.session['user'])
-
     if("user" in request.session):
         return redirect('dashboard')
 
@@ -182,15 +180,11 @@ def foodDash(request, category_id):
     for key, value in categoryPosts.items():
         categoryPostsMap[key] = value
 
-    print(categoryPostsMap)
-
     return render(request, "foodDash.html", {"categoryID": category_id, "categoryPosts": categoryPostsMap})
 
 
 def logout(request):
     request.session.pop('user', None)
     request.session.pop('uid', None)
-
-#     print(request.session['user'])
 
     return redirect("credentials")

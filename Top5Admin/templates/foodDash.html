@@ -108,6 +108,8 @@
         month[10] = "November";
         month[11] = "December";
 
+        let selectedPostForEdit = "";
+
         let selectedImgOrVid;
         let isSelectedImg = false;
         let storageRef = firebase.storage().ref();
@@ -205,7 +207,7 @@
 
         $("#saveBtn").click(() => {
           $("#loader").css("display", "flex");
-          let postKey = database.ref().child('content/posts/' + categoryID).push().key;
+          let postKey = selectedPostForEdit == "" ? database.ref().child('content/posts/' + categoryID).push().key : selectedPostForEdit;
 
           let postType = "";
 
@@ -458,6 +460,7 @@
             editBtn.setAttribute("alt", "edit");
 
             editBtn.addEventListener("click", () => {
+              selectedPostForEdit = postID;
               if(post.type == "txt") {
                 $("#postTxtArea").val($("[data-item-content-post-id='" + postID + "'] > p").html());
                 $("#saveBtn").css("display", "flex");
