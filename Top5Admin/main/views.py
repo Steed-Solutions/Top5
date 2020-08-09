@@ -147,7 +147,7 @@ def myDash(request):
     return render(request, "myDash.html", {"user": userMap, "categories": categoriesMap})
 
 
-def foodDash(request, category_id):
+def categoryDash(request, category_id):
     if request.method == "POST":
         if request.POST["reqType"] == "add":
             try:
@@ -182,7 +182,7 @@ def foodDash(request, category_id):
     for key, value in categoryPosts.items():
         categoryPostsMap[key] = value
 
-    return render(request, "foodDash.html", {"categoryID": category_id, "categoryPosts": categoryPostsMap})
+    return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": categoryPostsMap})
 
 
 def logout(request):

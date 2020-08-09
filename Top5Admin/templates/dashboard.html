@@ -6,6 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <link rel="stylesheet" href="{% static 'font/stylesheet.css' %}" />
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
     <link rel="stylesheet" href="{% static 'css/loader.css' %}" />
 
@@ -15,33 +16,60 @@
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-storage.js"></script>
     <script>
-      function foodDashboard(categoryID) {
-        $(".dashboard_name").text("Food Dashboard");
+      function toCamelCase(str){
+        return str.split(' ').map(function(word,index){
+          return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        }).join(' ');
+      }
+
+      function categoryDashboard(categoryID, name) {
+        $("#dashboardContent").hide();
+        $("#transitionLoader").css("display", "flex");
+        $(".dashboard_name").text(toCamelCase(name) + " Dashboard");
+        $(".header_subtxt").hide();
         $(".dashboard_icon").attr(
           "src",
           "{% static 'img/dashboard_icon.png' %}"
         );
         $(".post_icon").attr("src", "{% static 'img/post_icon_clicked.png' %}");
         $("#dashboardContent").load(
-          "{% url 'foodDash' category_id='CATEGORY_ID' %}".replace(
+          "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(
             /CATEGORY_ID/,
             categoryID
-          )
+          ), () => {
+            $("#transitionLoader").hide();
+            $("#dashboardContent").show();
+          }
         );
       }
 
-      function showSelectCategoryModal() {
-        $("#selectCategoryModal").show();
+      function showCategorySelectionView() {
+        $(".dashboard_name").text("Please select a category:");
+        $(".header_subtxt").hide();
+        $(".dashboard_icon").attr(
+          "src",
+          "{% static 'img/dashboard_icon.png' %}"
+        );
+        $(".post_icon").attr("src", "{% static 'img/post_icon_clicked.png' %}");
+        $(".personal_info").hide();
       }
 
       function myDashboard() {
+        $("#dashboardContent").hide();
+        $("#transitionLoader").css("display", "flex");
         $(".dashboard_name").text("My Dashboard");
+        $(".header_subtxt").show();
         $(".dashboard_icon").attr(
           "src",
           "{% static 'img/dashboard_icon_clicked.png' %}"
         );
         $(".post_icon").attr("src", "{% static 'img/post_icon.png' %}");
-        $("#dashboardContent").load("{% url 'myDash' %}");
+        $("#dashboardContent").load("{% url 'myDash' %}", () => {
+          $("#transitionLoader").hide();
+          $("#dashboardContent").show();
+          $(".personal_info").show();
+        });
+        
       }
     </script>
   </head>
@@ -66,48 +94,7 @@
           0%
         </p>
       </div>
-    </div>
-
-    <div id="selectCategoryModal" class="modal">
-      <!-- Modal content -->
-      <div class="modal-content">
-        <div class="modal_title">
-          <p>Select Category</p>
-          <span
-            id="selectCategoryClose"
-            class="close"
-            onclick="$('#selectCategoryModal').hide();"
-            ><img src="{% static 'img/delete_circle.png' %}"
-          /></span>
-        </div>
-        <div>
-          <div>
-            <p class="modal-message">
-              Select the category that you want to view.
-            </p>
-
-            <div class="container">
-              <label for="categorySelect" class="center_vertical"
-                ><b>Email</b></label
-              >
-              <select id="categorySelect" class="center_vertical">
-                <option name="default" hidden disabled selected value>
-                  -- Select a Category --
-                </option>
-                <option>ABC</option>
-                <option>ABD</option>
-                <option>ABE</option>
-              </select>
-            </div>
-
-            <button id="continueBtn" class="modal_button">
-              Continue
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    </div>   
     <div id="main">
       <aside id="side_menu_container">
         <div id="side_menu">
@@ -129,7 +116,7 @@
                 src="{% static 'img/post_icon.png' %}"
                 alt="posts"
               />
-              <p onclick="showSelectCategoryModal()" class="menu_item">Posts</p>
+              <p onclick="showCategorySelectionView()" class="menu_item">Posts</p>
             </div>
             <div>
               <img
@@ -137,9 +124,7 @@
                 src="{% static 'img/signout_icon.png' %}"
                 alt="signout"
               />
-              <a onclick="location.href='{% url 'logout' %}'" class="menu_item"
-                >Sign Out</a
-              >
+              <a onclick="location.href='{% url 'logout' %}'" class="menu_item">Sign Out</a>
             </div>
           </div>
         </div>
@@ -164,32 +149,39 @@
                   <p class="profile_email">{{ user.email }}</p>
                 </div>
               </div>
-              <div>
-                <span class="fas fa-bell header_icons"></span>
-                <span class="fas fa-envelope header_icons"></span>
-              </div>
             </div>
           </div>
         </header>
-        <div id="dashboardContent"></div>
+        <div>    
+          <div id="transitionLoader">              
+            <div class="lds-default">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>              
+            </div>
+          <div id="dashboardContent"></div>
+        </div>
       </section>
     </div>
 
     <script>
       $(document).ready(() => {
-        console.log(
-          "{% url 'foodDash' category_id='CATEGORY_ID' %}".replace(
-            /CATEGORY_ID/,
-            $("#categorySelect").val()
-          )
-        );
-
         myDashboard();
 
         $("#continueBtn").click(() => {
           if ($("#categorySelect").val() != null) {
             $("#selectCategoryModal").hide();
-            foodDashboard($("#categorySelect").val());
+            categoryDashboard($("#categorySelect").val());
           }
         });
       });

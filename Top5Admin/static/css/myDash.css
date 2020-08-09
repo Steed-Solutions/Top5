@@ -43,7 +43,7 @@ html {
   padding-bottom: 50px;
   border-bottom: 1px solid rgba(164, 161, 161, 0.1);
   display: grid;
-  grid-template-columns: 1.5fr 2.5fr 1fr;
+  grid-template-columns: 1.5fr 2.5fr 1fr 1fr;
   column-gap: 10px;
 }
 
@@ -116,4 +116,8 @@ html {
 .external_login_link {
   user-select: none;
   cursor: pointer;
+}
+
+#dashboardContent {
+  height: 100%;
 }

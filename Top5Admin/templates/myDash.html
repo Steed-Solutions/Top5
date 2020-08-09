@@ -13,22 +13,23 @@
     <div id="main_dashboard">
       <div class="personal_info">
         <div class="sec_header">
-          <p>Personal Inforamtion</p>
+          <p>Personal Information</p>
           <span id="personalInfoEditBtn" class="Edit_btn">Edit</span>
         </div>
         <div class="user_info">
           <p>Username</p>
           <p>Email</p>
           <p>Password</p>
+          <p>Confirm Password</p>
           <p id="infoUsername" name="personal_info_field">{{ user.name }}</p>
           <p id="infoEmail" name="personal_info_field">{{ user.email }}</p>
           <p id="infoPassword" name="personal_info_field">******</p>
+          <p id="infoConfirmPassword" name="personal_info_field">******</p>
         </div>
       </div>
       <div class="Categories_sec">
         <div class="sec_header">
           <p>Categories to Post</p>
-          <span class="Edit_btn">Edit</span>
         </div>
         <div class="categories_boxes"></div>
       </div>
@@ -59,7 +60,7 @@
               "</p></div>"
           );
           $("[name='" + id + "']").click(() => {
-            foodDashboard(id);
+            categoryDashboard(id, categories[id].name);
           });
         });
 
@@ -68,8 +69,8 @@
         $("#personalInfoEditBtn").click(() => {
           if ($("#personalInfoEditBtn").text() == "Edit") {
             $("#personalInfoEditBtn").text("Save");
-            $("[name='personal_info_field']").attr("contenteditable", true);
-            $("#infoPassword").text("");
+            $("[name='personal_info_field']").attr("contenteditable", true).css("color", "black");
+            $("#infoPassword, #infoConfirmPassword").text("");
           } else {
             $("#loader").css("display", "flex");
             savePersonalInfo();
@@ -77,45 +78,49 @@
         });
 
         function savePersonalInfo() {
-          $.ajax({
-            type: "POST",
-            url: "{% url 'myDash' %}",
-            data: {
-              username: $("#infoUsername").text(),
-              email: $("#infoEmail").text(),
-              password: $("#infoPassword").text(),
-              isNameUpdated: $("#infoUsername").text() != user.name,
-              isEmailUpdated: $("#infoEmail").text() != user.email,
-              isPasswordUpdated: $("#infoPassword").text().length > 0,
-              csrfmiddlewaretoken: "{{ csrf_token }}",
-            },
-            success: (response) => {
-              $("#loader").hide();
-              if (response.result == "success") {
-                user.name = $("#infoUsername").text();
-                user.email = $("#infoEmail").text();
+          if($("#infoPassword").text() == $("#infoConfirmPassword").text()) {
+            $.ajax({
+              type: "POST",
+              url: "{% url 'myDash' %}",
+              data: {
+                username: $("#infoUsername").text(),
+                email: $("#infoEmail").text(),
+                password: $("#infoPassword").text(),
+                isNameUpdated: $("#infoUsername").text() != user.name,
+                isEmailUpdated: $("#infoEmail").text() != user.email,
+                isPasswordUpdated: $("#infoPassword").text().length > 0,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+              },
+              success: (response) => {
+                $("#loader").hide();
+                if (response.result == "success") {
+                  user.name = $("#infoUsername").text();
+                  user.email = $("#infoEmail").text();
 
-                $(".profile_name").text(user.name);
-                $(".profile_email").text(user.email);
+                  $(".profile_name").text(user.name);
+                  $(".profile_email").text(user.email);
 
-                $("#personalInfoEditBtn").text("Edit");
-                $("[name='personal_info_field']").attr(
-                  "contenteditable",
-                  false
-                );
-                $("#infoPassword").text("******");
-              } else {
-                $("#infoUsername").text(user.name);
-                $("#infoEmail").text(user.email);
-              }
-              $("#loader").hide();
-            },
-            error: (xhr, errmsg, err) => {
-              $("#loader").hide();
-              alert("Failed to update info!");
-              console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-            },
-          });
+                  $("#personalInfoEditBtn").text("Edit");
+                  $("[name='personal_info_field']").attr(
+                    "contenteditable",
+                    false
+                  ).css("color", "#a4a1a1");
+                  $("#infoPassword, #infoConfirmPassword").text("******");
+                } else {
+                  $("#infoUsername").text(user.name);
+                  $("#infoEmail").text(user.email);
+                }
+                $("#loader").hide();
+              },
+              error: (xhr, errmsg, err) => {
+                $("#loader").hide();
+                alert("Failed to update info!");
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+              },
+            });
+          } else {
+            alert("Password and Confirm Password must be the same.")
+          }
         }
       });
     </script>

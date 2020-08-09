@@ -12,6 +12,13 @@
   z-index: 5;
 }
 
+#transitionLoader {
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
 .lds-default {
   display: inline-block;
   position: relative;
@@ -26,6 +33,11 @@
   border-radius: 50%;
   animation: lds-default 1.2s linear infinite;
 }
+
+#transitionLoader .lds-default div {
+  background: #76937a;
+}
+
 .lds-default div:nth-child(1) {
   animation-delay: 0s;
   top: 37px;

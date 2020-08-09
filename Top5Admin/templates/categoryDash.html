@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Food Dashboard</title>
     
-    <link rel="stylesheet" href="{% static 'css/foodDash.css' %}" />        
+    <link rel="stylesheet" href="{% static 'css/categoryDash.css' %}" />        
   </head>
   <body>
-    <div id="food_dashboard">
+    <div id="category_dashboard">
       <div class="post_sec">
         <textarea
           name="food_post"
@@ -41,7 +41,7 @@
             <img id="uploadedImgPreview" width="25%" />          
           </div>
           <div id="vidPreview" style="display: none; position: relative;">
-            <div style="width: 25%; height: 100%; display: inline-block; position: absolute;">
+            <div style="width: 25%; height: 100%; position: absolute; display: flex; justify-content: flex-end; z-index: 2;">
               <span id="removeSelectedVideo">
                 <img src="{% static 'img/delete_circle.png' %}"/>
               </span>
@@ -53,10 +53,10 @@
       </div>
       <div class="search_sec">
         <input type="text" name="search" class="search_input" placeholder="Search" id="search">
-        <div class="search_result">
+        {% comment %} <div class="search_result">
             <span>Show Result</span>
             <span class="result_count">5</span>
-        </div>
+        </div> {% endcomment %}
       </div>
       <div class="items_sec">
         <div class="item">
@@ -135,8 +135,7 @@
           if (this.files && this.files[0]) {       
             reader.onload = function(e) {
               $("#vidPreview").hide();
-              $("#uploadOptionsBtns").hide();    
-              $("#postTxtArea").show();
+              $("#uploadOptionsBtns").hide();                  
               $("#uploadPreview").show();
               $("#imgPreview").show();
               $("#saveBtn").css("display", "flex");
@@ -153,8 +152,7 @@
           if (this.files && this.files[0]) {       
             reader.onload = function(e) {                
               $("#imgPreview").hide();
-              $("#uploadOptionsBtns").hide();        
-              $("#postTxtArea").val("").hide();
+              $("#uploadOptionsBtns").hide();
               $("#uploadPreview").show();
               $("#vidPreview").show();
               $("#saveBtn").css("display", "flex");
@@ -165,7 +163,7 @@
             selectedImgOrVid = this.files[0];
             isSelectedImg = false;
           }
-        }); 
+        });   
 
         $("#removeSelectedImage").click(() => {
           $("#uploadedImgPreview").removeAttr("src");
@@ -186,8 +184,7 @@
           $("#uploadedVidPreview").removeAttr("src");
           $("#vidPreview").hide();
           $("#uploadPreview").hide();
-          $("#vidUploadForm > input").val(null);              
-          $("#postTxtArea").show();
+          $("#vidUploadForm > input").val(null);
           $("#uploadOptionsBtns").show();  
 
           selectedImgOrVid = null;
@@ -234,7 +231,7 @@
               uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                 $.ajax({
                   type: "POST",
-                  url: "{% url 'foodDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
+                  url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
                   data: {
                     reqType : "add",
                     key : postKey,
@@ -273,7 +270,7 @@
           } else {
             $.ajax({
               type: "POST",
-              url: "{% url 'foodDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
+              url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
               data: {
                 reqType : "add",
                 key : postKey,
@@ -308,114 +305,7 @@
               }
             }); 
           }
-
-        });
-
-        {% comment %} function pagination(){
-          $(".search_sec")
-
-          let paginationRow = document.createElement("tr");
-          paginationRow.classList.add("pagination_row");
-
-          let paginationColumn = document.createElement("td");
-          paginationColumn.setAttribute("colspan", isSuperUser ? 5 : 4);
-
-          let centerDiv = document.createElement("div");
-
-          let paginationRowContent = document.createElement("div");
-          paginationRowContent.classList.add("pagination_row_content");
-
-          let showingPagesDesc = document.createElement("span");
-
-          let pages = document.createElement("div");
-          pages.classList.add("pagination");
-
-          let previousPageBtn = document.createElement("span");
-          previousPageBtn.setAttribute("id", "prevPageBtn");
-          previousPageBtn.innerHTML = "Previous";
-
-          previousPageBtn.addEventListener("click", () => {
-            if(currentPage > 0) {
-              currentPage -= 1;
-              populateList(currentPage);
-            }
-          });
-
-          pages.append(previousPageBtn);
-
-          let pageNumbers = [];
-          if (currentPage <= 2) {
-            for (let i = 0; i < currentPage; i++) {
-              pageNumbers.push(i);
-            }
-          } else if (currentPage == totalPages - 1) {
-            for (
-              let i = currentPage - 1;
-              i >= 0 && pageNumbers.length < 4;
-              i--
-            ) {
-              pageNumbers.unshift(i);
-            }
-          } else if (currentPage == totalPages - 2) {
-            for (
-              let i = currentPage - 1;
-              i >= 0 && pageNumbers.length < 3;
-              i--
-            ) {
-              pageNumbers.unshift(i);
-            }
-          } else {
-            for (let i = currentPage - 2; i < currentPage; i++) {
-              pageNumbers.unshift(i);
-            }
-          }
-
-          pageNumbers.push(currentPage);
-
-          for (
-            let i = currentPage + 1;
-            i < totalPages && pageNumbers.length < 5;
-            i++
-          ) {
-            pageNumbers.push(i);
-          }
-
-          for(let i = 0; i < pageNumbers.length; i++) {
-            let pageBtn = document.createElement("span");
-            pageBtn.innerText = "" + (pageNumbers[i] + 1);
-
-            if(pageNumbers[i] == currentPage) {
-              pageBtn.setAttribute("class", "active");
-            } else {
-              pageBtn.addEventListener("click", () => {
-                currentPage = pageNumbers[i];
-                populateList(currentPage);
-              });
-            }
-
-            pages.append(pageBtn);
-          }
-
-          let nextPageBtn = document.createElement("span");
-          nextPageBtn.setAttribute("id", "nextPageBtn");
-          nextPageBtn.innerHTML = "Next";
-
-          nextPageBtn.addEventListener("click", () => {
-            if(currentPage < totalPages - 1) {
-              currentPage += 1;
-              populateList(currentPage);
-            }
-          });
-
-          pages.append(nextPageBtn);
-
-          paginationRowContent.append(showingPagesDesc);
-          paginationRowContent.append(pages);
-
-          centerDiv.append(paginationRowContent);
-          paginationColumn.append(centerDiv);
-          paginationRow.append(paginationColumn);
-        } {% endcomment %}
+        });        
 
         populatePostsList();
 
@@ -455,7 +345,7 @@
             let itemIcons = document.createElement("div");
             itemIcons.classList.add("item_icons");
 
-            let editBtn = document.createElement("img");
+            {% comment %} let editBtn = document.createElement("img");
             editBtn.setAttribute("src", "{% static 'img/edit_icon.png' %}");
             editBtn.setAttribute("alt", "edit");
 
@@ -491,7 +381,7 @@
 
                 $("#postTxtArea").val($("[data-item-content-post-id='" + postID + "'] > span").html());
               }              
-            });
+            }); {% endcomment %}
 
             let deleteBtn = document.createElement("img");
             deleteBtn.setAttribute("src", "{% static 'img/del_icon.png' %}");
@@ -501,7 +391,7 @@
               $("#loader").css("display", "flex");
               $.ajax({
                 type: "POST",
-                url: "{% url 'foodDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
+                url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
                 data: {
                   reqType : "delete",
                   key : postID,                  
@@ -524,7 +414,7 @@
               }); 
             });
 
-            itemIcons.appendChild(editBtn);
+            {% comment %} itemIcons.appendChild(editBtn); {% endcomment %}
             itemIcons.appendChild(deleteBtn);
 
             item.appendChild(itemContent);

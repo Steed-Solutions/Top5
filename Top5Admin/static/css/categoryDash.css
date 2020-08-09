@@ -20,7 +20,7 @@ html {
 #dashboard_container {
   height: 100%;
 }
-#food_dashboard {
+#category_dashboard {
   border-top-left-radius: 10px;
   background-color: #f5f4f9;
   height: 100%;
@@ -139,10 +139,9 @@ html {
 #removeSelectedImage,
 #removeSelectedVideo {
   position: absolute;
-  display: flex;
-  justify-content: flex-end;
-  width: 98%;
-  margin-top: 2%;
+  margin-top: 5px;
+  text-align: right;
+  right: 5px;
 }
 
 #removeSelectedImage > img,
@@ -153,16 +152,15 @@ html {
 }
 
 #saveBtn {
-  width: 98%;
-  height: 50px;
+  display: none;
+  width: 20%;
+  height: 40px;
   background-color: #a27dce;
   border-radius: 50px;
   color: white;
-  margin: 10px auto;
-  display: none;
+  margin: 10px 0 10px auto;
   align-items: center;
   justify-content: center;
-  user-select: none;
   cursor: pointer;
 }
 
