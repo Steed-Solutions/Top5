@@ -12,7 +12,7 @@
             android:id="@+id/logo_top_space"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.111"
+            app:layout_constraintDimensionRatio="W, 0.197:1"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
@@ -36,7 +36,7 @@
             android:id="@+id/email_bar_top_space"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.111"
+            app:layout_constraintDimensionRatio="W, 0.197:1"
             app:layout_constraintTop_toBottomOf="@+id/logo" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,10 +83,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="@font/titillium_regular"
                 android:hint="@string/hint_email"
                 android:includeFontPadding="false"
-                android:inputType="textEmailAddress"
+                android:inputType="textEmailAddress|textNoSuggestions"
                 android:textColorHint="@color/colorHint"
                 android:textSize="12sp"
                 app:autoSizeMaxTextSize="12sp"
@@ -123,7 +123,7 @@
             android:id="@+id/password_bar_top_space"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.025"
+            app:layout_constraintDimensionRatio="W, 0.044:1"
             app:layout_constraintTop_toBottomOf="@+id/email_input_container" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -170,10 +170,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="@font/titillium_regular"
                 android:hint="@string/hint_password"
                 android:includeFontPadding="false"
-                android:inputType="textPassword"
+                android:inputType="textPassword|textNoSuggestions"
                 android:textColorHint="@color/colorHint"
                 android:textSize="12sp"
                 app:autoSizeMaxTextSize="12sp"
@@ -210,7 +210,7 @@
             android:id="@+id/login_bar_top_space"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.047"
+            app:layout_constraintDimensionRatio="W, 0.083:1"
             app:layout_constraintTop_toBottomOf="@+id/password_input_container" />
 
         <Button
@@ -219,7 +219,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/round_rect_with_ripple"
-            android:fontFamily="@font/poppins_medium"
+            android:fontFamily="@font/titillium_medium"
             android:text="@string/log_in"
             android:textColor="@color/colorAccent"
             app:autoSizeMaxTextSize="18sp"
@@ -243,7 +243,7 @@
             android:id="@+id/forgotPasswordBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_regular"
+            android:fontFamily="@font/titillium_regular"
             android:includeFontPadding="false"
             android:text="@string/forgot_pass"
             android:textAlignment="center"
@@ -277,7 +277,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="@font/titillium_regular"
                 android:includeFontPadding="false"
                 android:text="@string/sign_in_using"
                 android:textColor="#C6C3BD"
@@ -319,7 +319,7 @@
             android:id="@+id/newAccBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_regular"
+            android:fontFamily="@font/titillium_regular"
             android:includeFontPadding="false"
             android:text="@string/new_acc"
             android:textAlignment="center"
@@ -339,9 +339,9 @@
             android:alpha="0.4"
             android:animateLayoutChanges="true"
             android:background="#000000"
-            android:visibility="gone"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+            android:visibility="gone">
 
             <ProgressBar
                 style="?android:attr/progressBarStyleLarge"

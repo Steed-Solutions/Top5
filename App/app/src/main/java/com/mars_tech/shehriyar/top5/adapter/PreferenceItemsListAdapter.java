@@ -50,9 +50,14 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
 
         holder.binding.itemName.setText(post.name);
 
-        if(post.type.equals("img")) {
-            Glide.with(context).load(post.content).into(holder.binding.itemContentImage);
+        if (post.type.contains("img")) {
+            Glide.with(context).load(post.link).into(holder.binding.itemContentImage);
+        } else if (post.type.contains("vid")) {
+            holder.binding.playBtn.setVisibility(View.VISIBLE);
+            Glide.with(context).asBitmap().load(post.link).into(holder.binding.itemContentImage);
         }
+
+        holder.binding.itemContentText.setText(post.type.toLowerCase().contains("txt") ? post.text : "");
 
         Drawable backgroundDrawable = DrawableCompat.wrap(holder.binding.itemTypeImageContainer.getBackground()).mutate();
         DrawableCompat.setTint(backgroundDrawable, Color.parseColor(post.category.color));
@@ -61,11 +66,13 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
 
         if (lastSelectedPos == position) {
             holder.binding.itemImageOverlay.setVisibility(View.GONE);
+            holder.binding.itemContentText.setVisibility(View.VISIBLE);
             ViewGroup.LayoutParams topGap = holder.binding.itemImageContainerTopSpace.getLayoutParams();
             topGap.height = 0;
             holder.binding.itemImageContainerTopSpace.setLayoutParams(topGap);
         } else {
             holder.binding.itemImageOverlay.setVisibility(View.VISIBLE);
+            holder.binding.itemContentText.setVisibility(View.GONE);
             ViewGroup.LayoutParams topGap = holder.binding.itemImageContainerTopSpace.getLayoutParams();
             topGap.height = 1;
             holder.binding.itemImageContainerTopSpace.setLayoutParams(topGap);
@@ -75,9 +82,6 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                holder.binding.itemImageOverlay.setVisibility(View.GONE);
-//                preferenceItemsListItemClickListener.OnItemClicked(holder.getLayoutPosition());
-
                 if (lastSelectedPos >= 0) {
                     notifyItemChanged(lastSelectedPos);
                 }
@@ -87,6 +91,8 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
 
                     notifyItemChanged(lastSelectedPos);
                 }
+
+                preferenceItemsListItemClickListener.OnItemClicked(holder.getLayoutPosition());
             }
         });
     }

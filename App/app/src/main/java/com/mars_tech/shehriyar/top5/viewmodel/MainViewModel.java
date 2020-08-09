@@ -1,6 +1,7 @@
 package com.mars_tech.shehriyar.top5.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -19,7 +20,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private MainModel mainModel;
     public LiveData<Boolean> signOutLiveData;
-    public LiveData<ArrayList<Category>> allCategoriesLiveData, selectedCategoriesLiveData;
+    public LiveData<ArrayList<Category>> allCategoriesLiveData, queriedCategoriesLiveData, selectedCategoriesLiveData;
     public LiveData<SaveResponse> saveResponseLiveData, filtersAndCategoriesSaveResponseLiveData;
     public LiveData<PostsResponse> allPostsLiveData;
     public LiveData<FiltersResponse> filtersResponseLiveData;
@@ -35,6 +36,10 @@ public class MainViewModel extends AndroidViewModel {
 
     public void getAllCategories() {
         allCategoriesLiveData = mainModel.getAllCategories();
+    }
+
+    public void getQueriedCategories(String searchTerm) {
+        queriedCategoriesLiveData = mainModel.getQueriedCategories(searchTerm);
     }
 
     public void saveSelectedCategories(ArrayList<String> categories) {

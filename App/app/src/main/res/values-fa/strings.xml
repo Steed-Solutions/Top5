@@ -16,6 +16,9 @@
     <string name="hint_username">نام کاربری</string>
     <string name="hint_email">پست الکترونیک</string>
     <string name="hint_password">کلمه عبور</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_gender">Gender</string>
+    <string name="hint_bio">Bio</string>
     <string name="user_pref_ins">برخی از موضوعات مورد علاقه خود را انتخاب کنید یا محتوای مورد علاقه خود را جستجو کنید</string>
     <string name="search_txt_placeholder">...کلیدواژه ها را وارد کنید</string>
     <string name="popular">محبوب</string>
@@ -27,11 +30,14 @@
     <string name="filter_new">جدید</string>
     <string name="filter_mood">حالت</string>
     <string name="your_interests">علایق شما</string>
+    <string name="language">Language</string>
     <string name="edit_profile">ویرایش نمایه</string>
     <string name="gender">جنس</string>
     <string name="bio">بیو</string>
     <string name="loading">LOADING</string>
     <string name="none">NONE</string>
+    <string name="downloads_none">You have saved nothing to your downloads yet</string>
+    <string name="details_none">There is nothing here - yet!</string>
 
     <string name="gender_placeholder">زن</string>
     <string name="bio_placeholder">نشاط، تا زحمت و اندوه، برخی از موارد مهم برای انجام با گذشت سالها ، من خواهم آمد ، كه كسی مزیت ورزش را از او بدست می آورد ، بنابراین تلاش محرک اگر منطقه مدرسه و طول عمر داشته باشد. اما درد در کار خانه خود را به عنوان</string>

@@ -45,7 +45,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:fontFamily="@font/poppins_medium"
+            android:fontFamily="@font/titillium_medium"
             android:includeFontPadding="false"
             android:text="FOOD FOOD FOOD"
             android:textAlignment="center"

@@ -25,16 +25,20 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public User(String name, String email, String password) {
+    public User(String name, String email, String password, String gender, String bio) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.gender = gender;
+        this.bio = bio;
     }
 
     public HashMap<String, String> toJson(){
         HashMap<String, String> json = new HashMap<>();
         json.put("name", name);
         json.put("email", email);
+        json.put("gender", gender);
+        json.put("bio", bio);
         return json;
     }
 }

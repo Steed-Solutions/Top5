@@ -1,6 +1,8 @@
 package com.mars_tech.shehriyar.top5.pojo;
 
-public class Post {
+import java.io.Serializable;
+
+public class Post implements Serializable {
 
     public String id, type, name, link, text;
     public Category category;

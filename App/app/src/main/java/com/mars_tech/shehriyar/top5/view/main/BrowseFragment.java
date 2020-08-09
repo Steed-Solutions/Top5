@@ -9,10 +9,13 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -24,9 +27,13 @@ import com.mars_tech.shehriyar.top5.adapter.BrowseCategoriesListAdapter;
 import com.mars_tech.shehriyar.top5.adapter.PopularListAdapter;
 import com.mars_tech.shehriyar.top5.adapter.SearchItemsListAdapter;
 import com.mars_tech.shehriyar.top5.databinding.FragmentBrowseBinding;
+import com.mars_tech.shehriyar.top5.listener.BrowseCategoriesListItemClickListener;
+import com.mars_tech.shehriyar.top5.listener.PopularListItemClickListener;
 import com.mars_tech.shehriyar.top5.listener.SearchItemsListItemClickListener;
+import com.mars_tech.shehriyar.top5.pojo.Post;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -37,6 +44,7 @@ public class BrowseFragment extends Fragment {
     private int browseCategoriesListWidth, popularListWidth, searchItemsListWidth;
 
     private FragmentBrowseBinding binding;
+    private NavController controller;
 
     private ArrayList<String> popularItems;
     private ArrayList<String> allSearchItems, queriedSearchItems;
@@ -51,17 +59,45 @@ public class BrowseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_browse, container, false);
+        initController();
 
-        ArrayList<String> browseCategories = new ArrayList<>();
-        browseCategories.add("");
-        browseCategories.add("");
-        browseCategories.add("");
-        browseCategories.add("");
-        browseCategories.add("");
+
+
+        ArrayList<HashMap<String, Object>> browseCategories = new ArrayList<>();
+
+        HashMap<String, Object> categoryMap1 = new HashMap<>();
+        categoryMap1.put("name", "Spanish food");
+        categoryMap1.put("image", R.drawable.browse_categories_dummy_image);
+        categoryMap1.put("typeColor", "#A27DCE");
+        categoryMap1.put("typeImage", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fcategories%2Ffood.png?alt=media&token=2a886017-bbc0-46ce-8a96-a605dd1bf8f8");
+
+        browseCategories.add(categoryMap1);
+
+        HashMap<String, Object> categoryMap2 = new HashMap<>();
+        categoryMap2.put("name", "Pop music");
+        categoryMap2.put("image", R.drawable.pop_music);
+        categoryMap2.put("typeColor", "#7EADDE");
+        categoryMap2.put("typeImage", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fcategories%2Fmusic.png?alt=media&token=35b0dbeb-9b59-4bff-a57d-d5d1af76d3d2");
+
+        browseCategories.add(categoryMap2);
+
+        HashMap<String, Object> categoryMap3 = new HashMap<>();
+        categoryMap3.put("name", "Abstract art");
+        categoryMap3.put("image", R.drawable.abstract_art);
+        categoryMap3.put("typeColor", "#EF6E41");
+        categoryMap3.put("typeImage", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fcategories%2Fart.png?alt=media&token=d3c40a8d-6ff8-45a3-903a-efe323ad4810");
+
+        browseCategories.add(categoryMap3);
+
+        HashMap<String, Object> categoryMap4 = new HashMap<>();
+        categoryMap4.put("name", "Planting");
+        categoryMap4.put("image", R.drawable.planting);
+        categoryMap4.put("typeColor", "#89BF6F");
+        categoryMap4.put("typeImage", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fcategories%2Fplanting.png?alt=media&token=644243d3-3df3-43de-908c-31e4e537665d");
+
+        browseCategories.add(categoryMap4);
 
         popularItems = new ArrayList<>();
-        popularItems.add("");
-        popularItems.add("");
         popularItems.add("");
         popularItems.add("");
         popularItems.add("");
@@ -77,7 +113,13 @@ public class BrowseFragment extends Fragment {
         // Browse Categories List
         binding.browseCategoriesList.setHasFixedSize(true);
 
-        BrowseCategoriesListAdapter browseCategoriesListAdapter = new BrowseCategoriesListAdapter(browseCategories);
+        BrowseCategoriesListAdapter browseCategoriesListAdapter = new BrowseCategoriesListAdapter(requireContext(), browseCategories, new BrowseCategoriesListItemClickListener() {
+            @Override
+            public void OnItemClicked(int index) {
+                BrowseFragmentDirections.ActionBrowseFragmentToDetailsFragment action = BrowseFragmentDirections.actionBrowseFragmentToDetailsFragment();
+                controller.navigate(action);
+            }
+        });
         binding.browseCategoriesList.setAdapter(browseCategoriesListAdapter);
 
         GridLayoutManager browseCategoriesListLayoutManager = new GridLayoutManager(this.getContext(), 2, GridLayoutManager.VERTICAL, false) {
@@ -108,7 +150,13 @@ public class BrowseFragment extends Fragment {
         // Popular List
         binding.popularList.setHasFixedSize(true);
 
-        PopularListAdapter popularListAdapter = new PopularListAdapter(popularItems);
+        PopularListAdapter popularListAdapter = new PopularListAdapter(popularItems, new PopularListItemClickListener() {
+            @Override
+            public void OnItemClicked(int index) {
+                BrowseFragmentDirections.ActionBrowseFragmentToDetailsFragment action = BrowseFragmentDirections.actionBrowseFragmentToDetailsFragment();
+                controller.navigate(action);
+            }
+        });
         binding.popularList.setAdapter(popularListAdapter);
 
         LinearLayoutManager popularListLayoutManager = new LinearLayoutManager(this.getContext(), GridLayoutManager.HORIZONTAL, false) {
@@ -147,7 +195,8 @@ public class BrowseFragment extends Fragment {
         SearchItemsListAdapter searchItemsListAdapter = new SearchItemsListAdapter(queriedSearchItems, new SearchItemsListItemClickListener() {
             @Override
             public void OnItemClicked(int index) {
-
+                BrowseFragmentDirections.ActionBrowseFragmentToDetailsFragment action = BrowseFragmentDirections.actionBrowseFragmentToDetailsFragment();
+                controller.navigate(action);
             }
         });
         binding.searchItemsList.setAdapter(searchItemsListAdapter);
@@ -183,7 +232,7 @@ public class BrowseFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length() == 0) {
+                if (s.length() == 0) {
                     binding.searchTermLayout.setVisibility(View.GONE);
                     binding.noSearchTermLayout.setVisibility(View.VISIBLE);
                 } else {
@@ -220,6 +269,10 @@ public class BrowseFragment extends Fragment {
 
 
         return binding.getRoot();
+    }
+
+    private void initController() {
+        controller = NavHostFragment.findNavController(this);
     }
 
 }

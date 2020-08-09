@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mars_tech.shehriyar.top5.R;
 import com.mars_tech.shehriyar.top5.adapter.InterestsListAdapter;
@@ -143,14 +144,10 @@ public class FiltersFragment extends Fragment {
         InterestsListAdapter interestsListAdapter = new InterestsListAdapter(getContext(), allInterests, selectedInterests, new InterestsListItemClickListener() {
             @Override
             public void OnItemClicked(String id) {
-                Log.d("UPDATED_INT", "" +updatedInterests.size());
                 if (updatedInterests.contains(id)) {
                     updatedInterests.remove(id);
-                    Log.d("UPDATED_INT", "" +updatedInterests.size());
                 } else {
                     updatedInterests.add(id);
-                    Log.d("UPDATED_INT", "" +updatedInterests.size());
-                    Log.d("UPDATED_INT", "" +selectedInterests.size());
                 }
             }
         });
@@ -159,11 +156,7 @@ public class FiltersFragment extends Fragment {
         binding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.d("WTH_01", "" + !selectedInterests.containsAll(updatedInterests));
-//                Log.d("WTH_02", "" + !updatedInterests.containsAll(selectedInterests));
-//                Log.d("WTH_03", "" + (selectedInterests.size() != updatedInterests.size()));
                 if (!selectedInterests.containsAll(updatedInterests) || !updatedInterests.containsAll(selectedInterests) || selectedInterests.size() != updatedInterests.size()) {
-                    Log.d("WTF", "WTH");
                     showOverlay();
                     viewModel.saveFiltersAndCategories(new ArrayList<String>(), updatedInterests);
                     viewModel.filtersAndCategoriesSaveResponseLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
@@ -172,13 +165,14 @@ public class FiltersFragment extends Fragment {
                             viewModel.filtersAndCategoriesSaveResponseLiveData.removeObservers(requireActivity());
                             hideOverlay();
                             if (saveResponse.isError) {
-
+                                Toast.makeText(getContext(), saveResponse.statusMessage, Toast.LENGTH_SHORT).show();
                             } else {
                                 controller.navigateUp();
                             }
-
                         }
                     });
+                } else {
+                    controller.navigateUp();
                 }
             }
         });

@@ -18,11 +18,15 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 
 import com.mars_tech.shehriyar.top5.R;
 import com.mars_tech.shehriyar.top5.adapter.UserPreferencesListAdapter;
@@ -41,20 +45,21 @@ import java.util.Objects;
  */
 public class UserPrefFragment extends Fragment {
 
+    private UserSingleton userSingleton = UserSingleton.getInstance();
+
     private FragmentUserPrefBinding binding;
     private NavController controller;
     private MainViewModel viewModel;
 
     private int categoriesListWidth;
-    private ArrayList<Category> allCategories;
+    private ArrayList<Category> categories;
     private ArrayList<String> selectedCategories;
 
-    private UserSingleton userSingleton = UserSingleton.getInstance();
+    private UserPreferencesListAdapter userPreferencesListAdapter;
 
     public UserPrefFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,9 +78,9 @@ public class UserPrefFragment extends Fragment {
             viewModel.getAllCategories();
             viewModel.allCategoriesLiveData.observe(requireActivity(), new Observer<ArrayList<Category>>() {
                 @Override
-                public void onChanged(ArrayList<Category> categories) {
-                    allCategories = categories;
-                    Log.d("CATEGORIES_USER_PREF", "" + categories.size());
+                public void onChanged(ArrayList<Category> allCategories) {
+                    categories = new ArrayList<>();
+                    categories.addAll(allCategories);
                     afterDBLoad();
                 }
             });
@@ -111,25 +116,56 @@ public class UserPrefFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void initViewModel() {
+    private void initViewModel() {
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
     }
 
-    void afterDBLoad() {
+    private void afterDBLoad() {
+        binding.searchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.searchBar.setOnClickListener(null);
+                TranslateAnimation animation = new TranslateAnimation(0.0f, (float) ((binding.searchBar.getMeasuredWidth() / 2) - (binding.searchBar.getMeasuredHeight() * 0.445) - 15),
+                        0.0f, 0.0f);
+                animation.setDuration(250);
+                animation.setFillAfter(true);
+
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        binding.searchInput.setVisibility(View.VISIBLE);
+                        binding.searchInput.requestFocus();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+                binding.searchBtn.startAnimation(animation);
+            }
+        });
+
         binding.categoriesGrid.setHasFixedSize(true);
 
-        UserPreferencesListAdapter userPreferencesListAdapter = new UserPreferencesListAdapter(getContext(), allCategories, new UserPreferencesListItemClickListener() {
+        userPreferencesListAdapter = new UserPreferencesListAdapter(getContext(), categories, new UserPreferencesListItemClickListener() {
             @Override
             public void OnItemClicked(int index) {
-                if (selectedCategories.contains(allCategories.get(index))) {
-                    selectedCategories.remove(allCategories.get(index));
+                if (selectedCategories.contains(categories.get(index).id)) {
+                    selectedCategories.remove(categories.get(index).id);
 
                     if (selectedCategories.isEmpty()) {
                         binding.saveBtn.setEnabled(false);
                         binding.saveBtn.setAlpha((float) 0.4);
                     }
                 } else {
-                    selectedCategories.add(allCategories.get(index).id);
+                    selectedCategories.add(categories.get(index).id);
 
                     if (selectedCategories.size() == 1) {
                         binding.saveBtn.setEnabled(true);
@@ -183,6 +219,33 @@ public class UserPrefFragment extends Fragment {
                         }
                     }
                 });
+            }
+        });
+
+        viewModel.getQueriedCategories("");
+        viewModel.queriedCategoriesLiveData.observe(requireActivity(), new Observer<ArrayList<Category>>() {
+            @Override
+            public void onChanged(ArrayList<Category> queriedCategories) {
+                categories.clear();
+                categories.addAll(queriedCategories);
+                userPreferencesListAdapter.notifyDataSetChanged();
+            }
+        });
+
+        binding.searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewModel.getQueriedCategories(s.toString().trim());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 

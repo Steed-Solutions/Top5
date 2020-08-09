@@ -20,12 +20,8 @@
                 android:padding="1dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/popular_list_dummy_image"
-                app:riv_corner_radius="30dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0.5" />
+                app:riv_corner_radius="30dp"
+                android:alpha="0.5"/>
 
             <View
                 android:id="@+id/item_name_top_gap"
@@ -43,7 +39,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@null"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/titillium_medium"
                 android:includeFontPadding="false"
                 android:text="Grow Aloe vera"
                 android:textAlignment="center"

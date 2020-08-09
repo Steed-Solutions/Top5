@@ -2,9 +2,13 @@ package com.mars_tech.shehriyar.top5.view.credentials;
 
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.widget.TextViewCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -14,10 +18,13 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.mars_tech.shehriyar.top5.R;
 import com.mars_tech.shehriyar.top5.databinding.FragmentSignupBinding;
@@ -41,6 +48,8 @@ public class SignupFragment extends Fragment {
 
     private UserSingleton userSingleton = UserSingleton.getInstance();
 
+    private String selectedGender;
+
     public SignupFragment() {
         // Required empty public constructor
     }
@@ -55,6 +64,7 @@ public class SignupFragment extends Fragment {
         controller = NavHostFragment.findNavController(this);
 
         initViewModel();
+        initGenderSpinner();
         initClickListeners();
 
         return binding.getRoot();
@@ -85,12 +95,12 @@ public class SignupFragment extends Fragment {
             public void onClick(View v) {
                 if (validateForm()) {
                     showOverlay();
-                    viewModel.signUpWithCredentials(new User(binding.usernameInp.getText().toString().trim(), binding.emailInp.getText().toString().trim(), binding.passwordInp.getText().toString().trim()));
+                    viewModel.signUpWithCredentials(new User(binding.usernameInp.getText().toString().trim(), binding.emailInp.getText().toString().trim(), binding.passwordInp.getText().toString().trim(), binding.genderInp.getSelectedItem().toString(), binding.bioInp.getText().toString()));
                     viewModel.authenticatedUserLiveData.observe(requireActivity(), new Observer<AuthResponse>() {
                         @Override
                         public void onChanged(AuthResponse authResponse) {
                             hideOverlay();
-                            if(authResponse.isError) {
+                            if (authResponse.isError) {
                                 showError(authResponse.statusMessage);
                             } else {
                                 userSingleton.currentUser = authResponse.user;
@@ -103,6 +113,30 @@ public class SignupFragment extends Fragment {
 //                controller.navigate(R.id.action_signupFragment_to_mainActivity);
             }
         });
+    }
+
+    private void initGenderSpinner() {
+        String[] items = new String[]{Constants.GENDER_OPTION_EN_MALE, Constants.GENDER_OPTION_EN_FEMALE, Constants.GENDER_OPTION_EN_OTHER, Constants.GENDER_OPTION_EN_PREFER_NOT_TO_SAY};
+        selectedGender = items[0];
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, items) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+//                return super.getView(position, convertView, parent);
+
+                TextView textView = (TextView) super.getView(position, convertView, parent);
+
+                TextViewCompat.setAutoSizeTextTypeUniformWithPresetSizes(textView, new int[]{10, 11, 12}, TypedValue.COMPLEX_UNIT_SP);
+
+                View view = textView.getRootView();
+
+                view.setBackgroundColor(Color.parseColor("#00000000"));
+                view.setPadding(0, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
+
+                return view;
+            }
+        };
+        binding.genderInp.setAdapter(adapter);
     }
 
     private boolean validateForm() {
@@ -131,6 +165,11 @@ public class SignupFragment extends Fragment {
         String passwordVal = binding.passwordInp.getText().toString().trim();
         boolean isValid = passwordVal.length() >= 6;
         binding.passwordInpWarning.setVisibility(isValid ? View.GONE : View.VISIBLE);
+
+        if (isValid) {
+            binding.confirmPasswordInpWarning.setVisibility(!binding.passwordInp.getText().toString().equals(binding.confirmPasswordInp.getText().toString()) ? View.VISIBLE : View.GONE);
+        }
+
         return isValid;
     }
 

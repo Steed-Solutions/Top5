@@ -1,24 +1,37 @@
 package com.mars_tech.shehriyar.top5.adapter;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.mars_tech.shehriyar.top5.R;
 import com.mars_tech.shehriyar.top5.databinding.BrowseCategoriesListSingleItemViewBinding;
+import com.mars_tech.shehriyar.top5.listener.BrowseCategoriesListItemClickListener;
+import com.mars_tech.shehriyar.top5.pojo.Post;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BrowseCategoriesListAdapter extends RecyclerView.Adapter<BrowseCategoriesListAdapter.BrowseCategoriesListViewHolder> {
 
-    private ArrayList<String> items;
+    private Context context;
+    private ArrayList<HashMap<String, Object>> items;
+    private BrowseCategoriesListItemClickListener browseCategoriesListItemClickListener;
 
-    public BrowseCategoriesListAdapter(ArrayList<String> items) {
+
+    public BrowseCategoriesListAdapter(Context context, ArrayList<HashMap<String, Object>> items, BrowseCategoriesListItemClickListener browseCategoriesListItemClickListener) {
+        this.context = context;
         this.items = items;
+        this.browseCategoriesListItemClickListener = browseCategoriesListItemClickListener;
     }
 
     @NonNull
@@ -29,7 +42,24 @@ public class BrowseCategoriesListAdapter extends RecyclerView.Adapter<BrowseCate
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BrowseCategoriesListAdapter.BrowseCategoriesListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final BrowseCategoriesListAdapter.BrowseCategoriesListViewHolder holder, int position) {
+        HashMap<String, Object> map = items.get(position);
+
+        holder.binding.itemName.setText(map.get("name").toString());
+
+        holder.binding.image.setImageResource((Integer) map.get("image"));
+
+        Drawable backgroundDrawable = DrawableCompat.wrap(holder.binding.itemTypeImageContainer.getBackground()).mutate();
+        DrawableCompat.setTint(backgroundDrawable, Color.parseColor(map.get("typeColor").toString()));
+
+        Glide.with(context).load(map.get("typeImage").toString()).into(holder.binding.itemTypeImage);
+
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                browseCategoriesListItemClickListener.OnItemClicked(holder.getLayoutPosition());
+            }
+        });
 
     }
 

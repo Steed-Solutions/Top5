@@ -14,18 +14,15 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/browse_categories_list_item_border_box"
                 android:padding="1dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/browse_categories_dummy_image"
-                app:riv_corner_radius="2dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0.5" />
+                app:riv_corner_radius="2dp"
+                android:alpha="0.5"/>
 
             <View
                 android:id="@+id/item_type_image_container_top_gap"
@@ -41,8 +38,7 @@
                 android:id="@+id/item_name_top_gap"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@null"
-                app:layout_constraintDimensionRatio="W, 0.065:1"
+                app:layout_constraintDimensionRatio="W, 0.094:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,7 +46,6 @@
                 android:id="@+id/item_type_image_container_start_gap"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="0.058" />
@@ -86,8 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@null"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/titillium_medium"
                 android:includeFontPadding="false"
                 android:text="Spanish food"
                 android:textAlignment="center"

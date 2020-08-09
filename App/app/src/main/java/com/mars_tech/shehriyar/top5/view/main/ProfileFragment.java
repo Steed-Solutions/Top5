@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +39,7 @@ import java.util.HashMap;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
+    private NavController controller;
     private MainViewModel viewModel;
 
     private int interestsListWidth;
@@ -57,6 +59,7 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
 
+        initController();
         initViewModel();
 
         viewModel.getAllCategories();
@@ -80,6 +83,10 @@ public class ProfileFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    void initController(){
+        controller = NavHostFragment.findNavController(this);
     }
 
     void initViewModel() {
@@ -121,12 +128,19 @@ public class ProfileFragment extends Fragment {
 
             ProfileInterestsListAdapter profileInterestsListAdapter = new ProfileInterestsListAdapter(getContext(), interests);
             binding.interestsList.setAdapter(profileInterestsListAdapter);
+
+            binding.saveBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    controller.navigateUp();
+                }
+            });
         }
 
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavHostFragment.findNavController(ProfileFragment.this).navigateUp();
+                controller.navigateUp();
             }
         });
     }

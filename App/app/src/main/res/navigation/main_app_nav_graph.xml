@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_browseFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_browseFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -37,6 +40,12 @@
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_contentFragment"
+            app:destination="@id/contentFragment" />
     </fragment>
     <fragment
         android:id="@+id/filtersFragment"
@@ -64,4 +73,38 @@
         android:name="com.mars_tech.shehriyar.top5.view.credentials.CredentialsActivity"
         android:label="CredentialsActivity"
         tools:layout="@layout/activity_credentials" />
+    <fragment
+        android:id="@+id/downloadsFragment"
+        android:name="com.mars_tech.shehriyar.top5.view.main.DownloadsFragment"
+        android:label="DownloadsFragment"
+        tools:layout="@layout/fragment_downloads" >
+        <action
+            android:id="@+id/action_downloadsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_downloadsFragment_to_filtersFragment"
+            app:destination="@id/filtersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.mars_tech.shehriyar.top5.view.main.DetailsFragment"
+        android:label="DetailsFragment"
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="postArg"
+            app:argType="com.mars_tech.shehriyar.top5.pojo.Post"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/contentFragment"
+        android:name="com.mars_tech.shehriyar.top5.view.main.ContentFragment"
+        android:label="ContentFragment"
+        tools:layout="@layout/fragment_content" >
+        <argument
+            android:name="postArg"
+            app:argType="com.mars_tech.shehriyar.top5.pojo.Post"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

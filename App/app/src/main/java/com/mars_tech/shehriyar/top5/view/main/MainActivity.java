@@ -51,25 +51,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 if (destination.getLabel().equals("UserPrefFragment")) {
-                    binding.footer.setVisibility(View.GONE);
+                    binding.footerLayout.setVisibility(View.GONE);
                     binding.filterBtn.setVisibility(View.INVISIBLE);
                     binding.userBtn.setVisibility(View.INVISIBLE);
+                } else if (destination.getLabel().equals("ContentFragment") || destination.getLabel().equals("DetailsFragment")) {
+                    binding.headerLayout.setVisibility(View.GONE);
+                    binding.footerLayout.setVisibility(View.GONE);
                 } else {
+                    binding.headerLayout.setVisibility(View.VISIBLE);
                     binding.filterBtn.setVisibility(View.VISIBLE);
                     binding.userBtn.setVisibility(View.VISIBLE);
 
                     if (destination.getLabel().equals("FiltersFragment")) {
-                        binding.footer.setVisibility(View.GONE);
+                        binding.footerLayout.setVisibility(View.GONE);
                         binding.userBtn.setImageResource(R.drawable.user);
+                        binding.userBtn.setVisibility(View.GONE);
                         binding.filterBtn.setImageResource(R.drawable.filter_selected);
                         binding.logoutTxt.setVisibility(View.INVISIBLE);
                     } else if (destination.getLabel().equals("ProfileFragment")) {
-                        binding.footer.setVisibility(View.GONE);
+                        binding.footerLayout.setVisibility(View.GONE);
                         binding.logoutTxt.setVisibility(View.VISIBLE);
                         binding.filterBtn.setImageResource(R.drawable.filter);
+                        binding.filterBtn.setVisibility(View.GONE);
                         binding.userBtn.setImageResource(R.drawable.user_selected);
                     } else {
-                        binding.footer.setVisibility(View.VISIBLE);
+                        binding.footerLayout.setVisibility(View.VISIBLE);
                         binding.filterBtn.setImageResource(R.drawable.filter);
                         binding.userBtn.setImageResource(R.drawable.user);
                         binding.logoutTxt.setVisibility(View.INVISIBLE);
@@ -110,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void initViewModel(){
+    void initViewModel() {
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
 }

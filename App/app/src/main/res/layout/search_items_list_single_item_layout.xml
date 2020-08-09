@@ -15,7 +15,8 @@
             android:scaleType="centerCrop"
             android:src="@drawable/dummy_image"
             app:layout_constraintDimensionRatio="W, 0.481:1"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:alpha="0.5"/>
 
         <View
             android:id="@+id/itemImageOverlay"
@@ -82,7 +83,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="@null"
-            android:fontFamily="@font/poppins_medium"
+            android:fontFamily="@font/titillium_medium"
             android:includeFontPadding="false"
             android:text="Recipe"
             android:textAlignment="center"
@@ -103,7 +104,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:background="@null"
-            android:fontFamily="@font/poppins_medium"
+            android:fontFamily="@font/titillium_medium"
             android:includeFontPadding="false"
             android:text="Chocolate wheat cake"
             android:textAlignment="center"
@@ -156,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="5dp"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/titillium_regular"
                     android:includeFontPadding="false"
                     android:text="450 likes"
                     android:textColor="#000"
@@ -197,7 +198,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="5dp"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/titillium_regular"
                     android:includeFontPadding="false"
                     android:text="450 comments"
                     android:textColor="#000"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ public class UserPreferencesListAdapter extends RecyclerView.Adapter<UserPrefere
             holder.binding.categoryImage.setClipToOutline(true);
         }
 
+        holder.binding.categoryImage.setImageDrawable(null);
         Glide.with(context).load(category.imgURL).into(holder.binding.categoryImage);
 
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
