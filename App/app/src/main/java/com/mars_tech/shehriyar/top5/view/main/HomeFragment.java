@@ -81,7 +81,6 @@ public class HomeFragment extends Fragment {
                             binding.loadingLayout.setVisibility(View.GONE);
                             binding.noneLayout.setVisibility(View.VISIBLE);
                         } else {
-//                            Log.d("NEW_POST", "UPDATESSS BROOOO : " + postsResponse.posts.size());
                             if(preferenceItems != null) {
                                 preferenceItems.clear();
                                 preferenceItems.addAll(postsResponse.posts);

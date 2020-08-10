@@ -13,6 +13,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,7 +27,10 @@ import com.mars_tech.shehriyar.top5.R;
 import com.mars_tech.shehriyar.top5.databinding.ActivityMainBinding;
 import com.mars_tech.shehriyar.top5.pojo.User;
 import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
+import com.mars_tech.shehriyar.top5.util.Constants;
 import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         controller = Navigation.findNavController(this, R.id.main_app_nav_host_fragment);
 
         initViewModel();
+        updateUserProfileLogoutTxt();
 
         binding.greetingsUser.setText("HEY " + userSingleton.currentUser.name.toUpperCase() + "!");
 
@@ -116,7 +123,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void initViewModel() {
+    private void initViewModel() {
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+    }
+
+    private boolean getIsRTL() {
+        SharedPreferences preferenceSharedPreferences = getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+        return preferenceSharedPreferences.getString(Constants.PREFERRED_LANG_PREFERRED, "en").equals("fa");
+    }
+
+    private void updateUserProfileLogoutTxt(){
+        if(getIsRTL()) {
+            binding.logoutTxt.setImageResource(R.drawable.logout_fa);
+        } else {
+            binding.logoutTxt.setImageResource(R.drawable.logout);
+        }
     }
 }

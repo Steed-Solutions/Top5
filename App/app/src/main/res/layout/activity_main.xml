@@ -21,7 +21,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="1dp"
                 app:layout_constraintHeight_percent="0.088"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:layoutDirection="ltr">
 
                 <View
                     android:id="@+id/header_start_gap"
@@ -127,7 +128,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHeight_percent="0.051">
+            app:layout_constraintHeight_percent="0.051"
+            android:layoutDirection="ltr">
 
             <View
                 android:id="@+id/footer_top_border"

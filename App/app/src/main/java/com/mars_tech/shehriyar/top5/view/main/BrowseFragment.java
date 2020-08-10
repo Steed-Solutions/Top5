@@ -1,7 +1,9 @@
 package com.mars_tech.shehriyar.top5.view.main;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,7 @@ import com.mars_tech.shehriyar.top5.listener.BrowseCategoriesListItemClickListen
 import com.mars_tech.shehriyar.top5.listener.PopularListItemClickListener;
 import com.mars_tech.shehriyar.top5.listener.SearchItemsListItemClickListener;
 import com.mars_tech.shehriyar.top5.pojo.Post;
+import com.mars_tech.shehriyar.top5.util.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +53,8 @@ public class BrowseFragment extends Fragment {
     private ArrayList<String> popularItems;
     private ArrayList<String> allSearchItems, queriedSearchItems;
 
+    private boolean isRTL;
+
     public BrowseFragment() {
         // Required empty public constructor
     }
@@ -60,14 +66,13 @@ public class BrowseFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_browse, container, false);
         initController();
-
-
+        setIsRTL();
 
         ArrayList<HashMap<String, Object>> browseCategories = new ArrayList<>();
 
         HashMap<String, Object> categoryMap1 = new HashMap<>();
         categoryMap1.put("name", "Spanish food");
-        categoryMap1.put("image", R.drawable.browse_categories_dummy_image);
+        categoryMap1.put("image", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/browse_categories_dummy_image.png?alt=media&token=3a1c9853-4ee3-42f0-9116-1ff6ad547ef6");
         categoryMap1.put("typeColor", "#A27DCE");
         categoryMap1.put("typeImage", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fcategories%2Ffood.png?alt=media&token=2a886017-bbc0-46ce-8a96-a605dd1bf8f8");
 
@@ -75,7 +80,7 @@ public class BrowseFragment extends Fragment {
 
         HashMap<String, Object> categoryMap2 = new HashMap<>();
         categoryMap2.put("name", "Pop music");
-        categoryMap2.put("image", R.drawable.pop_music);
+        categoryMap2.put("image", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/pop_music.png?alt=media&token=f8a93acb-a8f0-4a29-8307-130238663365");
         categoryMap2.put("typeColor", "#7EADDE");
         categoryMap2.put("typeImage", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fcategories%2Fmusic.png?alt=media&token=35b0dbeb-9b59-4bff-a57d-d5d1af76d3d2");
 
@@ -83,7 +88,7 @@ public class BrowseFragment extends Fragment {
 
         HashMap<String, Object> categoryMap3 = new HashMap<>();
         categoryMap3.put("name", "Abstract art");
-        categoryMap3.put("image", R.drawable.abstract_art);
+        categoryMap3.put("image", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/abstract_art.png?alt=media&token=1916a6e9-cb32-4e46-8605-e1638012c329");
         categoryMap3.put("typeColor", "#EF6E41");
         categoryMap3.put("typeImage", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fcategories%2Fart.png?alt=media&token=d3c40a8d-6ff8-45a3-903a-efe323ad4810");
 
@@ -91,7 +96,7 @@ public class BrowseFragment extends Fragment {
 
         HashMap<String, Object> categoryMap4 = new HashMap<>();
         categoryMap4.put("name", "Planting");
-        categoryMap4.put("image", R.drawable.planting);
+        categoryMap4.put("image", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/planting.png?alt=media&token=7a5f7ab3-dc9e-4822-ba33-63094b521be3");
         categoryMap4.put("typeColor", "#89BF6F");
         categoryMap4.put("typeImage", "https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fcategories%2Fplanting.png?alt=media&token=644243d3-3df3-43de-908c-31e4e537665d");
 
@@ -122,13 +127,9 @@ public class BrowseFragment extends Fragment {
         });
         binding.browseCategoriesList.setAdapter(browseCategoriesListAdapter);
 
-        GridLayoutManager browseCategoriesListLayoutManager = new GridLayoutManager(this.getContext(), 2, GridLayoutManager.VERTICAL, false) {
-            @Override
-            public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
-                browseCategoriesListWidth = getWidth();
-                return true;
-            }
-        };
+        browseCategoriesListWidth = (int) (getWidth() * 0.811);
+
+        GridLayoutManager browseCategoriesListLayoutManager = new GridLayoutManager(this.getContext(), 2, GridLayoutManager.VERTICAL, false);
         browseCategoriesListLayoutManager.setItemPrefetchEnabled(true);
         binding.browseCategoriesList.setLayoutManager(browseCategoriesListLayoutManager);
 
@@ -159,10 +160,11 @@ public class BrowseFragment extends Fragment {
         });
         binding.popularList.setAdapter(popularListAdapter);
 
+        popularListWidth = getWidth();
+
         LinearLayoutManager popularListLayoutManager = new LinearLayoutManager(this.getContext(), GridLayoutManager.HORIZONTAL, false) {
             @Override
             public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
-                popularListWidth = getWidth();
                 lp.width = (int) (popularListWidth * 0.267);
                 lp.height = (int) (popularListWidth * 0.267);
                 return true;
@@ -176,13 +178,15 @@ public class BrowseFragment extends Fragment {
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 int position = parent.getChildAdapterPosition(view); // item position
 
-                if (position == 0) {
+                if ((!isRTL && position == 0) || (isRTL && position == popularItems.size() - 1)) {
                     outRect.left = (int) (popularListWidth * 0.086);
                     outRect.right = (int) (popularListWidth * 0.015);
-                } else if (position == popularItems.size() - 1) {
+                }
+                else if ((isRTL && position == popularItems.size() - 1) || (isRTL && position == 0)) {
                     outRect.right = (int) (popularListWidth * 0.086);
                     outRect.left = (int) (popularListWidth * 0.015);
-                } else {
+                }
+                else {
                     outRect.right = (int) (popularListWidth * 0.015);
                     outRect.left = (int) (popularListWidth * 0.015);
                 }
@@ -273,6 +277,17 @@ public class BrowseFragment extends Fragment {
 
     private void initController() {
         controller = NavHostFragment.findNavController(this);
+    }
+
+    private int getWidth() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
+    }
+
+    private void setIsRTL() {
+        SharedPreferences preferenceSharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+        isRTL = preferenceSharedPreferences.getString(Constants.PREFERRED_LANG_PREFERRED, "en").equals("fa");
     }
 
 }

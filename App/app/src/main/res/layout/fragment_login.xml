@@ -94,7 +94,9 @@
                 app:autoSizeStepGranularity="0.8sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toStartOf="@+id/email_input_end_gap"
-                app:layout_constraintStart_toEndOf="@+id/email_input_start_gap" />
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/email_input_start_gap"
+                tools:layout_editor_absoluteY="0dp" />
 
             <ImageView
                 android:id="@+id/emailInpWarning"

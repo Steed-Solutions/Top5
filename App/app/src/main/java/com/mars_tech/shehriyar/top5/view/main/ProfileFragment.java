@@ -1,6 +1,9 @@
 package com.mars_tech.shehriyar.top5.view.main;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
 
@@ -17,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.mars_tech.shehriyar.top5.R;
@@ -27,10 +31,12 @@ import com.mars_tech.shehriyar.top5.databinding.FragmentProfileBinding;
 import com.mars_tech.shehriyar.top5.pojo.Category;
 import com.mars_tech.shehriyar.top5.pojo.User;
 import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
+import com.mars_tech.shehriyar.top5.util.Constants;
 import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 /**
@@ -56,11 +62,13 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        loadLocale();
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
 
         initController();
         initViewModel();
+        initLangSwitch();
 
         viewModel.getAllCategories();
         viewModel.allCategoriesLiveData.observe(requireActivity(), new Observer<ArrayList<Category>>() {
@@ -85,12 +93,19 @@ public class ProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void initController(){
+    void initController() {
         controller = NavHostFragment.findNavController(this);
     }
 
     void initViewModel() {
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+    }
+
+    void initLangSwitch() {
+        SharedPreferences preferenceSharedPref = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+        String lang = preferenceSharedPref.getString(Constants.PREFERRED_LANG_PREFERRED, "en");
+
+        binding.langSwitch.setChecked(lang.equals("fa"));
     }
 
     void afterDBLoad() {
@@ -143,6 +158,38 @@ public class ProfileFragment extends Fragment {
                 controller.navigateUp();
             }
         });
+
+        binding.langSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    setLocale("fa");
+                    requireActivity().recreate();
+                } else {
+                    setLocale("en");
+                    requireActivity().recreate();
+                }
+            }
+        });
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        requireActivity().getBaseContext().getResources().updateConfiguration(config, requireActivity().getBaseContext().getResources().getDisplayMetrics());
+
+        SharedPreferences.Editor editor = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE).edit();
+        editor.putString(Constants.PREFERRED_LANG_PREFERRED, lang);
+        editor.apply();
+    }
+
+    public void loadLocale() {
+        SharedPreferences preferenceSharedPref = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+        String lang = preferenceSharedPref.getString(Constants.PREFERRED_LANG_PREFERRED, "en");
+        setLocale(lang);
+
     }
 
 }

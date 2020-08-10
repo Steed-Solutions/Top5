@@ -97,7 +97,8 @@
                 android:layout_height="0dp"
                 android:background="@null"
                 app:layout_constraintDimensionRatio="W, 0.114"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:layoutDirection="ltr">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/itemTypeImageContainer"
@@ -153,7 +154,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="W, 0.114"
-                app:layout_constraintTop_toBottomOf="@+id/itemContentContainer">
+                app:layout_constraintTop_toBottomOf="@+id/itemContentContainer"
+                android:layoutDirection="ltr">
 
                 <View
                     android:id="@+id/bottom_bar_start_gap"

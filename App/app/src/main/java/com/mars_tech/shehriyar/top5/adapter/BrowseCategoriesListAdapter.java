@@ -47,7 +47,7 @@ public class BrowseCategoriesListAdapter extends RecyclerView.Adapter<BrowseCate
 
         holder.binding.itemName.setText(map.get("name").toString());
 
-        holder.binding.image.setImageResource((Integer) map.get("image"));
+        Glide.with(context).load(map.get("image").toString()).into(holder.binding.image);
 
         Drawable backgroundDrawable = DrawableCompat.wrap(holder.binding.itemTypeImageContainer.getBackground()).mutate();
         DrawableCompat.setTint(backgroundDrawable, Color.parseColor(map.get("typeColor").toString()));

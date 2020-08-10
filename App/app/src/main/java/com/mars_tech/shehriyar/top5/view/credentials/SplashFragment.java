@@ -1,6 +1,9 @@
 package com.mars_tech.shehriyar.top5.view.credentials;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -20,8 +23,10 @@ import com.google.firebase.database.core.Platform;
 import com.mars_tech.shehriyar.top5.R;
 import com.mars_tech.shehriyar.top5.pojo.User;
 import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
+import com.mars_tech.shehriyar.top5.util.Constants;
 import com.mars_tech.shehriyar.top5.viewmodel.CredentialsViewModel;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
@@ -51,6 +56,8 @@ public class SplashFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        loadLocale();
 
         initController();
         initViewModel();
@@ -102,6 +109,25 @@ public class SplashFragment extends Fragment {
 
     private void initViewModel() {
         viewModel = new ViewModelProvider(requireActivity()).get(CredentialsViewModel.class);
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        requireActivity().getBaseContext().getResources().updateConfiguration(config, requireActivity().getBaseContext().getResources().getDisplayMetrics());
+
+        SharedPreferences.Editor editor = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE).edit();
+        editor.putString(Constants.PREFERRED_LANG_PREFERRED, lang);
+        editor.apply();
+    }
+
+    public void loadLocale(){
+        SharedPreferences preferenceSharedPref = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+        String lang = preferenceSharedPref.getString(Constants.PREFERRED_LANG_PREFERRED, "en");
+        setLocale(lang);
+
     }
 
 }

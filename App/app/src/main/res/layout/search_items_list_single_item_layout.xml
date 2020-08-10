@@ -12,11 +12,11 @@
             android:id="@+id/itemImage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:alpha="0.5"
             android:scaleType="centerCrop"
             android:src="@drawable/dummy_image"
             app:layout_constraintDimensionRatio="W, 0.481:1"
-            app:layout_constraintTop_toTopOf="parent"
-            android:alpha="0.5"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/itemImageOverlay"
@@ -29,98 +29,107 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/itemTypeImageContainerOuter"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@null"
-            app:layout_constraintDimensionRatio="H, 1:1"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.114">
+            android:layoutDirection="ltr">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/itemTypeImageContainer"
+                android:id="@+id/itemTypeImageContainerOuter"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/category_circle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="W, 1:1"
-                app:layout_constraintHeight_percent="0.686"
+                android:background="@null"
+                app:layout_constraintDimensionRatio="H, 1:1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.114">
 
-                <ImageView
-                    android:id="@+id/itemTypeImage"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/itemTypeImageContainer"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@null"
-                    android:src="@drawable/food"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/category_circle"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="W, 1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_percent="0.686"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.567" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/itemTypeImage"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@null"
+                        android:src="@drawable/food"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="W, 1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_percent="0.567" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <View
+                android:id="@+id/item_type_top_gap"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@null"
+                app:layout_constraintDimensionRatio="W, 0.032:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/itemType"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@null"
+                android:fontFamily="@font/titillium_medium"
+                android:includeFontPadding="false"
+                android:text="Recipe"
+                android:textAlignment="center"
+                android:textColor="#000"
+                app:autoSizeMaxTextSize="19sp"
+                app:autoSizeMinTextSize="16sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/item_type_top_gap" />
+
+            <TextView
+                android:id="@+id/itemName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@null"
+                android:fontFamily="@font/titillium_medium"
+                android:includeFontPadding="false"
+                android:text="Chocolate wheat cake"
+                android:textAlignment="center"
+                android:textColor="#000"
+                app:autoSizeMaxTextSize="19sp"
+                app:autoSizeMinTextSize="16sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemType" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/item_type_top_gap"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@null"
-            app:layout_constraintDimensionRatio="W, 0.032:1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/itemType"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@null"
-            android:fontFamily="@font/titillium_medium"
-            android:includeFontPadding="false"
-            android:text="Recipe"
-            android:textAlignment="center"
-            android:textColor="#000"
-            app:autoSizeMaxTextSize="19sp"
-            app:autoSizeMinTextSize="16sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_type_top_gap" />
-
-        <TextView
-            android:id="@+id/itemName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
-            android:background="@null"
-            android:fontFamily="@font/titillium_medium"
-            android:includeFontPadding="false"
-            android:text="Chocolate wheat cake"
-            android:textAlignment="center"
-            android:textColor="#000"
-            app:autoSizeMaxTextSize="19sp"
-            app:autoSizeMinTextSize="16sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemType" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layoutDirection="ltr"
             app:layout_constraintDimensionRatio="W, 0.114"
             app:layout_constraintTop_toBottomOf="@+id/itemImage">
 

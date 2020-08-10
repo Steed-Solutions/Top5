@@ -1,7 +1,9 @@
 package com.mars_tech.shehriyar.top5.view.credentials;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -50,6 +52,8 @@ public class SignupFragment extends Fragment {
 
     private String selectedGender;
 
+    private boolean isRTL;
+
     public SignupFragment() {
         // Required empty public constructor
     }
@@ -66,6 +70,7 @@ public class SignupFragment extends Fragment {
         initViewModel();
         initGenderSpinner();
         initClickListeners();
+        rtlFix();
 
         return binding.getRoot();
     }
@@ -116,7 +121,7 @@ public class SignupFragment extends Fragment {
     }
 
     private void initGenderSpinner() {
-        String[] items = new String[]{Constants.GENDER_OPTION_EN_MALE, Constants.GENDER_OPTION_EN_FEMALE, Constants.GENDER_OPTION_EN_OTHER, Constants.GENDER_OPTION_EN_PREFER_NOT_TO_SAY};
+        String[] items = new String[]{requireActivity().getResources().getString(R.string.gender_male), requireActivity().getResources().getString(R.string.gender_female), requireActivity().getResources().getString(R.string.gender_other), requireActivity().getResources().getString(R.string.gender_prefer_not_to_say)};
         selectedGender = items[0];
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, items) {
             @NonNull
@@ -137,6 +142,20 @@ public class SignupFragment extends Fragment {
             }
         };
         binding.genderInp.setAdapter(adapter);
+    }
+
+    private boolean getIsRTL() {
+        SharedPreferences preferenceSharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+        return preferenceSharedPreferences.getString(Constants.PREFERRED_LANG_PREFERRED, "en").equals("fa");
+    }
+
+    private void rtlFix() {
+        if (getIsRTL()) {
+            binding.passwordInp.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+            binding.confirmPasswordInp.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+
+            binding.genderInp.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+        }
     }
 
     private boolean validateForm() {

@@ -1,7 +1,10 @@
 package com.mars_tech.shehriyar.top5.view.credentials;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -13,6 +16,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.text.Editable;
+import android.text.InputType;
+import android.text.Layout;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +65,7 @@ public class LoginFragment extends Fragment {
 
         initViewModel();
         initClickListeners();
+        rtlFix();
 
         return binding.getRoot();
     }
@@ -93,7 +101,7 @@ public class LoginFragment extends Fragment {
                         public void onChanged(AuthResponse authResponse) {
                             hideOverlay();
                             viewModel.authenticatedUserLiveData.removeObservers(requireActivity());
-                            if(authResponse.isError) {
+                            if (authResponse.isError) {
                                 showError(authResponse.statusMessage);
                             } else {
                                 userSingleton.currentUser = authResponse.user;
@@ -104,6 +112,17 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private boolean getIsRTL() {
+        SharedPreferences preferenceSharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+        return preferenceSharedPreferences.getString(Constants.PREFERRED_LANG_PREFERRED, "en").equals("fa");
+    }
+
+    private void rtlFix() {
+        if (getIsRTL()) {
+            binding.passwordInp.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+        }
     }
 
     private boolean validateForm() {

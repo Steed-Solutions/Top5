@@ -44,4 +44,9 @@
     <string name="english">English</string>
     <string name="persian">Persian</string>
 
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_other">Other</string>
+    <string name="gender_prefer_not_to_say">Prefer not to say</string>
+
 </resources>
