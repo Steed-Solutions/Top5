@@ -156,7 +156,12 @@
               $("#uploadPreview").show();
               $("#vidPreview").show();
               $("#saveBtn").css("display", "flex");
-              $("#uploadedVidPreview").attr("src", e.target.result + "#t=0.5")
+              $("#uploadedVidPreview").attr("src", e.target.result)
+
+              document.getElementById("uploadedVidPreview").onloadedmetadata = function() {
+                document.getElementById("uploadedVidPreview").currentTime = 0.5;
+                document.getElementById("uploadedVidPreview").setAttribute('preload', "auto");
+              };
             }          
             reader.readAsDataURL(this.files[0]); // convert to base64 string         
               
