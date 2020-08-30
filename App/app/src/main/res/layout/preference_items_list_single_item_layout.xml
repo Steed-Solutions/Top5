@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0.4"
-                    android:background="#FFFFFF"/>
+                    android:background="#FFFFFF" />
 
                 <ImageView
                     android:id="@+id/playBtn"
@@ -96,9 +96,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@null"
+                android:layoutDirection="ltr"
                 app:layout_constraintDimensionRatio="W, 0.114"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layoutDirection="ltr">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/itemTypeImageContainer"
@@ -153,9 +153,9 @@
                 android:id="@+id/footer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layoutDirection="ltr"
                 app:layout_constraintDimensionRatio="W, 0.114"
-                app:layout_constraintTop_toBottomOf="@+id/itemContentContainer"
-                android:layoutDirection="ltr">
+                app:layout_constraintTop_toBottomOf="@+id/itemContentContainer">
 
                 <View
                     android:id="@+id/bottom_bar_start_gap"
@@ -165,7 +165,7 @@
                     app:layout_constraintWidth_percent="0.039" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/likes_container"
+                    android:id="@+id/likesContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -205,12 +205,12 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/comments_container"
+                    android:id="@+id/commentsContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/downloadBtn"
-                    app:layout_constraintStart_toEndOf="@+id/likes_container"
+                    app:layout_constraintEnd_toStartOf="@+id/saveBtn"
+                    app:layout_constraintStart_toEndOf="@+id/likesContainer"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
@@ -245,17 +245,28 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
-                    android:id="@+id/downloadBtn"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/saveBtn"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@null"
-                    android:src="@drawable/download_black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="W, 1:1"
                     app:layout_constraintEnd_toStartOf="@+id/bottom_bar_end_gap"
-                    app:layout_constraintHeight_percent="0.334"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintHeight_percent="0.6"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/download_black"
+                        app:layout_constraintDimensionRatio="W, 1:1"
+                        app:layout_constraintHeight_percent="0.55"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:id="@+id/bottom_bar_end_gap"

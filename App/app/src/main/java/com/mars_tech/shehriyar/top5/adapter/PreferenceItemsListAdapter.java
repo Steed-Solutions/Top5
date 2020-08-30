@@ -49,6 +49,8 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
         Post post = preferenceItems.get(position);
 
         holder.binding.itemName.setText(post.name);
+        holder.binding.likes.setText(post.likes + " like" + (post.likes != 1 ? "s" : ""));
+        holder.binding.comments.setText(post.comments + " comment" + (post.comments != 1 ? "s" : ""));
 
         if (post.type.contains("img")) {
             Glide.with(context).load(post.link).into(holder.binding.itemContentImage);
@@ -56,6 +58,8 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
             holder.binding.playBtn.setVisibility(View.VISIBLE);
             Glide.with(context).asBitmap().load(post.link).into(holder.binding.itemContentImage);
         }
+
+        holder.binding.liked.setImageResource(post.isLiked ? R.drawable.ic_fav_true : R.drawable.ic_fav_false);
 
         holder.binding.itemContentText.setText(post.type.toLowerCase().contains("txt") ? post.text : "");
 
@@ -78,6 +82,30 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
             holder.binding.itemImageContainerTopSpace.setLayoutParams(topGap);
         }
 
+        holder.binding.likesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                preferenceItemsListItemClickListener.OnPostLikeContainerClicked(holder.getLayoutPosition());
+            }
+        });
+
+        holder.binding.commentsContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                preferenceItemsListItemClickListener.OnPostCommentsContainerClicked(holder.getLayoutPosition());
+            }
+        });
+
+        if (post.isSaved) {
+            holder.binding.saveBtn.setVisibility(View.INVISIBLE);
+        } else {
+            holder.binding.saveBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    preferenceItemsListItemClickListener.OnPostSaveBtnClicked(holder.getLayoutPosition());
+                }
+            });
+        }
 
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override

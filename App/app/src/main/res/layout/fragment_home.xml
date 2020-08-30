@@ -6,7 +6,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".view.main.HomeFragment">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/main_layout"
@@ -18,8 +19,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:context=".view.main.HomeFragment">
+                android:layout_height="wrap_content">
 
                 <View
                     android:id="@+id/ad_banner_top_gap"

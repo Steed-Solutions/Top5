@@ -122,6 +122,7 @@
                                 android:background="@drawable/check_box_states"
                                 android:button="@null"
                                 android:checked="true"
+                                android:clickable="false"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintDimensionRatio="W, 1:1"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -164,7 +165,7 @@
                                 android:layout_height="match_parent"
                                 android:background="@drawable/check_box_states"
                                 android:button="@null"
-                                android:checked="true"
+                                android:clickable="false"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintDimensionRatio="W, 1:1"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -207,7 +208,7 @@
                                 android:layout_height="match_parent"
                                 android:background="@drawable/check_box_states"
                                 android:button="@null"
-                                android:checked="true"
+                                android:clickable="false"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintDimensionRatio="W, 1:1"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -250,7 +251,7 @@
                                 android:layout_height="match_parent"
                                 android:background="@drawable/check_box_states"
                                 android:button="@null"
-                                android:checked="true"
+                                android:clickable="false"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintDimensionRatio="W, 1:1"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -278,42 +279,6 @@
                             android:layout_height="0dp"
                             app:layout_constraintDimensionRatio="W, 0.052:1"
                             app:layout_constraintTop_toBottomOf="@+id/checkbox4" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/checkbox5"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            app:layout_constraintDimensionRatio="W, 0.056:1"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/checkboxes_middle_gap_4">
-
-                            <CheckBox
-                                android:id="@+id/checkboxInp5"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/check_box_states"
-                                android:button="@null"
-                                android:checked="true"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintDimensionRatio="W, 1:1"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/checkboxInpTxt5"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="30dp"
-                                android:fontFamily="@font/titillium_regular"
-                                android:includeFontPadding="false"
-                                android:text="@string/filter_mood"
-                                app:autoSizeMaxTextSize="18sp"
-                                app:autoSizeMinTextSize="14sp"
-                                app:autoSizeTextType="uniform"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/checkboxInp5" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

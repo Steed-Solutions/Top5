@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +54,8 @@ public class FiltersFragment extends Fragment {
 
     private ArrayList<Category> allInterests;
     private ArrayList<String> selectedInterests, updatedInterests;
+
+    private CheckBox lastCheckedCheckBox;
 
     public FiltersFragment() {
         // Required empty public constructor
@@ -98,18 +102,23 @@ public class FiltersFragment extends Fragment {
     }
 
     void initCheckBoxes() {
-        final HashMap<TextView, CheckBox> checkboxes = new HashMap<>();
-        checkboxes.put(binding.checkboxInpTxt1, binding.checkboxInp1);
-        checkboxes.put(binding.checkboxInpTxt2, binding.checkboxInp2);
-        checkboxes.put(binding.checkboxInpTxt3, binding.checkboxInp3);
-        checkboxes.put(binding.checkboxInpTxt4, binding.checkboxInp4);
-        checkboxes.put(binding.checkboxInpTxt5, binding.checkboxInp5);
+        final HashMap<ConstraintLayout, CheckBox> checkboxes = new HashMap<>();
+        checkboxes.put(binding.checkbox1, binding.checkboxInp1);
+        checkboxes.put(binding.checkbox2, binding.checkboxInp2);
+        checkboxes.put(binding.checkbox3, binding.checkboxInp3);
+        checkboxes.put(binding.checkbox4, binding.checkboxInp4);
 
-        for (final TextView txt : checkboxes.keySet()) {
-            txt.setOnClickListener(new View.OnClickListener() {
+        lastCheckedCheckBox = binding.checkboxInp1.isChecked() ? binding.checkboxInp1 : (binding.checkboxInp2.isChecked() ? binding.checkboxInp2 : (binding.checkboxInp3.isChecked() ? binding.checkboxInp3 : binding.checkboxInp4));
+
+        for (final ConstraintLayout layout : checkboxes.keySet()) {
+            layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    checkboxes.get(txt).setChecked(!checkboxes.get(txt).isChecked());
+                    if(!checkboxes.get(layout).isChecked()) {
+                        lastCheckedCheckBox.setChecked(false);
+                        checkboxes.get(layout).setChecked(true);
+                        lastCheckedCheckBox = checkboxes.get(layout);
+                    }
                 }
             });
         }

@@ -181,12 +181,10 @@ public class BrowseFragment extends Fragment {
                 if ((!isRTL && position == 0) || (isRTL && position == popularItems.size() - 1)) {
                     outRect.left = (int) (popularListWidth * 0.086);
                     outRect.right = (int) (popularListWidth * 0.015);
-                }
-                else if ((isRTL && position == popularItems.size() - 1) || (isRTL && position == 0)) {
+                } else if ((isRTL && position == popularItems.size() - 1) || (isRTL && position == 0)) {
                     outRect.right = (int) (popularListWidth * 0.086);
                     outRect.left = (int) (popularListWidth * 0.015);
-                }
-                else {
+                } else {
                     outRect.right = (int) (popularListWidth * 0.015);
                     outRect.left = (int) (popularListWidth * 0.015);
                 }

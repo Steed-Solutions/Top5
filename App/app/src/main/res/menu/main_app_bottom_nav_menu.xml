@@ -17,7 +17,7 @@
 
 
     <item
-        android:id="@+id/downloadsFragment"
+        android:id="@+id/savedFragment"
         android:icon="@drawable/download"
         android:orderInCategory="3"
         android:title=""

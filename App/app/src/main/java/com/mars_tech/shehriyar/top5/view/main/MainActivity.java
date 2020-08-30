@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     binding.footerLayout.setVisibility(View.GONE);
                     binding.filterBtn.setVisibility(View.INVISIBLE);
                     binding.userBtn.setVisibility(View.INVISIBLE);
-                } else if (destination.getLabel().equals("ContentFragment") || destination.getLabel().equals("DetailsFragment")) {
+                } else if (destination.getLabel().equals("ContentFragment") || destination.getLabel().equals("DetailsFragment") || destination.getLabel().equals("CommentsFragment")) {
                     binding.headerLayout.setVisibility(View.GONE);
                     binding.footerLayout.setVisibility(View.GONE);
                 } else {
@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
                     controller.navigate(R.id.action_homeFragment_to_filtersFragment);
                 } else if (controller.getCurrentDestination().getLabel().equals("BrowseFragment")) {
                     controller.navigate(R.id.action_browseFragment_to_filtersFragment);
+                } else if (controller.getCurrentDestination().getLabel().equals("SavedFragment")) {
+                    controller.navigate(R.id.action_savedFragment_to_filtersFragment);
                 }
             }
         });
@@ -110,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                     controller.navigate(R.id.action_homeFragment_to_profileFragment);
                 } else if (currentDestinationLabel.equals("BrowseFragment")) {
                     controller.navigate(R.id.action_browseFragment_to_profileFragment);
+                } else if (currentDestinationLabel.equals("SavedFragment")) {
+                    controller.navigate(R.id.action_savedFragment_to_profileFragment);
                 } else if (currentDestinationLabel.equals("ProfileFragment")) {
                     viewModel.signOutUser();
                     viewModel.signOutLiveData.observe(MainActivity.this, new Observer<Boolean>() {

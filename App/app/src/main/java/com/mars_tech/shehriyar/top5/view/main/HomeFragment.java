@@ -2,12 +2,9 @@ package com.mars_tech.shehriyar.top5.view.main;
 
 
 import android.content.DialogInterface;
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -15,14 +12,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.mars_tech.shehriyar.top5.R;
@@ -30,12 +26,13 @@ import com.mars_tech.shehriyar.top5.adapter.PreferenceItemsListAdapter;
 import com.mars_tech.shehriyar.top5.databinding.FragmentHomeBinding;
 import com.mars_tech.shehriyar.top5.listener.PreferenceItemsListItemClickListener;
 import com.mars_tech.shehriyar.top5.pojo.Category;
+import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
 import com.mars_tech.shehriyar.top5.pojo.Post;
 import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
+import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
 import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 /**
@@ -149,6 +146,43 @@ public class HomeFragment extends Fragment {
             public void OnItemClicked(int index) {
                 HomeFragmentDirections.ActionHomeFragmentToContentFragment action = HomeFragmentDirections.actionHomeFragmentToContentFragment().setPostArg(preferenceItems.get(index));
                 controller.navigate(action);
+            }
+
+            @Override
+            public void OnPostLikeContainerClicked(int index) {
+                viewModel.setLikeOrUnlikePost(preferenceItems.get(index));
+                viewModel.postLikedOrUnlikedLiveData.observe(requireActivity(), new Observer<LikeResponse>() {
+                    @Override
+                    public void onChanged(LikeResponse response) {
+                        if(response.isSuccess) {
+                            preferenceItems.set(preferenceItems.indexOf(response.post), response.post);
+                            preferenceItemsListAdapter.notifyItemChanged(preferenceItems.indexOf(response.post));
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void OnPostCommentsContainerClicked(int index) {
+                HomeFragmentDirections.ActionHomeFragmentToCommentsFragment action = HomeFragmentDirections.actionHomeFragmentToCommentsFragment().setPostArg(preferenceItems.get(index));
+                controller.navigate(action);
+            }
+
+            @Override
+            public void OnPostSaveBtnClicked(int index) {
+                viewModel.savePost(preferenceItems.get(index).category.id, preferenceItems.get(index).id);
+                viewModel.savePostLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
+                    @Override
+                    public void onChanged(SaveResponse saveResponse) {
+                        if(!saveResponse.isError) {
+                            Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(requireContext(), saveResponse.statusMessage, Toast.LENGTH_SHORT).show();
+                        }
+
+                        viewModel.savePostLiveData.removeObservers(requireActivity());
+                    }
+                });
             }
         });
         binding.preferenceItemsList.setAdapter(preferenceItemsListAdapter);

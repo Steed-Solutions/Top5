@@ -1,7 +1,6 @@
 package com.mars_tech.shehriyar.top5.viewmodel;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -9,7 +8,10 @@ import androidx.lifecycle.LiveData;
 
 import com.mars_tech.shehriyar.top5.model.MainModel;
 import com.mars_tech.shehriyar.top5.pojo.Category;
+import com.mars_tech.shehriyar.top5.pojo.Comment;
+import com.mars_tech.shehriyar.top5.pojo.CommentsResponse;
 import com.mars_tech.shehriyar.top5.pojo.FiltersResponse;
+import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
 import com.mars_tech.shehriyar.top5.pojo.Post;
 import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
 import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
@@ -20,10 +22,13 @@ public class MainViewModel extends AndroidViewModel {
 
     private MainModel mainModel;
     public LiveData<Boolean> signOutLiveData;
+    public LiveData<LikeResponse> postLikedOrUnlikedLiveData;
     public LiveData<ArrayList<Category>> allCategoriesLiveData, queriedCategoriesLiveData, selectedCategoriesLiveData;
-    public LiveData<SaveResponse> saveResponseLiveData, filtersAndCategoriesSaveResponseLiveData;
-    public LiveData<PostsResponse> allPostsLiveData;
+    public LiveData<SaveResponse> saveResponseLiveData, filtersAndCategoriesSaveResponseLiveData, savePostLiveData;
+    public LiveData<PostsResponse> allPostsLiveData, allSavedPostsLiveData;
     public LiveData<FiltersResponse> filtersResponseLiveData;
+    public LiveData<CommentsResponse> allPostCommentsLiveData, commentOnPostLiveData, deleteCommentLiveData;
+    public LiveData<String> allPostLikerStringLiveData;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -50,6 +55,10 @@ public class MainViewModel extends AndroidViewModel {
         allPostsLiveData = mainModel.getAllSelectedCategoricalPosts();
     }
 
+    public void setLikeOrUnlikePost(Post post){
+        postLikedOrUnlikedLiveData = mainModel.getPostLikedOrUnlikedLiveData(post);
+    }
+
     public void getFiltersAndSelectedCategories() {
         filtersResponseLiveData = mainModel.getFiltersAndSelectedCategories();
     }
@@ -60,5 +69,29 @@ public class MainViewModel extends AndroidViewModel {
 
     public void getSelectedCategories() {
         selectedCategoriesLiveData = mainModel.getSelectedCategories();
+    }
+
+    public void getAllPostLikerString(String postID, boolean isLiked) {
+        allPostLikerStringLiveData = mainModel.getAllPostLikerString(postID, isLiked);
+    }
+
+    public void getPostComments(String postID){
+        allPostCommentsLiveData = mainModel.getPostComments(postID);
+    }
+
+    public void commentOnPost(String categoryID, Comment comment) {
+        commentOnPostLiveData = mainModel.commentOnPost(categoryID, comment);
+    }
+
+    public void deleteCommentFromPost(String categoryID, Comment comment) {
+        deleteCommentLiveData = mainModel.deleteCommentFromPost(categoryID, comment);
+    }
+
+    public void getAllSavedPosts() {
+        allSavedPostsLiveData = mainModel.getAllSavedPosts();
+    }
+
+    public void savePost(String categoryID, String postID) {
+        savePostLiveData = mainModel.savePost(categoryID, postID);
     }
 }
