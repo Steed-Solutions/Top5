@@ -1,6 +1,7 @@
 package com.mars_tech.shehriyar.top5.pojo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Post implements Serializable {
 
@@ -8,11 +9,12 @@ public class Post implements Serializable {
     public long likes, comments;
     public Category category;
     public boolean isLiked, isSaved;
+    public ArrayList<String> tags;
 
     public Post() {
     }
 
-    public Post(String id, String type, String name, String link, String text, long likes, long comments, Category category) {
+    public Post(String id, String type, String name, String link, String text, long likes, long comments, Category category, ArrayList<String> tags) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -21,5 +23,6 @@ public class Post implements Serializable {
         this.likes = likes;
         this.comments = comments;
         this.category = category;
+        this.tags = tags;
     }
 }

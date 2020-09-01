@@ -1,7 +1,9 @@
 package com.mars_tech.shehriyar.top5.view.main;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -30,6 +32,7 @@ import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
 import com.mars_tech.shehriyar.top5.pojo.Post;
 import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
 import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
+import com.mars_tech.shehriyar.top5.util.Constants;
 import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
@@ -63,35 +66,43 @@ public class HomeFragment extends Fragment {
         initController();
         initBannerAd();
 
-        viewModel.getAllCategories();
-        viewModel.allCategoriesLiveData.observe(requireActivity(), new Observer<ArrayList<Category>>() {
+        viewModel.getAllUserTagsAndRecentlyViewedPosts();
+        viewModel.completionResponseLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
             @Override
-            public void onChanged(ArrayList<Category> categories) {
-
-
-                viewModel.getAllSelectedCategoricalPosts();
-                viewModel.allPostsLiveData.observe(requireActivity(), new Observer<PostsResponse>() {
+            public void onChanged(SaveResponse saveResponse) {
+                viewModel.getAllCategories();
+                viewModel.allCategoriesLiveData.observe(requireActivity(), new Observer<ArrayList<Category>>() {
                     @Override
-                    public void onChanged(PostsResponse postsResponse) {
-                        if (postsResponse.isError) {
-                            binding.statusTxt.setText(postsResponse.statusMessage);
-                            binding.loadingLayout.setVisibility(View.GONE);
-                            binding.noneLayout.setVisibility(View.VISIBLE);
-                        } else {
-                            if(preferenceItems != null) {
-                                preferenceItems.clear();
-                                preferenceItems.addAll(postsResponse.posts);
-                                preferenceItemsListAdapter.notifyDataSetChanged();
-                            } else {
-                                preferenceItems = new ArrayList<>();
-                                preferenceItems.addAll(postsResponse.posts);
+                    public void onChanged(ArrayList<Category> categories) {
+                        SharedPreferences preferenceSharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+                        int filterIndex = preferenceSharedPreferences.getInt(Constants.PREFERRED_FILTER_INDEX, Constants.PREFERRED_FILTER_INDEX_DEFAULT);
+                        viewModel.getAllSelectedCategoricalPosts(filterIndex);
+                        viewModel.allPostsLiveData.observe(requireActivity(), new Observer<PostsResponse>() {
+                            @Override
+                            public void onChanged(PostsResponse postsResponse) {
+                                if (postsResponse.isError) {
+                                    binding.statusTxt.setText(postsResponse.statusMessage);
+                                    binding.loadingLayout.setVisibility(View.GONE);
+                                    binding.noneLayout.setVisibility(View.VISIBLE);
+                                } else {
+                                    if (preferenceItems != null) {
+                                        preferenceItems.clear();
+                                        preferenceItems.addAll(postsResponse.posts);
+                                        preferenceItemsListAdapter.notifyDataSetChanged();
+                                    } else {
+                                        preferenceItems = new ArrayList<>();
+                                        preferenceItems.addAll(postsResponse.posts);
+                                    }
+                                    afterDBLoad();
+                                }
                             }
-                            afterDBLoad();
-                        }
+                        });
+
+//                viewModel.allCategoriesLiveData.removeObservers(requireActivity());
                     }
                 });
 
-//                viewModel.allCategoriesLiveData.removeObservers(requireActivity());
+                viewModel.completionResponseLiveData.removeObservers(requireActivity());
             }
         });
 
@@ -131,6 +142,7 @@ public class HomeFragment extends Fragment {
         controller = NavHostFragment.findNavController(this);
 
     }
+
     private void initBannerAd() {
         AdRequest adRequest = new AdRequest.Builder().build();
         binding.adBanner.loadAd(adRequest);
@@ -144,6 +156,7 @@ public class HomeFragment extends Fragment {
         preferenceItemsListAdapter = new PreferenceItemsListAdapter(getContext(), preferenceItems, new PreferenceItemsListItemClickListener() {
             @Override
             public void OnItemClicked(int index) {
+                viewModel.updateFiltersData(preferenceItems.get(index));
                 HomeFragmentDirections.ActionHomeFragmentToContentFragment action = HomeFragmentDirections.actionHomeFragmentToContentFragment().setPostArg(preferenceItems.get(index));
                 controller.navigate(action);
             }
@@ -154,7 +167,7 @@ public class HomeFragment extends Fragment {
                 viewModel.postLikedOrUnlikedLiveData.observe(requireActivity(), new Observer<LikeResponse>() {
                     @Override
                     public void onChanged(LikeResponse response) {
-                        if(response.isSuccess) {
+                        if (response.isSuccess) {
                             preferenceItems.set(preferenceItems.indexOf(response.post), response.post);
                             preferenceItemsListAdapter.notifyItemChanged(preferenceItems.indexOf(response.post));
                         }
@@ -174,7 +187,7 @@ public class HomeFragment extends Fragment {
                 viewModel.savePostLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
                     @Override
                     public void onChanged(SaveResponse saveResponse) {
-                        if(!saveResponse.isError) {
+                        if (!saveResponse.isError) {
                             Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(requireContext(), saveResponse.statusMessage, Toast.LENGTH_SHORT).show();

@@ -78,7 +78,7 @@ public class CommentsFragment extends Fragment {
             }
         });
 
-        viewModel.getPostComments(post.id);
+        viewModel.getPostComments(post);
         viewModel.allPostCommentsLiveData.observe(requireActivity(), new Observer<CommentsResponse>() {
             @Override
             public void onChanged(CommentsResponse commentsResponse) {
@@ -146,7 +146,7 @@ public class CommentsFragment extends Fragment {
             public void onClick(View v) {
                 String commentMsg = binding.commentInp.getText().toString().trim();
                 if(commentMsg.length() > 0) {
-                    viewModel.commentOnPost(post.category.id, new Comment(post.id, "", "", binding.commentInp.getText().toString().trim(), Calendar.getInstance().getTimeInMillis()));
+                    viewModel.commentOnPost(post.category.id, new Comment(post, "", "", binding.commentInp.getText().toString().trim(), Calendar.getInstance().getTimeInMillis()));
                     viewModel.commentOnPostLiveData.observe(requireActivity(), new Observer<CommentsResponse>() {
                         @Override
                         public void onChanged(CommentsResponse commentsResponse) {

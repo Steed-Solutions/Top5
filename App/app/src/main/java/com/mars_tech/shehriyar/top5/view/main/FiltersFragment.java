@@ -1,6 +1,8 @@
 package com.mars_tech.shehriyar.top5.view.main;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 
@@ -32,6 +34,7 @@ import com.mars_tech.shehriyar.top5.listener.InterestsListItemClickListener;
 import com.mars_tech.shehriyar.top5.pojo.Category;
 import com.mars_tech.shehriyar.top5.pojo.FiltersResponse;
 import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
+import com.mars_tech.shehriyar.top5.util.Constants;
 import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
 
 import org.w3c.dom.Text;
@@ -39,6 +42,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 
 
 /**
@@ -56,6 +60,7 @@ public class FiltersFragment extends Fragment {
     private ArrayList<String> selectedInterests, updatedInterests;
 
     private CheckBox lastCheckedCheckBox;
+    private int lastCheckedCheckBoxIndex;
 
     public FiltersFragment() {
         // Required empty public constructor
@@ -108,9 +113,20 @@ public class FiltersFragment extends Fragment {
         checkboxes.put(binding.checkbox3, binding.checkboxInp3);
         checkboxes.put(binding.checkbox4, binding.checkboxInp4);
 
-        lastCheckedCheckBox = binding.checkboxInp1.isChecked() ? binding.checkboxInp1 : (binding.checkboxInp2.isChecked() ? binding.checkboxInp2 : (binding.checkboxInp3.isChecked() ? binding.checkboxInp3 : binding.checkboxInp4));
+        ArrayList<ConstraintLayout> layouts = new ArrayList<>();
+        layouts.add(binding.checkbox1);
+        layouts.add(binding.checkbox2);
+        layouts.add(binding.checkbox3);
+        layouts.add(binding.checkbox4);
 
-        for (final ConstraintLayout layout : checkboxes.keySet()) {
+        SharedPreferences preferenceSharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+        lastCheckedCheckBoxIndex = preferenceSharedPreferences.getInt(Constants.PREFERRED_FILTER_INDEX, Constants.PREFERRED_FILTER_INDEX_DEFAULT);
+
+        lastCheckedCheckBox = checkboxes.get(layouts.get(lastCheckedCheckBoxIndex));
+        lastCheckedCheckBox.setChecked(true);
+
+        for (int i = 0; i < layouts.size(); i++) {
+            ConstraintLayout layout = layouts.get(i);
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -118,6 +134,7 @@ public class FiltersFragment extends Fragment {
                         lastCheckedCheckBox.setChecked(false);
                         checkboxes.get(layout).setChecked(true);
                         lastCheckedCheckBox = checkboxes.get(layout);
+                        lastCheckedCheckBoxIndex = layouts.indexOf(layout);
                     }
                 }
             });
@@ -165,9 +182,19 @@ public class FiltersFragment extends Fragment {
         binding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences preferenceSharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+                int previouslySavedFilterIndex = preferenceSharedPreferences.getInt(Constants.PREFERRED_FILTER_INDEX, Constants.PREFERRED_FILTER_INDEX_DEFAULT);
+
+                if(lastCheckedCheckBoxIndex != previouslySavedFilterIndex) {
+                    SharedPreferences.Editor preferenceSharedPreferencesEditor = preferenceSharedPreferences.edit();
+                    preferenceSharedPreferencesEditor.putInt(Constants.PREFERRED_FILTER_INDEX, lastCheckedCheckBoxIndex);
+                    preferenceSharedPreferencesEditor.apply();
+                }
+
                 if (!selectedInterests.containsAll(updatedInterests) || !updatedInterests.containsAll(selectedInterests) || selectedInterests.size() != updatedInterests.size()) {
                     showOverlay();
-                    viewModel.saveFiltersAndCategories(new ArrayList<String>(), updatedInterests);
+
+                    viewModel.saveFiltersAndCategories(updatedInterests);
                     viewModel.filtersAndCategoriesSaveResponseLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
                         @Override
                         public void onChanged(SaveResponse saveResponse) {

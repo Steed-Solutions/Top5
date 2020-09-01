@@ -24,7 +24,7 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<Boolean> signOutLiveData;
     public LiveData<LikeResponse> postLikedOrUnlikedLiveData;
     public LiveData<ArrayList<Category>> allCategoriesLiveData, queriedCategoriesLiveData, selectedCategoriesLiveData;
-    public LiveData<SaveResponse> saveResponseLiveData, filtersAndCategoriesSaveResponseLiveData, savePostLiveData;
+    public LiveData<SaveResponse> saveResponseLiveData, filtersAndCategoriesSaveResponseLiveData, savePostLiveData, completionResponseLiveData;
     public LiveData<PostsResponse> allPostsLiveData, allSavedPostsLiveData;
     public LiveData<FiltersResponse> filtersResponseLiveData;
     public LiveData<CommentsResponse> allPostCommentsLiveData, commentOnPostLiveData, deleteCommentLiveData;
@@ -43,6 +43,10 @@ public class MainViewModel extends AndroidViewModel {
         allCategoriesLiveData = mainModel.getAllCategories();
     }
 
+    public void getAllUserTagsAndRecentlyViewedPosts() {
+        completionResponseLiveData = mainModel.getAllUserTagsAndRecentlyViewedPosts();
+    }
+
     public void getQueriedCategories(String searchTerm) {
         queriedCategoriesLiveData = mainModel.getQueriedCategories(searchTerm);
     }
@@ -51,8 +55,8 @@ public class MainViewModel extends AndroidViewModel {
         saveResponseLiveData = mainModel.saveSelectedCategories(categories);
     }
 
-    public void getAllSelectedCategoricalPosts() {
-        allPostsLiveData = mainModel.getAllSelectedCategoricalPosts();
+    public void getAllSelectedCategoricalPosts(int filter) {
+        allPostsLiveData = mainModel.getAllSelectedCategoricalPosts(filter);
     }
 
     public void setLikeOrUnlikePost(Post post){
@@ -63,8 +67,8 @@ public class MainViewModel extends AndroidViewModel {
         filtersResponseLiveData = mainModel.getFiltersAndSelectedCategories();
     }
 
-    public void saveFiltersAndCategories(ArrayList<String> filters, ArrayList<String> categories) {
-        filtersAndCategoriesSaveResponseLiveData = mainModel.saveFiltersAndCategories(filters, categories);
+    public void saveFiltersAndCategories(ArrayList<String> categories) {
+        filtersAndCategoriesSaveResponseLiveData = mainModel.saveFiltersAndCategories(categories);
     }
 
     public void getSelectedCategories() {
@@ -75,8 +79,8 @@ public class MainViewModel extends AndroidViewModel {
         allPostLikerStringLiveData = mainModel.getAllPostLikerString(postID, isLiked);
     }
 
-    public void getPostComments(String postID){
-        allPostCommentsLiveData = mainModel.getPostComments(postID);
+    public void getPostComments(Post post){
+        allPostCommentsLiveData = mainModel.getPostComments(post);
     }
 
     public void commentOnPost(String categoryID, Comment comment) {
@@ -93,5 +97,9 @@ public class MainViewModel extends AndroidViewModel {
 
     public void savePost(String categoryID, String postID) {
         savePostLiveData = mainModel.savePost(categoryID, postID);
+    }
+
+    public void updateFiltersData(Post post) {
+        mainModel.updateFiltersData(post);
     }
 }

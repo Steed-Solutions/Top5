@@ -4,11 +4,12 @@ import java.util.HashMap;
 
 public class Comment {
 
-    public String postID, id, userID, comment, userName;
+    public String id, userID, comment, userName;
     public long timestamp;
+    public Post post;
 
-    public Comment(String postID, String id, String userID, String comment, long timestamp) {
-        this.postID = postID;
+    public Comment(Post post, String id, String userID, String comment, long timestamp) {
+        this.post = post;
         this.id = id;
         this.userID = userID;
         this.comment = comment;
