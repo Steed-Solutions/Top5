@@ -40,9 +40,6 @@ storage = firebase.storage()
 
 
 def credentials(request):
-    if("user" in request.session):
-        return redirect('dashboard')
-
     if request.method == "POST":
         if 'username' in request.POST:
             if request.POST['username'] == "":
