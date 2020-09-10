@@ -1,0 +1,25 @@
+{% extends 'site/base.html' %} {% load static %} {% block content %}
+
+<div class="user_profile_save">
+    <h2>ALL</h2>
+    
+    {% for post in posts %}
+    <div class="saved_item">
+        <div class="item_img">
+            <img src="{% static 'img/post_content2.png' %}" alt="item">
+        </div>
+        <div class="item_details">
+            <p style="color: {{ post.category.color }}">{{ post.name }}</p>
+            <span>{% if "vid" in post.type %}Video{% else %}Post{% endif %}</span>
+            <div>
+                <div name="category_{{ post.category.id }}">
+                    <img src="{{ post.category.imgURL }}" alt="icon" onload="setCategoryIconBackground('{{ post.category.id }}', '{{ post.category.color }}')" />
+                </div>
+                <p>Saved from <span>{{ post.category.name }} {% if not "vid" in post.type %}'s post{% endif %} </span></p>
+            </div>
+        </div>
+    </div>    
+    {% endfor %}
+</div>
+    
+{% endblock %}

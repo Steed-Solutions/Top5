@@ -1,0 +1,232 @@
+{% extends 'site/base.html' %} {% load static %} {% block content %}
+
+<style>
+
+  .lds-default {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .lds-default div {
+    background: white;
+  }
+
+</style>
+
+<div id="overlayLoader">
+  <div class="lds-default">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>  
+
+<div class="user_profile_page">
+  <h2>User Profile</h2>
+  <div class="profile">
+    <span>Edit Information</span>
+    <div class="profile_content">
+      <div class="profile_img_container">
+        <div class="profile_img">
+          <img src="{% static 'img/profilepix.png' %}" alt="profilepic" />
+        </div>
+        <span class="profile_name">Ariana Jon</span>
+        <span class="profile_email">ArianaJon@gmail.com</span>
+      </div>
+      <div class="profile_details">
+        <div class="gender">
+          <h4>GENDER</h4>
+          <p>Female</p>
+        </div>
+        <div class="bio">
+          <h4>BIO</h4>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+            enim ad minim veniam, quis nostrud exercitation ullamco laboris
+            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+            in
+          </p>
+        </div>
+        <div class="interests">
+          <h4>Your interests</h4>
+          <div>
+            {% for interest in interests %}
+              <div name="interest_{{ interest.id }}">
+                  <img src="{{ interest.imgURL }}" alt="icon" onload="setInterestIconBackground('{{ interest.id }}', '{{ interest.color }}')" />                  
+              </div>
+            {% endfor %}          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h2>Filters</h2>
+  <div class="filters">
+    <div class="checkboxes_container">
+      <div class="checkbox">
+        <input type="checkbox" name="filter" data-filter-id=0 />
+        <h4 for="made_for_you">MADE FOR YOU</h4>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" name="filter" data-filter-id=1 />
+        <h4 for="you_may_also_like">YOU MAY ALSO LIKE</h4>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" name="filter" data-filter-id=2 />
+        <h4 for="recently_viewed">RECENTLY VIEWED</h4>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" name="filter" data-filter-id=3 />
+        <h4 for="new">NEW</h4>
+      </div>
+    </div>
+    <div class="interest_checkboxes_container">
+      {% for categoryID, category in categories.items %}
+      <div class="checkbox">
+        <input type="checkbox" data-category-id="{{ categoryID }}" onclick="onInterestClicked(this)"/>
+        <div name="category_{{ categoryID }}">
+          <img src="{{ category.imgURL }}" alt="icon" onload="setCategoryIconBackground('{{ categoryID }}', '{{ category.color }}')" />
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  let categories = {{ categories | safe }};
+  let userInterests = {{ interests | safe }};
+
+  function populateInterestsList(){
+    document.querySelector(".interests > div").innerHTML = "";
+    userInterests.forEach(interest => {
+      let newInterest = document.createElement("div");
+      newInterest.setAttribute("name", "interest_" + interest.id);
+      newInterest.innerHTML = "<img src='" + interest.imgURL + "' alt='icon' onload=\"setInterestIconBackground('" + interest.id + "', '" + interest.color + "')\" />";  
+      document.querySelector(".interests > div").appendChild(newInterest);
+    });    
+    
+  }  
+
+  function updateInterests(categoryID, isAdd) {
+    $("#overlayLoader").show();
+
+    data = {
+      type: "interest",
+      categoryID: categoryID,
+      interestOperation: isAdd ? "add" : "remove",
+      csrfmiddlewaretoken: "{{ csrf_token }}",
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "{% url 'profile' %}",
+      data: data,
+      success: (response) => {
+        if(response.result == "failure") {            
+          alert("Failed to update filter!");
+          $("[data-category-id='" + categoryID + "']").prop("checked", !isAdd);
+        } else {
+          if(isAdd) {
+            userInterests.push(categories[categoryID]);
+          } else {
+            userInterests = userInterests.filter(interest => {
+              return interest.id != categoryID;
+            });
+          }
+          populateInterestsList();       
+        }
+
+        $("#overlayLoader").hide();
+      },
+      error: (xhr, errmsg, err) => {
+        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+      },
+    });
+
+  }
+
+  function onInterestClicked(checkbox) {
+    const id = $(checkbox).attr("data-category-id");
+    const isAdd = $(checkbox).prop("checked");
+
+    updateInterests(id, isAdd);
+  }
+
+  $(document).ready(() => {
+    let prevSelectedFilterID = null;
+    let selectedFilterID = {{ filterID | safe }};
+    let categories = {{ categories | safe }};
+    let userInterests = {{ interests | safe }};
+
+    $("[data-filter-id='" + selectedFilterID + "']").prop("checked", true);
+
+    userInterests.forEach(interest => {
+      $("[data-category-id='" + interest.id + "']").prop("checked", true);
+    });
+
+    function updateFilter() {
+      $("#overlayLoader").show();
+
+      data = {
+        type: "filter",
+        filterID: selectedFilterID,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "{% url 'profile' %}",
+        data: data,
+        success: (response) => {
+          if(response.result == "failure") {            
+            alert("Failed to update filter!");
+            $("[data-filter-id='" + selectedFilterID + "']").prop("checked", true);
+            selectedFilterID = prevSelectedFilterID;
+            prevSelectedFilterID = null;
+            $("[data-filter-id='" + selectedFilterID + "']").prop("checked", true);
+          }
+
+          $("#overlayLoader").hide();
+        },
+        error: (xhr, errmsg, err) => {
+          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        },
+      });
+    }
+
+    
+
+    $("[name='filter']").each((index, element) => {
+      $(element).click(() => {
+        const currCheckboxID = $(element).attr("data-filter-id");
+        if($("[data-filter-id='" + currCheckboxID + "']")[0] != $("[data-filter-id='" + selectedFilterID + "']")[0]) {
+          prevSelectedFilterID = selectedFilterID;
+          selectedFilterID = currCheckboxID;
+          $("[name='filter']").prop("checked", false);
+          $("[data-filter-id='" + selectedFilterID + "']").prop("checked", true);
+
+          updateFilter();
+        } else {
+          $("[data-filter-id='" + selectedFilterID + "']").prop("checked", true);
+        }     
+      })
+    });
+  });
+</script>
+
+{% endblock %}

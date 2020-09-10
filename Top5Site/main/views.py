@@ -6,6 +6,7 @@ from django.contrib.staticfiles import finders
 import firebase_admin
 from firebase_admin import credentials as adminCredentials, auth as adminAuth
 
+import random
 import pyrebase
 
 cred = adminCredentials.Certificate(finders.find(
@@ -40,6 +41,9 @@ storage = firebase.storage()
 
 
 def credentials(request):
+    if "user" in request.session:
+        return redirect('home')
+
     if request.method == "POST":
         if 'username' in request.POST:
             if request.POST['username'] == "":
@@ -49,9 +53,10 @@ def credentials(request):
 
                     uid = user['localId']
 
-                    adminCheck = db.child("users/admin/" + uid).get().val()
+                    userCheck = db.child(
+                        "users/regularUsers/" + uid).get().val()
 
-                    if(adminCheck == None):
+                    if(userCheck == None):
                         return JsonResponse({"result": "failure"})
 
                     user = auth.refresh(user['refreshToken'])
@@ -75,9 +80,12 @@ def credentials(request):
                     request.session['user'] = user_id
                     request.session['uid'] = uid
 
-                    db.child("users/admin/" + uid).set({
+                    db.child("users/regularUsers/" + uid).set({
                         "name": request.POST['username'],
-                        "email": request.POST['email']
+                        "email": request.POST['email'],
+                        "preferences": {
+                            "categories": request.POST['selectedCategories']
+                        }
                     })
 
                     return JsonResponse({"result": "success"})
@@ -92,8 +100,236 @@ def credentials(request):
             except:
                 return JsonResponse({"result": "failure"})
 
-    return render(request, "credentials.html")
+    categories = list()
+
+    categoriesItems = db.child("content/categories").get().val()
+    for key, val in categoriesItems.items():
+        val["id"] = key
+        categories.append(val)
+
+    return render(request, "credentials/credentials.html", {"categories": categories})
+
+
+def home(request):
+    if request.method == "POST":
+        if request.POST['type'] == "load":
+            try:
+                isLoggedIn = "user" in request.session
+
+                categories = {}
+                allPosts = list()
+
+                categoriesItems = db.child("content/categories").get().val()
+                for key, val in categoriesItems.items():
+                    val["id"] = key
+                    categories[key] = val
+
+                if isLoggedIn:
+                    userPrefFilter = db.child(
+                        "users/regularUsers/" + request.session['uid'] + "/preferences/filterID").get().val()
+                    userPrefFilter = int(userPrefFilter) if userPrefFilter != None else 3
+
+                    userTags = db.child(
+                        "users/regularUsers/" + request.session['uid'] + "/tags").get().val()
+                    userTags = list() if userTags == None else userTags
+
+                    userRecentlyViewed = db.child(
+                        "users/regularUsers/" + request.session['uid'] + "/recentlyViewed").get().val()
+                    userRecentlyViewed = list() if userRecentlyViewed == None else {
+                        item['category']: item['post'] for item in userRecentlyViewed}
+
+                    userPrefCategories = db.child(
+                        "users/regularUsers/" + request.session['uid'] + "/preferences/categories").get().val()
+                    userPrefCategories = [] if userPrefCategories == None else [
+                        k for k, v in userPrefCategories.items()]
+
+                    for categoryID in userPrefCategories:
+                        categoryPosts = db.child(
+                            "content/posts/" + categoryID).get().val()
+                        categoryPosts = {} if categoryPosts == None else dict(
+                            categoryPosts)
+
+                        for postID in categoryPosts:
+                            post = categoryPosts[postID]
+                            postTags = post["tags"] if "tags" in post else list()
+                            hasCommonTags = False
+                            for postTag in postTags:
+                                if postTag in userTags:
+                                    hasCommonTags = True
+                                    break
+
+                            isRecentlyViewed = postID in userRecentlyViewed.values()
+                            hasChance = random.randint(1, 3) % 3 == 0
+
+                            if (userPrefFilter == 0 and hasCommonTags) or (userPrefFilter == 1 and isRecentlyViewed) or (userPrefFilter == 2 and (hasChance or hasCommonTags)) or (userPrefFilter == 3):                            
+                                post["id"] = postID
+                                post["category"] = categories[categoryID]
+
+                                comments = list()
+
+                                commentItems = db.child(
+                                    "comments/" + postID).get().val()
+                                if commentItems != None:
+                                    for key, val in commentItems.items():
+                                        val["id"] = key
+
+                                        val["username"] = db.child(
+                                            "users/regularUsers/" + val["userID"] + "/name").get().val()
+
+                                        comments.append(val)
+
+                                post["allComments"] = comments
+
+                                allPosts.append(post)
+                else:
+                    allCategoricalPosts = {}
+
+                    allPostItems = db.child("content/posts").get().val()
+                    for categoryID, posts in allPostItems.items():
+                        allCategoricalPosts[categoryID] = posts
+
+                    for categoryID in allCategoricalPosts:
+                        posts = allCategoricalPosts[categoryID]
+                        for postID in posts:
+                            post = posts[postID]
+                            post["id"] = postID
+                            post["category"] = categories[categoryID]
+
+                            comments = list()
+
+                            commentItems = db.child(
+                                "comments/" + postID).get().val()
+                            if commentItems != None:
+                                for key, val in commentItems.items():
+                                    val["id"] = key
+
+                                    val["username"] = db.child(
+                                        "users/regularUsers/" + val["userID"] + "/name").get().val()
+
+                                    comments.append(val)
+
+                            post["allComments"] = comments
+
+                            allPosts.append(post)
+
+                return JsonResponse({"result": "failure", "posts": allPosts})
+            except:
+                return JsonResponse({"result": "failure"})
+
+    return render(request, "site/pages/home.html", {"isLoggedIn": "user" in request.session})
+
+def profile(request):
+    if not "user" in request.session:
+        return redirect('home')
+
+    if request.method == "POST":
+        if request.POST['type'] == "filter":
+            try:
+                db.child("users/regularUsers/" + request.session['uid'] + "/preferences/filterID").set(request.POST['filterID'])
+
+                return JsonResponse({"result": "success"})
+            except:
+                return JsonResponse({"result": "failure"})
+        elif request.POST['type'] == "interest":
+            try:
+                db.child("users/regularUsers/" + request.session['uid'] + "/preferences/categories/" + request.POST['categoryID']).set(None if request.POST['interestOperation'] == "remove" else "categoryID")
+
+                return JsonResponse({"result": "success"})
+            except:
+                return JsonResponse({"result": "failure"})
+
+    categories = {}
+
+    categoriesItems = db.child("content/categories").get().val()
+    for key, val in categoriesItems.items():
+        val["id"] = key
+        categories[key] = val
+
+    userPrefFilter = db.child(
+        "users/regularUsers/" + request.session['uid'] + "/preferences/filterID").get().val()
+    userPrefFilter = userPrefFilter if userPrefFilter != None else 3
+
+    userPrefCategories = db.child(
+        "users/regularUsers/" + request.session['uid'] + "/preferences/categories").get().val()
+    userPrefCategories = [] if userPrefCategories == None else [
+        k for k, v in userPrefCategories.items()]
+
+    interests = list()
+    for categoryID in userPrefCategories:        
+        interests.append(categories[categoryID])
+
+    return render(request, "site/pages/userProfile.html", {"isLoggedIn": "user" in request.session, "categories": categories, "interests": interests, "filterID": userPrefFilter})
+
+def browse(request):
+    return redirect('home')
+
+    return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session})
+
+def saved(request):
+    if not "user" in request.session:
+        return redirect('home')
+
+    # if request.method == "POST":
+    #     if request.POST['type'] == "load":
+    #         categories = {}
+    #         allPosts = list()
+
+    #         categoriesItems = db.child("content/categories").get().val()
+    #         for key, val in categoriesItems.items():
+    #             val["id"] = key
+    #             categories[key] = val
+
+    #         userSavedPostIDs = db.child(
+    #             "users/regularUsers/" + request.session['uid'] + "/saved").get().val()
+    #         userSavedPostIDs = {} if userSavedPostIDs == None else {
+    #             k: v for k, v in userSavedPostIDs.items()}
+
+    #         for postID, categoryID in userSavedPostIDs:
+    #             post = db.child("content/posts/" + categoryID +
+    #                             "/" + postID).get().val()
+    #             if post == None:
+    #                 break
+    #             post = dict(post)
+    #             post["id"] = postID
+    #             post["category"] = categories[categoryID]
+
+    #         allPosts.append(post)
+
+    #         return JsonResponse({"posts": allPosts})
+
+    categories = {}
+    allPosts = list()
+
+    categoriesItems = db.child("content/categories").get().val()
+    for key, val in categoriesItems.items():
+        val["id"] = key
+        categories[key] = val
+
+    userSavedPostIDs = db.child(
+        "users/regularUsers/" + request.session['uid'] + "/saved").get().val()
+    userSavedPostIDs = {} if userSavedPostIDs == None else {
+        k: v for k, v in userSavedPostIDs.items()}
+
+    for postID in userSavedPostIDs:
+        post = db.child("content/posts/" + userSavedPostIDs[postID] +
+                        "/" + postID).get().val()
+        if post == None:
+            break
+        post = dict(post)
+        post["id"] = postID
+        post["category"] = categories[userSavedPostIDs[postID]]
+
+    allPosts.append(post)
+
+    return render(request, "site/pages/savedPosts.html", {"isLoggedIn": "user" in request.session, "posts": allPosts})
 
 
 def comingSoon(request):
     return render(request, "coming_soon.html")
+
+
+def logout(request):
+    request.session.pop('user', None)
+    request.session.pop('uid', None)
+
+    return redirect("home")

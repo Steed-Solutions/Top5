@@ -1,0 +1,47 @@
+{% extends 'site/base.html' %} {% load static %} {% block content %}
+
+<div class="search_page">
+  <div class="search_field">
+    <img src="{% static 'img/search_icon.png' %}" alt="search" />
+    <input type="text" placeholder="Enter Keywords" />
+  </div>
+  <div class="next_btn">
+    <img src="{% static 'img/next_btn.png' %}" alt="next_btn" />
+  </div>
+  <div class="categories_sec">
+    <div class="category_card">
+      <img src="{% static 'img/food_icon.png' %}" alt="food_icon" />
+      <span>Spanish food</span>
+    </div>
+    <div class="category_card">
+      <img src="{% static 'img/music_icon.png' %}" alt="music_icon" />
+      <span>Pop music</span>
+    </div>
+    <div class="category_card">
+      <img src="{% static 'img/paint_icon.png' %}" alt="paint_icon" />
+      <span>Abstract art</span>
+    </div>
+    <div class="category_card">
+      <img src="{% static 'img/plant_icon.png' %}" alt="plant_icon" />
+      <span>Planting</span>
+    </div>
+  </div>
+  <div class="popular_sec">
+    <h2>POPULAR</h2>
+    <div class="popular_content">
+      <div class="popular_card">
+        <span>Grow Aloe vera </span>
+      </div>
+
+      <div class="popular_card">
+        <span>Guitar basics </span>
+      </div>
+
+      <div class="popular_card">
+        <span>Trending paint brush </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

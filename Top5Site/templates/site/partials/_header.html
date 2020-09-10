@@ -1,0 +1,46 @@
+{% load static %}
+
+<nav>
+  <div class="nav_brand" onclick="window.location.assign('{% url 'home' %}')">
+    <img src="{% static 'img/irantop5v42_icon.png' %}" alt="logo"/>
+  </div>
+  <button class="toggle_btn" onclick="openRightMenu()">
+    <span class="bar line1"></span>
+    <span class="bar line2"></span>
+    <span class="bar line3"></span>
+  </button>
+</nav>
+
+<div id="rightMenu" class="w3-sidebar w3-bar-block w3-card w3-animate-right">
+  <button onclick="closeRightMenu()" class="back_btn w3-button w3-large">
+    <i class="fas fa-arrow-left"></i>
+  </button>
+  {% if isLoggedIn %}
+  <a href="{% url 'home' %}" class="w3-bar-item w3-button">Home</a>
+  <a href="{% url 'profile' %}" class="w3-bar-item w3-button">My Profile</a>
+  <a href="{% url 'browse' %}" class="w3-bar-item w3-button">Browse</a>
+  <a href="{% url 'saved' %}" class="w3-bar-item w3-button">Saved Posts</a>  
+  <a href="{% url 'logout' %}" class="w3-bar-item w3-button">Log Out</a>
+  {% else %}
+  <a href="{% url 'credentials' %}" class="w3-bar-item w3-button">Log In</a>
+  {% endif %}
+</div>
+
+<script>
+  function openRightMenu() {
+    $("#rightMenu").show();
+  }
+
+  function closeRightMenu() {
+    $("#rightMenu").hide();
+  }
+
+  $(window).click((e) => {
+    if (
+      $(e.target).closest("#rightMenu").length == 0 &&
+      $(e.target).closest(".toggle_btn").length == 0
+    ) {
+      closeRightMenu();
+    }
+  });
+</script>

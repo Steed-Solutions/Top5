@@ -1,0 +1,169 @@
+{% extends 'site/base.html' %} {% load static %} {% block content %}
+
+<style>
+  .home_page_container {
+    height: calc(100% - 70px);
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+</style>
+
+<div class="home_page_container">
+  <div class="home_page">
+    <div
+      class="search_field"
+      style="
+        width: 25.6vw;
+        height: 2.73vw;
+        align-self: flex-end;
+        margin-right: 6.3vw;
+      "
+    >
+      <img src="{% static 'img/search_icon_gray.png' %}" alt="search" />
+      <input type="text" placeholder="Enter Keywords" />
+    </div>
+
+    <div class="ad">AD BANNER</div>
+
+    <div id="posts"></div>
+
+    <div id="loader">
+      <div class="lds-default">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>        
+      <div>Loading...</div>
+    </div>  
+
+    <div class="view_more_btn">
+      <button>View More</button>
+    </div>
+  </div>
+
+  {% include 'site/partials/_footer.html' %}
+</div>
+
+<script>
+  let allLoadedPosts = [];
+
+  function loadPosts() {
+    data = {
+      type: "load",
+      lastLoadedPost:
+        allLoadedPosts.length > 0
+          ? allLoadedPosts[allLoadedPosts.length - 1]["id"]
+          : "",
+      csrfmiddlewaretoken: "{{ csrf_token }}",
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "{% url 'home' %}",
+      data: data,
+      success: (response) => {
+        const posts = document.getElementById("posts");
+        response.posts.forEach((post) => {
+          posts.appendChild(createPostElement(post));
+        });
+        $("#loader").hide();
+      },
+      error: (xhr, errmsg, err) => {
+        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+      },
+    });
+  }
+
+  function createPostElement(postMap) {
+    let post = document.createElement("div");
+    post.classList.add("post");
+
+    let postContainer = document.createElement("div");
+    postContainer.classList.add("post_container");
+
+    let postHeader = document.createElement("div");
+    postHeader.classList.add("post_header");
+    postHeader.innerHTML ="<div name='category_" + postMap["category"]["id"] + "'><img src='" + postMap["category"]["imgURL"] +"' alt='icon' onload=\"setCategoryIconBackground('" + postMap["category"]["id"] + "','" + postMap["category"]["color"] + "')\" /></div><span>" + postMap["name"] + "</span>";
+    postContainer.appendChild(postHeader);
+
+    let postContent = document.createElement("div");
+    postContent.classList.add("post_content");
+    if (postMap["type"].indexOf("img") >= 0) {
+      postContent.innerHTML =
+        "<img src='" +
+        postMap["link"] +
+        "' class='post_content_image' alt='post_img' onerror='$(this).hide()' />";
+    } else if (postMap["type"].indexOf("vid") >= 0) {
+      postContent.innerHTML =
+        "<video src='" +
+        postMap["link"] +
+        "#t=0.5' class='post_content_video' preload='metadata' />";
+    }
+    if (postMap["type"].toLowerCase().indexOf("txt") >= 0) {
+      postContent.innerHTML +=
+        "<span style='color: " +
+        (postMap["link"] == "" ? "black" : "white") +
+        "'>" +
+        postMap["text"] +
+        "</span>";
+    }
+    postContainer.appendChild(postContent);
+
+    let postAction = document.createElement("div");
+    postAction.classList.add("post_action");
+    postAction.innerHTML =
+      "<div class='post_action_item'><span class='far fa-heart'></span><span>" +
+      postMap["likes"] +
+      " likes</span></div><div class='post_action_item'><span class='far fa-comment'></span><span>" +
+      postMap["comments"] +
+      " comments</span></div><div class='post_action_item'><span class='far fa-bookmark'></span></div>";
+    postContainer.appendChild(postAction);
+
+    let commentSection = document.createElement("div");
+    commentSection.classList.add("comment_sec");
+
+    let likes = document.createElement("div");
+    likes.classList.add("likes");
+    likes.innerHTML =
+      "<div class='user_pic'><img src=\"{% static 'img/user1.png' %}\" alt='user' /><img src=\"{% static 'img/user2.png' %}\" alt='user' /><img src=\"{% static 'img/user3.png' %}\" alt='user' /></div><span>Liked by Ariana Jon and 18 others</span>";
+    commentSection.appendChild(likes);
+
+    let comments = document.createElement("div");
+    comments.classList.add("comments");
+    postMap["allComments"].forEach((commentMap) => {
+      let comment = document.createElement("div");
+      comment.classList.add("comment");
+      comment.innerHTML =
+        "<img src=\"{% static 'img/user1.png' %}\" alt='user' /><div class='comment_content'><span>" +
+        commentMap["username"] +
+        "</span><span>" +
+        commentMap["comment"] +
+        "</span><span class='comment_action'>24h</span><span class='comment_action'>Reply</span></div>";
+      comments.appendChild(comment);
+    });
+    commentSection.appendChild(comments);
+    postContainer.appendChild(commentSection);
+
+    let commentInput = document.createElement("div");
+    commentInput.classList.add("comment_input");
+    commentInput.innerHTML =
+      "<img src=\"{% static 'img/user2.png' %}\" alt='user' /><input type='text' placeholder='Comment as Britney Alei…….' /><button>Post</button>";
+    postContainer.appendChild(commentInput);
+
+    post.appendChild(postContainer);
+    return post;
+  }
+
+  loadPosts();
+</script>
+
+{% endblock %}
