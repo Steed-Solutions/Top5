@@ -151,14 +151,24 @@ def categoryDash(request, category_id):
     if request.method == "POST":
         if request.POST["reqType"] == "add":
             try:
+
+                data = {
+                    "comments": 0,
+                    "likes": 0,
+                    "type": request.POST["type"],
+                    "name": request.POST["name"],
+                    "link": request.POST["link"],
+                    "text": request.POST["text"],
+                    "timestamp": request.POST["timestamp"]
+                }
+
+                textWords = data["text"].split(" ")
+                data["words"] = {}
+                for word in textWords:
+                    data["words"][word.lower()] = True
+
                 db.child('content/posts/' + category_id +
-                         '/' + request.POST["key"]).set({
-                             "type": request.POST["type"],
-                             "name": request.POST["name"],
-                             "link": request.POST["link"],
-                             "text": request.POST["text"],
-                             "timestamp": request.POST["timestamp"]
-                         })
+                         '/' + request.POST["key"]).set(data)
 
                 return JsonResponse({"result": "success", "postKey": request.POST["key"], "post": {"type": request.POST["type"],
                                                                                                    "name": request.POST["name"],
@@ -179,8 +189,10 @@ def categoryDash(request, category_id):
     categoryPostsMap = {}
     categoryPosts = db.child("content/posts/" + category_id).get().val()
 
-    for key, value in categoryPosts.items():
-        categoryPostsMap[key] = value
+    if categoryPosts != None:
+        categoryPostsMap = dict(categoryPosts)
+
+    print(categoryPostsMap)
 
     return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": categoryPostsMap})
 

@@ -163,7 +163,10 @@
 
         let categoryPosts = "{{ categoryPosts | safe }}";
         categoryPosts = categoryPosts.replace(/'/g, '"');
+        categoryPosts = categoryPosts.replace(/True/g, "true");
         categoryPosts = JSON.parse(categoryPosts);
+
+        
 
         $("#uploadImgBtn").click(() => {
           $("#imgUploadForm > input").click();
@@ -387,6 +390,8 @@
               itemContent.innerHTML += "<video src='" + post.link + "#t=0.5'  width='40%' preload='metadata' />";
             } else if(post.type == "imgTxt") {
               itemContent.innerHTML += "<img src='" + post.link + "' width='40%' /><span>" + post.text + "</span>";
+            } else if(post.type == "vidTxt") {
+              itemContent.innerHTML += "<video src='" + post.link + "#t=0.5'  width='40%' preload='metadata' /><span>" + post.text + "</span>";
             }
 
             let itemDate = document.createElement("span");
