@@ -123,7 +123,7 @@
     postAction.innerHTML =
       "<div class='post_action_item'><span class='far fa-heart'></span><span>" +
       postMap["likes"] +
-      " likes</span></div><div class='post_action_item'><span class='far fa-comment'></span><span>" +
+      " like" + (postMap["likes"] > 1 ? "s" : "") + "</span></div><div class='post_action_item'><span class='far fa-comment'></span><span>" +
       postMap["comments"] +
       " comments</span></div><div class='post_action_item'><span class='far fa-bookmark'></span></div>";
     postContainer.appendChild(postAction);

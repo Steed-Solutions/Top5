@@ -236,7 +236,7 @@ nav {
 }
 
 .post {
-  width: 45.4vw;
+  width: 87.4vw;
   margin-bottom: 90px;
   border: 1px solid #d2d0d0;
 }
@@ -253,7 +253,7 @@ nav {
 .post_header > div {
   height: 68.6%;
   margin: 1% 20px 0 2%;
-  padding: 1.7%;
+  padding: 0.7%;
   border-radius: 50%;
 }
 
@@ -269,16 +269,18 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 2vw;
 }
 
 .post_content_image,
 .post_content_video {
-  width: 100%;
+  width: 45.4vw;
   height: 21.8vw;
   object-fit: cover;
   z-index: -2;
   top: 0;
   position: absolute;
+  margin: auto;
 }
 
 .post_content > span {
@@ -287,8 +289,7 @@ nav {
 }
 
 .post_action {
-  border: 1px solid #d2d0d0;
-  border-bottom: none;
+  border-top: 1px solid #d2d0d0;
   display: flex;
   justify-content: space-between;
   padding: 1.8vw 1.7vw 0.95vw 1.7vw;
@@ -305,8 +306,6 @@ nav {
 
 .comment_sec {
   width: 100%;
-  border: 1px solid #d2d0d0;
-  border-top: none;
 }
 
 .likes {
