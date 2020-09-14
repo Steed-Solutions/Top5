@@ -157,6 +157,7 @@ def categoryDash(request, category_id):
                     "likes": 0,
                     "type": request.POST["type"],
                     "name": request.POST["name"],
+                    "category": category_id,
                     "link": request.POST["link"],
                     "text": request.POST["text"],
                     "timestamp": request.POST["timestamp"]
@@ -167,8 +168,7 @@ def categoryDash(request, category_id):
                 for word in textWords:
                     data["words"][word.lower()] = True
 
-                db.child('content/posts/' + category_id +
-                         '/' + request.POST["key"]).set(data)
+                db.child('content/posts/' + request.POST["key"]).set(data)
 
                 return JsonResponse({"result": "success", "postKey": request.POST["key"], "post": {"type": request.POST["type"],
                                                                                                    "name": request.POST["name"],
@@ -176,11 +176,11 @@ def categoryDash(request, category_id):
                                                                                                    "text": request.POST["text"],
                                                                                                    "timestamp": request.POST["timestamp"]}})
             except:
+                print("WTH")
                 return JsonResponse({"result": "failure"})
         elif request.POST["reqType"] == "delete":
             try:
-                db.child('content/posts/' + category_id +
-                         '/' + request.POST["key"]).remove()
+                db.child('content/posts/' + request.POST["key"]).remove()
 
                 return JsonResponse({"result": "success", "postKey": request.POST["key"]})
             except:
@@ -191,8 +191,6 @@ def categoryDash(request, category_id):
 
     if categoryPosts != None:
         categoryPostsMap = dict(categoryPosts)
-
-    print(categoryPostsMap)
 
     return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": categoryPostsMap})
 

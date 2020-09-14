@@ -10,41 +10,44 @@
     <link rel="stylesheet" href="{% static 'css/categoryDash.css' %}" />
   </head>
   <body>
-    <div id="category_dashboard">
+    <div id="category_dashboard" method="post" enctype="multipart/form-data">
       <div class="post_sec">
-        <textarea
-          name="food_post"
-          id="postTxtArea"
-          cols="30"
-          rows="10"
-          placeholder="Post here..."
-        ></textarea>
-        <div id="uploadOptionsBtns" class="post_sec_icons">
-          <form
-            id="imgUploadForm"
-            method="post"
-            enctype="multipart/form-data"
-            style="display: none"
-          >
-            {% csrf_token %}<input type="file" accept="image/*" />
-          </form>
-          <div id="uploadImgBtn" class="post_sec_icon">
-            <img src="{% static 'img/photo_icon.png' %}" alt="photo_icon" />
-            <span>Photo</span>
+        <form id="newPostForm" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input id="name" type="text" placeholder="Name" required />
+
+          <textarea
+            name="food_post"
+            id="postTxtArea"
+            cols="30"
+            rows="10"
+            placeholder="Post here..."
+          ></textarea>
+          <div id="uploadOptionsBtns" class="post_sec_icons">
+            <input
+              id="imgUploadInput"
+              type="file"
+              accept="image/*"
+              style="display: none"
+            />
+            <div id="uploadImgBtn" class="post_sec_icon">
+              <img src="{% static 'img/photo_icon.png' %}" alt="photo_icon" />
+              <span>Photo</span>
+            </div>
+
+            <input
+              id="vidUploadInput"
+              type="file"
+              accept="video/*"
+              style="display: none"
+            />
+            <div id="uploadVidBtn" class="post_sec_icon">
+              <img src="{% static 'img/video_icon.png' %}" alt="vid_icon" />
+              <span>Video</span>
+            </div>
           </div>
-          <form
-            id="vidUploadForm"
-            method="post"
-            enctype="multipart/form-data"
-            style="display: none"
-          >
-            {% csrf_token %}<input type="file" accept="video/*" />
-          </form>
-          <div id="uploadVidBtn" class="post_sec_icon">
-            <img src="{% static 'img/video_icon.png' %}" alt="vid_icon" />
-            <span>Video</span>
-          </div>
-        </div>
+          <input type="submit" style="display: none" />
+        </form>
         <div id="uploadPreview" style="display: none">
           <div id="imgPreview" style="display: none; position: relative">
             <div
@@ -96,44 +99,7 @@
         </div>
         {% endcomment %}
       </div>
-      <div class="items_sec">
-        <div class="item">
-          <div class="item_content">
-            <p>
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
-          </div>
-          <span class="item_date">8:00 pm<br />27 March,2020</span>
-          <div class="item_icons">
-            <img src="{% static 'img/edit_icon.png' %}" alt="edit" />
-            <img src="{% static 'img/del_icon.png' %}" alt="delete" />
-          </div>
-        </div>
-        <div class="item">
-          <div class="item_content">
-            <img src="{% static 'img/item_vid_icon.png' %}" alt="vid" />
-            <img src="{% static 'img/item_vid_icon.png' %}" alt="vid" />
-          </div>
-          <span class="item_date">8:00 pm<br />27 March,2020</span>
-          <div class="item_icons">
-            <img src="{% static 'img/edit_icon.png' %}" alt="edit" />
-            <img src="{% static 'img/del_icon.png' %}" alt="delete" />
-          </div>
-        </div>
-        <div class="item">
-          <div class="item_content">
-            <img src="{% static 'img/item_photo_icon.png' %}" alt="vid" />
-          </div>
-          <span class="item_date">8:00 pm<br />27 March,2020</span>
-          <div class="item_icons">
-            <img src="{% static 'img/edit_icon.png' %}" alt="edit" />
-            <img src="{% static 'img/del_icon.png' %}" alt="delete" />
-          </div>
-        </div>
-      </div>
+      <div class="items_sec"></div>
     </div>
 
     <script src="{% static 'js/firebaseInit.js' %}"></script>
@@ -166,20 +132,20 @@
         categoryPosts = categoryPosts.replace(/True/g, "true");
         categoryPosts = JSON.parse(categoryPosts);
 
-        
+
 
         $("#uploadImgBtn").click(() => {
-          $("#imgUploadForm > input").click();
+          $("#imgUploadInput").click();
         });
 
         $("#uploadVidBtn").click(() => {
-          $("#vidUploadForm > input").click();
+          $("#vidUploadInput").click();
         });
 
         $("#loaderPercen").show();
 
         let reader = new FileReader();
-        $("#imgUploadForm > input").change(function(evt) {
+        $("#imgUploadInput").change(function(evt) {
           if (this.files && this.files[0]) {
             reader.onload = function(e) {
               $("#vidPreview").hide();
@@ -196,7 +162,7 @@
           }
         });
 
-        $("#vidUploadForm > input").change(function() {
+        $("#vidUploadInput").change(function() {
           if (this.files && this.files[0]) {
             reader.onload = function(e) {
               $("#imgPreview").hide();
@@ -222,7 +188,7 @@
           $("#uploadedImgPreview").removeAttr("src");
           $("#imgPreview").hide();
           $("#uploadPreview").hide();
-          $("#imgUploadForm > input").val(null);
+          $("#imgUploadInput").val(null);
           $("#uploadOptionsBtns").show();
 
           selectedImgOrVid = null;
@@ -237,7 +203,7 @@
           $("#uploadedVidPreview").removeAttr("src");
           $("#vidPreview").hide();
           $("#uploadPreview").hide();
-          $("#vidUploadForm > input").val(null);
+          $("#vidUploadInput").val(null);
           $("#uploadOptionsBtns").show();
 
           selectedImgOrVid = null;
@@ -258,109 +224,117 @@
         });
 
         $("#saveBtn").click(() => {
-          $("#loader").css("display", "flex");
-          let postKey = selectedPostForEdit == "" ? database.ref().child('content/posts/' + categoryID).push().key : selectedPostForEdit;
-
-          let postType = "";
-
-          if((selectedImgOrVid != null) && ($("#postTxtArea").val().length > 0) && isSelectedImg) {
-            postType = "imgTxt";
-          } else if((selectedImgOrVid != null) && ($("#postTxtArea").val().length > 0) && !isSelectedImg) {
-            postType = "vidTxt";
-          } else if((selectedImgOrVid != null) && !isSelectedImg) {
-            postType = "vid";
-          } else if((selectedImgOrVid != null) && isSelectedImg) {
-            postType = "img";
+          if(!$("#newPostForm")[0].checkValidity()) {
+            $("#newPostForm input[type='submit']").click();
           } else {
-            postType = "txt";
-          }
+            $("#loader").css("display", "flex");
+            let postKey = selectedPostForEdit == "" ? database.ref().child('content/posts/' + categoryID).push().key : selectedPostForEdit;
 
-          if(postType != "txt") {
-            let uploadTask = storageRef.child('content/posts/' + categoryID + '/' + postKey + '.jpg').put(selectedImgOrVid);
-            uploadTask.on('state_changed', function(snapshot){
-              var progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2);
-              $("#loaderPercen").text(progress + '%');
+            let postType = "";
 
-            }, function(error) {
-              console.log(error);
-              // Handle unsuccessful uploads
-            }, function() {
-              uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                $.ajax({
-                  type: "POST",
-                  url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
-                  data: {
-                    reqType : "add",
-                    key : postKey,
-                    type : postType,
-                    name : postKey,
-                    link : downloadURL,
-                    text : $("#postTxtArea").val(),
-                    timestamp : (new Date()).getTime(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                  },
-                  success: (response) => {
-                    if(response.result == "success") {
-                      categoryPosts[response.postKey] = response.post;
+            if((selectedImgOrVid != null) && ($("#postTxtArea").val().length > 0) && isSelectedImg) {
+              postType = "imgTxt";
+            } else if((selectedImgOrVid != null) && ($("#postTxtArea").val().length > 0) && !isSelectedImg) {
+              postType = "vidTxt";
+            } else if((selectedImgOrVid != null) && !isSelectedImg) {
+              postType = "vid";
+            } else if((selectedImgOrVid != null) && isSelectedImg) {
+              postType = "img";
+            } else {
+              postType = "txt";
+            }
 
-                      $("#loader").hide();
-                      isSelectedImg ? $("#uploadedImgPreview").removeAttr("src") : $("#uploadedVidPreview").removeAttr("src");
-                      $("#vidPreview, #imgPreview").hide();
-                      $("#uploadPreview").hide();
-                      $("#imgUploadForm > input, #vidUploadForm > input").val(null);
-                      $("#postTxtArea").val("").show();
-                      $("#uploadOptionsBtns").show();
-                      $("#saveBtn").hide();
-                      selectedImgOrVid = null;
+            if(postType != "txt") {
+              let uploadTask = storageRef.child('content/posts/' + categoryID + '/' + postKey + '.jpg').put(selectedImgOrVid);
+              uploadTask.on('state_changed', function(snapshot){
+                var progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2);
+                $("#loaderPercen").text(progress + '%');
 
-                      populatePostsList(true);
-                    } else {
-                      alert("Failed to add post!");
+              }, function(error) {
+                console.log(error);
+                // Handle unsuccessful uploads
+              }, function() {
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                  $.ajax({
+                    type: "POST",
+                    url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
+                    data: {
+                      reqType : "add",
+                      key : postKey,
+                      type : postType,
+                      name : $("#name").val(),
+                      link : downloadURL,
+                      text : $("#postTxtArea").val(),
+                      timestamp : (new Date()).getTime(),
+                      csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    success: (response) => {
+                      if(response.result == "success") {
+                        categoryPosts[response.postKey] = response.post;
+
+                        $("#loader").hide();
+                        isSelectedImg ? $("#uploadedImgPreview").removeAttr("src") : $("#uploadedVidPreview").removeAttr("src");
+                        $("#vidPreview, #imgPreview").hide();
+                        $("#uploadPreview").hide();
+                        $("#imgUploadInput, #vidUploadInput").val(null);
+                        $("#name").val("");
+                        $("#postTxtArea").val("").show();
+                        $("#uploadOptionsBtns").show();
+                        $("#saveBtn").hide();
+                        selectedImgOrVid = null;s
+
+                        populatePostsList(true);
+                      } else {
+                        alert("Failed to add post!");
+                        $("#loader").hide();
+                      }
+                    },
+                    error: (xhr, errmsg, err) => {
+                      console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
                     }
-                  },
-                  error: (xhr, errmsg, err) => {
-                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-                  }
+                  });
                 });
               });
-            });
-          } else {
-            $.ajax({
-              type: "POST",
-              url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
-              data: {
-                reqType : "add",
-                key : postKey,
-                type : postType,
-                name : postKey,
-                link : "",
-                text : $("#postTxtArea").val(),
-                timestamp : (new Date()).getTime(),
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-              },
-              success: (response) => {
-                if(response.result == "success") {
-                  categoryPosts[response.postKey] = response.post;
+            } else {
+              $.ajax({
+                type: "POST",
+                url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
+                data: {
+                  reqType : "add",
+                  key : postKey,
+                  type : postType,
+                  name : $("#name").val(),
+                  link : "",
+                  text : $("#postTxtArea").val(),
+                  timestamp : (new Date()).getTime(),
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: (response) => {
+                  if(response.result == "success") {
+                    categoryPosts[response.postKey] = response.post;
 
-                  $("#loader").hide();
-                  isSelectedImg ? $("#uploadedImgPreview").removeAttr("src") : $("#uploadedVidPreview").removeAttr("src");
-                  $("#vidPreview, #imgPreview").hide();
-                  $("#uploadPreview").hide();
-                  $("#imgUploadForm > input, #vidUploadForm > input").val(null);
-                  $("#postTxtArea").val("").show();
-                  $("#uploadOptionsBtns").show();
-                  $("#saveBtn").hide();
-                  selectedImgOrVid = null;
+                    $("#loader").hide();
+                    isSelectedImg ? $("#uploadedImgPreview").removeAttr("src") : $("#uploadedVidPreview").removeAttr("src");
+                    $("#vidPreview, #imgPreview").hide();
+                    $("#uploadPreview").hide();
+                    $("#imgUploadInput, #vidUploadInput").val(null);
+                    $("#name").val("");
+                    $("#postTxtArea").val("").show();
+                    $("#uploadOptionsBtns").show();
+                    $("#saveBtn").hide();
+                    selectedImgOrVid = null;
 
-                  populatePostsList();
-                } else {
-                  alert("Failed to add post!");
+                    populatePostsList();
+                  } else {
+                    alert("Failed to add post!");
+                    $("#loader").hide();
+                  }
+                },
+                error: (xhr, errmsg, err) => {
+                  console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
                 }
-              },
-              error: (xhr, errmsg, err) => {
-                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-              }
-            });
+              });
+            }
           }
         });
 

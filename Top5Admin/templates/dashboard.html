@@ -16,10 +16,13 @@
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-storage.js"></script>
     <script>
-      function toCamelCase(str){
-        return str.split(' ').map(function(word,index){
-          return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-        }).join(' ');
+      function toCamelCase(str) {
+        return str
+          .split(" ")
+          .map(function (word, index) {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+          })
+          .join(" ");
       }
 
       function categoryDashboard(categoryID, name) {
@@ -36,7 +39,8 @@
           "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(
             /CATEGORY_ID/,
             categoryID
-          ), () => {
+          ),
+          () => {
             $("#transitionLoader").hide();
             $("#dashboardContent").show();
           }
@@ -69,7 +73,6 @@
           $("#dashboardContent").show();
           $(".personal_info").show();
         });
-        
       }
     </script>
   </head>
@@ -90,11 +93,9 @@
           <div></div>
           <div></div>
         </div>
-        <p id="loaderPercen" style="color: white; text-align: center;">
-          0%
-        </p>
+        <p id="loaderPercen" style="color: white; text-align: center">0%</p>
       </div>
-    </div>   
+    </div>
     <div id="main">
       <aside id="side_menu_container">
         <div id="side_menu">
@@ -116,7 +117,9 @@
                 src="{% static 'img/post_icon.png' %}"
                 alt="posts"
               />
-              <p onclick="showCategorySelectionView()" class="menu_item">Posts</p>
+              <p onclick="showCategorySelectionView()" class="menu_item">
+                Posts
+              </p>
             </div>
             <div>
               <img
@@ -124,7 +127,7 @@
                 src="{% static 'img/signout_icon.png' %}"
                 alt="signout"
               />
-              <a onclick="location.href='{% url 'logout' %}'" class="menu_item">Sign Out</a>
+              <a href="{% url 'logout' %}" class="menu_item">Sign Out</a>
             </div>
           </div>
         </div>
@@ -152,8 +155,8 @@
             </div>
           </div>
         </header>
-        <div>    
-          <div id="transitionLoader">              
+        <div>
+          <div id="transitionLoader">
             <div class="lds-default">
               <div></div>
               <div></div>
@@ -167,8 +170,8 @@
               <div></div>
               <div></div>
               <div></div>
-            </div>              
             </div>
+          </div>
           <div id="dashboardContent"></div>
         </div>
       </section>
