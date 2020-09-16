@@ -167,7 +167,7 @@
     let comment = document.createElement("div");
     comment.classList.add("comment");
     comment.innerHTML =
-      "<img src=\"{% static 'img/user1.png' %}\" alt='user' /><div class='comment_content'><span>You</span><span>" +
+      "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><div class='comment_content'><span>You</span><span>" +
       message +
       "</span><span class='comment_action'>24h</span><span class='comment_action'>Reply</span></div>";
     document.getElementById("comments_" + postID).appendChild(comment);
@@ -283,7 +283,7 @@
     let likes = document.createElement("div");
     likes.classList.add("likes");
     likes.innerHTML =
-      "<div class='user_pic'><img src=\"{% static 'img/user1.png' %}\" alt='user' /><img src=\"{% static 'img/user2.png' %}\" alt='user' /><img src=\"{% static 'img/user3.png' %}\" alt='user' /></div><span>" + postMap["likeStr"] + "</span>";
+      "<div class='user_pic'><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /></div><span>" + postMap["likeStr"] + "</span>";
     commentSection.appendChild(likes);
 
     let comments = document.createElement("div");
@@ -293,7 +293,7 @@
       let comment = document.createElement("div");
       comment.classList.add("comment");
       comment.innerHTML =
-        "<img src=\"{% static 'img/user1.png' %}\" alt='user' /><div class='comment_content'><span>" +
+        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><div class='comment_content'><span>" +
         commentMap["username"] +
         "</span><span>" +
         commentMap["comment"] +
@@ -307,7 +307,7 @@
       let commentInput = document.createElement("div");
       commentInput.classList.add("comment_input");
       commentInput.innerHTML =
-        "<img src=\"{% static 'img/user2.png' %}\" alt='user' /><input id='comment_inp_" + postMap["id"] + "' type='text' placeholder='Comment as Britney Alei…….' /><button id='post_" + postMap["id"] + "' >Post</button>";
+        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><input id='comment_inp_" + postMap["id"] + "' type='text' placeholder='Comment as Britney Alei…….' /><button id='post_" + postMap["id"] + "' >Post</button>";
       postContainer.appendChild(commentInput);
     }
 

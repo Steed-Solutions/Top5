@@ -27,17 +27,19 @@
         <p>No Saved Posts</p>
     {% endif %}
 
-    <div class="controls" >
-      <div class="control_buttons">
-        <div id="viewPrevBtn" class="view_more_btn" {% if pageNum == 0 %}style="display:none;"{% else %}style="display:flex;"{% endif %}>
-          <button>View Prev</button>
+    {% if posts|length > 0 and hasNext %}
+        <div class="controls" >
+        <div class="control_buttons">
+            <div id="viewPrevBtn" class="view_more_btn" {% if pageNum == 0 %}style="display:none;"{% else %}style="display:flex;"{% endif %}>
+            <button>View Prev</button>
+            </div>
+            <div id="viewMoreBtn" class="view_more_btn" {% if not hasNext %}style="display:none;"{% else %}style="display:flex;"{% endif %}>
+            <button>View More</button>
+            </div>
         </div>
-        <div id="viewMoreBtn" class="view_more_btn" {% if not hasNext %}style="display:none;"{% else %}style="display:flex;"{% endif %}>
-          <button>View More</button>
+        <p id="page" style="display: block;">Page <span id="pageNum">{{ pageNumForView }}</span></p>
         </div>
-      </div>
-      <p id="page" style="display: block;">Page <span id="pageNum">{{ pageNumForView }}</span></p>
-    </div>     
+    {% endif %}
 </div>
 
 <script>

@@ -1,20 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Top5 | Coming Soon</title>
+{% extends 'site/base.html' %}
 
-    <style>
-      body {
-        height: 100vh;
-        width: 100vw;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Coming Soon</h1>
-  </body>
-</html>
+{% block content %}
+<style>
+  .body {
+    height: calc(100vh - 70px);
+    width: 100vw;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+<div class="body">
+  <h1>There is nothing here yet</h1>
+</div>
+{% endblock %}

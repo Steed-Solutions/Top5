@@ -34,28 +34,24 @@
 <div class="user_profile_page">
   <h2>User Profile</h2>
   <div class="profile">
-    <span>Edit Information</span>
+    <span id="editProfileBtn">Edit Information</span>
     <div class="profile_content">
       <div class="profile_img_container">
         <div class="profile_img">
-          <img src="{% static 'img/profilepix.png' %}" alt="profilepic" />
+          <img src="{% static 'img/user_avatar.png' %}" alt="profilepic" />
         </div>
-        <span class="profile_name">Ariana Jon</span>
-        <span class="profile_email">ArianaJon@gmail.com</span>
+        <span id="userName" class="profile_name">{{ userDetails.name }}</span>
+        <span id="userEmail" class="profile_email">{{ userDetails.email }}</span>
       </div>
       <div class="profile_details">
         <div class="gender">
           <h4>GENDER</h4>
-          <p>Female</p>
+          <p id="userGender">{{ userDetails.gender }}</p>
         </div>
         <div class="bio">
           <h4>BIO</h4>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-            enim ad minim veniam, quis nostrud exercitation ullamco laboris
-            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-            in
+          <p id="userBio">
+            {{ userDetails.description }}
           </p>
         </div>
         <div class="interests">
@@ -173,6 +169,8 @@
     let categories = {{ categories | safe }};
     let userInterests = {{ interests | safe }};
 
+    let userDataMap = {};
+
     $("[data-filter-id='" + selectedFilterID + "']").prop("checked", true);
 
     userInterests.forEach(interest => {
@@ -209,6 +207,40 @@
       });
     }
 
+    function saveProfile() {
+      $("#overlayLoader").show();
+
+      data = {
+        type: "saveProfile",
+        //name: $("#userName").text(),
+        //email: $("#userEmail").text(),
+        gender: $("#userGender").text().trim(),
+        description: $("#userBio").text().trim(), 
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "{% url 'profile' %}",
+        data: data,
+        success: (response) => {
+          if(response.result == "failure") {            
+            alert("Failed to update info!");                      
+            $("#userGender").text(userDataMap.gender == "" ? "N/A" : userDataMap.gender);
+            $("#userBio").text(userDataMap.description == "" ? "N/A" : userDataMap.description);
+          }
+
+          $("#editProfileBtn").text("Edit Information");
+          $("#userGender").attr("contenteditable", false);            
+          $("#userBio").attr("contenteditable", false);
+
+          $("#overlayLoader").hide();
+        },
+        error: (xhr, errmsg, err) => {
+          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        },
+      });
+    }
     
 
     $("[name='filter']").each((index, element) => {
@@ -220,11 +252,34 @@
           $("[name='filter']").prop("checked", false);
           $("[data-filter-id='" + selectedFilterID + "']").prop("checked", true);
 
-          updateFilter();
+          updateFilter(); 
         } else {
           $("[data-filter-id='" + selectedFilterID + "']").prop("checked", true);
         }     
       })
+    });
+
+    $("#editProfileBtn").click(() => {
+      if($("#editProfileBtn").text().indexOf("Edit") > -1) {
+        $("#editProfileBtn").text("Save Information");
+        //$("#userName").attr("contenteditable", true);
+        //$("#userEmail").attr("contenteditable", true);
+        $("#userGender").attr("contenteditable", true);
+        $("#userBio").attr("contenteditable", true);
+
+        if($("#userGender").text().trim() == "N/A") {
+          $("#userGender").text("");
+        }
+
+        if($("#userBio").text().trim() == "N/A") {
+          $("#userBio").text("");
+        }
+
+        userDataMap["gender"] = $("#userGender").text().trim();
+        userDataMap["description"] = $("#userBio").text().trim();
+      } else {
+        saveProfile();        
+      }
     });
   });
 </script>

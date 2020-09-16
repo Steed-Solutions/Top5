@@ -11,19 +11,19 @@
       <img id="nextBtn" src="{% static 'img/next_btn.png' %}" alt="next_btn" />
     </div>
     <div class="categories_sec">
-      <div class="category_card">
-        <img src="{% static 'img/food_icon.png' %}" alt="food_icon" />
+      <div class="category_card" onclick="window.location = '{% url 'comingSoon' %}'" >
+        <img src="{% static 'img/food_icon.png' %}" alt="food_icon"/>
         <span>Spanish food</span>
       </div>
-      <div class="category_card">
+      <div class="category_card" onclick="window.location = '{% url 'comingSoon' %}'" >
         <img src="{% static 'img/music_icon.png' %}" alt="music_icon" />
         <span>Pop music</span>
       </div>
-      <div class="category_card">
+      <div class="category_card" onclick="window.location = '{% url 'comingSoon' %}'" >
         <img src="{% static 'img/paint_icon.png' %}" alt="paint_icon" />
         <span>Abstract art</span>
       </div>
-      <div class="category_card">
+      <div class="category_card" onclick="window.location = '{% url 'comingSoon' %}'" >
         <img src="{% static 'img/plant_icon.png' %}" alt="plant_icon" />
         <span>Planting</span>
       </div>
@@ -31,15 +31,15 @@
     <div class="popular_sec">
       <h2>POPULAR</h2>
       <div class="popular_content">
-        <div class="popular_card">
+        <div class="popular_card" onclick="window.location = '{% url 'comingSoon' %}'" >
           <span>Grow Aloe vera </span>
         </div>
 
-        <div class="popular_card">
+        <div class="popular_card" onclick="window.location = '{% url 'comingSoon' %}'" >
           <span>Guitar basics </span>
         </div>
 
-        <div class="popular_card">
+        <div class="popular_card" onclick="window.location = '{% url 'comingSoon' %}'" >
           <span>Trending paint brush </span>
         </div>
       </div>
@@ -89,18 +89,22 @@
 
   let pageFromCall = 0;
 
+  let currentAjaxReq;
+
   $("#nextBtn").click(() => {
     window.location.href = "{% url 'home' %}";
   });
 
-  function loadSearchResults(searchTerm, direction) {
+  function loadSearchResults(searchTerm, direction) {    
     $("#noPosts").hide();
     $("#posts").hide();
     $("#page").hide();
     $("#loader").show();    
-
-    $("#seachInput").prop("disabled", true);
     
+    if(currentAjaxReq != null){
+      currentAjaxReq.abort();
+    }
+
     pageNumber += direction == "next" ? 1 : -1;
 
     data = {
@@ -110,64 +114,65 @@
       csrfmiddlewaretoken: "{{ csrf_token }}",
     };
 
-    $.ajax({
+    currentAjaxReq = $.ajax({
       type: "POST",
       url: "{% url 'browse' %}",
       data: data,
-      success: (response) => {        
-        $("#seachInput").prop("disabled", false);
-        $("#seachInput").focus();
-        if(response.posts.length > 0) {
-          if(response.posts.length < parseInt(response.loadLimit)) {
-            $("#viewMoreBtn").hide();  
-          } else {
-            $("#posts").html("");
-          }
+      success: (response) => {
+        if(response.searchTerm == searchTerm) {
 
-          if(allLoadedPosts.length == parseInt(response.loadLimit)) {
-            $("#posts").html("");
-          }
+          if(response.posts.length > 0) {
+            if(response.posts.length < parseInt(response.loadLimit)) {
+              $("#viewMoreBtn").hide();  
+            } else {
+              $("#posts").html("");
+            }
 
-          if(allLoadedPosts.length > 0 && allLoadedPosts[0]['id'] == response.posts[0]['id']) {
-            $("#viewMoreBtn").hide(); 
-          }
-          
-          $("#posts").show();
+            if(allLoadedPosts.length == parseInt(response.loadLimit)) {
+              $("#posts").html("");
+            }
 
-          if (direction == "previous") {
-            $("#viewMoreBtn").css("display", "flex"); 
-          }
+            if(allLoadedPosts.length > 0 && allLoadedPosts[0]['id'] == response.posts[0]['id']) {
+              $("#viewMoreBtn").hide(); 
+            }
+            
+            $("#posts").show();
 
-          if(!response.hasNext) {
-            $("#viewMoreBtn").hide(); 
-          }
+            if (direction == "previous") {
+              $("#viewMoreBtn").css("display", "flex"); 
+            }
 
-          pageFromCall = parseInt(response.pageNum);
-          $("#page").show();
-          $("#pageNum").html(response.pageNumForView);
+            if(!response.hasNext) {
+              $("#viewMoreBtn").hide(); 
+            }
 
-          if(pageFromCall == 0) {
-            $("#viewPrevBtn").hide();
-          } else {
-            $("#viewPrevBtn").css("display", "flex");
-          }
-
-          allLoadedPosts = []
-          response.posts.forEach((post) => {
-            allLoadedPosts.push(post);
-            createPostElement(post);
-          });       
-        } else {
-          $("#viewMoreBtn").hide();
-          
-          if(pageNumber == 0 && allLoadedPosts.length == 0) {
-            $("#noPosts").show();
-          } else {
-            $("#posts").show(); 
+            pageFromCall = parseInt(response.pageNum);
             $("#page").show();
+            $("#pageNum").html(response.pageNumForView);
+
+            if(pageFromCall == 0) {
+              $("#viewPrevBtn").hide();
+            } else {
+              $("#viewPrevBtn").css("display", "flex");
+            }
+
+            allLoadedPosts = []
+            response.posts.forEach((post) => {
+              allLoadedPosts.push(post);
+              createPostElement(post);
+            });       
+          } else {
+            $("#viewMoreBtn").hide();
+            
+            if(pageNumber == 0 && allLoadedPosts.length == 0) {
+              $("#noPosts").show();
+            } else {
+              $("#posts").show(); 
+              $("#page").show();
+            }
           }
+          $("#loader").hide();
         }
-        $("#loader").hide();
       },
       error: (xhr, errmsg, err) => {
         console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
@@ -202,7 +207,7 @@
     let comment = document.createElement("div");
     comment.classList.add("comment");
     comment.innerHTML =
-      "<img src=\"{% static 'img/user1.png' %}\" alt='user' /><div class='comment_content'><span>You</span><span>" +
+      "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><div class='comment_content'><span>You</span><span>" +
       message +
       "</span><span class='comment_action'>24h</span><span class='comment_action'>Reply</span></div>";
     document.getElementById("comments_" + postID).appendChild(comment);
@@ -318,7 +323,7 @@
     let likes = document.createElement("div");
     likes.classList.add("likes");
     likes.innerHTML =
-      "<div class='user_pic'><img src=\"{% static 'img/user1.png' %}\" alt='user' /><img src=\"{% static 'img/user2.png' %}\" alt='user' /><img src=\"{% static 'img/user3.png' %}\" alt='user' /></div><span>" + postMap["likeStr"] + "</span>";
+      "<div class='user_pic'><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /></div><span>" + postMap["likeStr"] + "</span>";
     commentSection.appendChild(likes);
 
     let comments = document.createElement("div");
@@ -328,7 +333,7 @@
       let comment = document.createElement("div");
       comment.classList.add("comment");
       comment.innerHTML =
-        "<img src=\"{% static 'img/user1.png' %}\" alt='user' /><div class='comment_content'><span>" +
+        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><div class='comment_content'><span>" +
         commentMap["username"] +
         "</span><span>" +
         commentMap["comment"] +
@@ -342,7 +347,7 @@
       let commentInput = document.createElement("div");
       commentInput.classList.add("comment_input");
       commentInput.innerHTML =
-        "<img src=\"{% static 'img/user2.png' %}\" alt='user' /><input id='comment_inp_" + postMap["id"] + "' type='text' placeholder='Comment as Britney Alei…….' /><button id='post_" + postMap["id"] + "' >Post</button>";
+        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><input id='comment_inp_" + postMap["id"] + "' type='text' placeholder='Comment as Britney Alei…….' /><button id='post_" + postMap["id"] + "' >Post</button>";
       postContainer.appendChild(commentInput);
     }
 

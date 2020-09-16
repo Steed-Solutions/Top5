@@ -329,6 +329,8 @@ nav {
 
 .user_pic > img {
   height: 2.3vw;
+  border: 3px solid white;
+  border-radius: 50%;
 }
 
 .user_pic > img:nth-of-type(2) {
@@ -478,6 +480,11 @@ nav {
   letter-spacing: 5px;
   margin-bottom: 1.04vw;
   margin-top: 2.4vw;
+}
+
+#editProfileBtn {
+  user-select: none;
+  cursor: pointer;
 }
 
 .profile {
