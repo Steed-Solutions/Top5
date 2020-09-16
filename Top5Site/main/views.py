@@ -274,19 +274,19 @@ def home(request):
                             post = posts[postID]
                             post["id"] = postID
                             post["category"] = categories[post["category"]]
-
+                            
                             post["isLiked"] = 0
 
                             likeStr = ""
                             likes = db.child("likes/" + postID).get().val()
                             if likes != None:
                                 likes = list(dict(likes).keys())
-                                likesCount = len(likes) + (-1 if isLiked else 0)
-                                limit = 2 if isLiked else 3                                
+                                likesCount = len(likes)
+                                limit = 3                                
 
                                 namedUsers = []
                                 for i in range(0, limit):
-                                    if i < len(likes) and likes[i] != request.session['uid']:
+                                    if i < len(likes):
                                         namedUsers.append(db.child("users/regularUsers/" + likes[i] + "/name").get().val())
 
                                 if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
@@ -296,7 +296,7 @@ def home(request):
                                         if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
                                             likeStr += " and "
                                         else:
-                                            if not (remainingLikes > 0 and i == len(namedUsers) - 1):
+                                            if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
                                                 likeStr += ", "                                            
 
                                         likeStr += namedUsers[i]
@@ -477,20 +477,25 @@ def browse(request):
                     post["id"] = postID
                     post["category"] = categories[post["category"]]
 
-                    isLiked = db.child("likes/" + postID + "/" + request.session['uid']).get().val() != None
-                    post["isLiked"] = 1 if isLiked else 0
+                    isLiked = 0 if not "user" in request.session else db.child("likes/" + postID + "/" + request.session['uid']).get().val() != None
+                    post["isLiked"] = 1 if isLiked else 0            
 
                     likeStr = "You" if isLiked else ""
                     likes = db.child("likes/" + postID).get().val()
                     if likes != None:
                         likes = list(dict(likes).keys())
                         likesCount = len(likes) + (-1 if isLiked else 0)
-                        limit = 2 if isLiked else 3                                
-
+                        limit = 2 if isLiked else 3           
+                        
                         namedUsers = []
                         for i in range(0, limit):
-                            if i < len(likes) and likes[i] != request.session['uid']:
-                                namedUsers.append(db.child("users/regularUsers/" + likes[i] + "/name").get().val())
+                            if i < len(likes):
+                                if "user" in request.session and likes[i] != request.session['uid']:
+                                    continue
+                        
+                                namedUsers.append(db.child("users/regularUsers/" + likes[i] + "/name").get().val())                        
+
+                        
 
                         if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
                             remainingLikes = likesCount - len(namedUsers)
@@ -499,7 +504,7 @@ def browse(request):
                                 if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
                                     likeStr += " and "
                                 else:
-                                    if not (remainingLikes > 0 and i == len(namedUsers) - 1):
+                                    if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
                                         likeStr += ", "                                            
 
                                 likeStr += namedUsers[i]
@@ -512,8 +517,8 @@ def browse(request):
 
                     else:
                         post["likeStr"] = "Be the first to like this"
-
-                    isSaved = db.child("users/regularUsers/" + request.session['uid'] + "/saved/" + postID).get().val() != None
+                    
+                    isSaved = False if not "user" in request.session else db.child("users/regularUsers/" + request.session['uid'] + "/saved/" + postID).get().val() != None
                     post["isSaved"] = 1 if isSaved else 0
 
                     comments = list()

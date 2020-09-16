@@ -20,7 +20,7 @@
       "
     >
       <img src="{% static 'img/search_icon_gray.png' %}" alt="search" />
-      <input type="text" placeholder="Enter Keywords" />
+      <input id="searchInp" type="text" placeholder="Enter Keywords"/>
     </div>
 
     <div class="ad">AD BANNER</div>
@@ -68,6 +68,10 @@
   let allLoadedPosts = [];
   let previousLastLoadedPostID = "", lastLoadedPostID = "";
   let pageNumber = 0;
+
+  $("#searchInp").click(() => {
+    window.location.href = "{% url 'browse' %}";
+  });
 
   function loadPosts(direction) {
     $("#posts").hide();
@@ -299,33 +303,38 @@
     commentSection.appendChild(comments);
     postContainer.appendChild(commentSection);
 
-    let commentInput = document.createElement("div");
-    commentInput.classList.add("comment_input");
-    commentInput.innerHTML =
-      "<img src=\"{% static 'img/user2.png' %}\" alt='user' /><input id='comment_inp_" + postMap["id"] + "' type='text' placeholder='Comment as Britney Alei…….' /><button id='post_" + postMap["id"] + "' >Post</button>";
-    postContainer.appendChild(commentInput);
+    if("{{ isLoggedIn }}" == "True") {
+      let commentInput = document.createElement("div");
+      commentInput.classList.add("comment_input");
+      commentInput.innerHTML =
+        "<img src=\"{% static 'img/user2.png' %}\" alt='user' /><input id='comment_inp_" + postMap["id"] + "' type='text' placeholder='Comment as Britney Alei…….' /><button id='post_" + postMap["id"] + "' >Post</button>";
+      postContainer.appendChild(commentInput);
+    }
+
 
     post.appendChild(postContainer);
 
     posts.appendChild(post);    
 
-    $("[name='like_" + postMap["id"] + "']").click((e) => {
-      postID = $(e.target).closest(".post_action_item").attr("name").replace("like_", "");
+    if("{{ isLoggedIn }}" == "True") {
+      $("[name='like_" + postMap["id"] + "']").click((e) => {
+        postID = $(e.target).closest(".post_action_item").attr("name").replace("like_", "");
+        
+        likePost(postID, $("[name='like_" + postID + "'] > span:first-child").hasClass("far"));
+      });    
       
-      likePost(postID, $("[name='like_" + postID + "'] > span:first-child").hasClass("far"));
-    });    
-    
-    $("#post_" + postMap["id"]).click((e) => {
-      postID = $(e.target).attr("id").replace("post_", "");
-      commentInp = $("#comment_inp_" + postID).val();
-      commentOnPost(postID, commentInp);      
-    });    
+      $("#post_" + postMap["id"]).click((e) => {
+        postID = $(e.target).attr("id").replace("post_", "");
+        commentInp = $("#comment_inp_" + postID).val();
+        commentOnPost(postID, commentInp);      
+      });    
 
-    $("#save_" + postMap["id"]).click((e) => {
-      postID = $(e.target).closest(".post_action_item").attr("id").replace("save_", "");
-      categoryID = $(e.target).closest(".post_action_item").attr("data-category-id");
-      savePost(postID, categoryID, $("#save_" + postID + " > span").hasClass("far"));      
-    }); 
+      $("#save_" + postMap["id"]).click((e) => {
+        postID = $(e.target).closest(".post_action_item").attr("id").replace("save_", "");
+        categoryID = $(e.target).closest(".post_action_item").attr("data-category-id");
+        savePost(postID, categoryID, $("#save_" + postID + " > span").hasClass("far"));      
+      }); 
+    }
 
     return post;
   }
