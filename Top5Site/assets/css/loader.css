@@ -3,6 +3,20 @@
   margin-bottom: 30px;
 }
 
+#overlayLoader {
+  height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: black;
+  opacity: 0.4;
+  z-index: 5;
+}
+
 #transitionLoader {
   height: 100%;
   display: none;

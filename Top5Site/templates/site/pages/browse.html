@@ -1,30 +1,52 @@
 {% extends 'site/base.html' %} {% load static %} {% block content %}
 
-<style>
-  .home_page_container {
-    height: calc(100% - 70px);
-    display: grid;
-    grid-template-rows: 1fr auto;
-  }
-</style>
+<div class="search_page">
+  <div class="search_field">
+    <img src="{% static 'img/search_icon.png' %}" alt="search" />
+    <input id="seachInput" type="text" placeholder="Enter Keywords" />
+  </div>
 
-<div class="home_page_container">
-  <div class="home_page">
-    <div
-      class="search_field"
-      style="
-        width: 25.6vw;
-        height: 2.73vw;
-        align-self: flex-end;
-        margin-right: 6.3vw;
-      "
-    >
-      <img src="{% static 'img/search_icon_gray.png' %}" alt="search" />
-      <input type="text" placeholder="Enter Keywords" />
+  <div id="normalLayout">
+    <div class="next_btn">
+      <img id="nextBtn" src="{% static 'img/next_btn.png' %}" alt="next_btn" />
     </div>
+    <div class="categories_sec">
+      <div class="category_card">
+        <img src="{% static 'img/food_icon.png' %}" alt="food_icon" />
+        <span>Spanish food</span>
+      </div>
+      <div class="category_card">
+        <img src="{% static 'img/music_icon.png' %}" alt="music_icon" />
+        <span>Pop music</span>
+      </div>
+      <div class="category_card">
+        <img src="{% static 'img/paint_icon.png' %}" alt="paint_icon" />
+        <span>Abstract art</span>
+      </div>
+      <div class="category_card">
+        <img src="{% static 'img/plant_icon.png' %}" alt="plant_icon" />
+        <span>Planting</span>
+      </div>
+    </div>
+    <div class="popular_sec">
+      <h2>POPULAR</h2>
+      <div class="popular_content">
+        <div class="popular_card">
+          <span>Grow Aloe vera </span>
+        </div>
 
-    <div class="ad">AD BANNER</div>
+        <div class="popular_card">
+          <span>Guitar basics </span>
+        </div>
 
+        <div class="popular_card">
+          <span>Trending paint brush </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="searchLayout" style="display: none; margin-top: 65px;">
     <div id="posts"></div>
     <p id="noPosts" style="text-align:center; display: none;">No Posts Available</p>
 
@@ -56,58 +78,75 @@
         </div>
       </div>
       <p id="page">Page <span id="pageNum">1</span></p>
-    </div>            
+    </div>
   </div>
-
-  {% include 'site/partials/_footer.html' %}
 </div>
 
 <script>
-  const posts = document.getElementById("posts");
-
   let allLoadedPosts = [];
   let previousLastLoadedPostID = "", lastLoadedPostID = "";
-  let pageNumber = 0;
+  let pageNumber = -1;  
 
-  function loadPosts(direction) {
+  let pageFromCall = 0;
+
+  $("#nextBtn").click(() => {
+    window.location.href = "{% url 'home' %}";
+  });
+
+  function loadSearchResults(searchTerm, direction) {
+    $("#noPosts").hide();
     $("#posts").hide();
     $("#page").hide();
-    $("#loader").show();       
+    $("#loader").show();    
+
+    $("#seachInput").prop("disabled", true);
+    
+    pageNumber += direction == "next" ? 1 : -1;
 
     data = {
       type: "load",
-      direction: direction,
-      previousLastLoadedPostID: allLoadedPosts.length > 0 ? allLoadedPosts[0]["id"] : "",
-      lastLoadedPost:
-        allLoadedPosts.length > 0 && direction == "next"
-          ? allLoadedPosts[allLoadedPosts.length - 1]["id"]
-          : "",
+      searchTerm: searchTerm,
+      pageNumber: pageNumber,      
       csrfmiddlewaretoken: "{{ csrf_token }}",
     };
 
     $.ajax({
       type: "POST",
-      url: "{% url 'home' %}",
+      url: "{% url 'browse' %}",
       data: data,
       success: (response) => {        
+        $("#seachInput").prop("disabled", false);
+        $("#seachInput").focus();
         if(response.posts.length > 0) {
-          if(response.posts.length < 10) {
+          if(response.posts.length < parseInt(response.loadLimit)) {
             $("#viewMoreBtn").hide();  
           } else {
             $("#posts").html("");
           }
+
+          if(allLoadedPosts.length == parseInt(response.loadLimit)) {
+            $("#posts").html("");
+          }
+
+          if(allLoadedPosts.length > 0 && allLoadedPosts[0]['id'] == response.posts[0]['id']) {
+            $("#viewMoreBtn").hide(); 
+          }
           
-          $("#posts").show();          
+          $("#posts").show();
 
           if (direction == "previous") {
             $("#viewMoreBtn").css("display", "flex"); 
           }
-          
-          pageNumber += direction == "next" ? 1 : -1;
-          $("#page").show();
-          $("#pageNum").html(pageNumber);
 
-          if(pageNumber == 1) {
+          if(!response.hasNext) {
+            $("#viewMoreBtn").hide(); 
+          }
+
+          pageFromCall = parseInt(response.pageNum);
+          $("#page").show();
+          $("#pageNum").html(response.pageNumForView);
+
+          if(pageFromCall == 0) {
             $("#viewPrevBtn").hide();
           } else {
             $("#viewPrevBtn").css("display", "flex");
@@ -121,7 +160,7 @@
         } else {
           $("#viewMoreBtn").hide();
           
-          if(pageNumber == 1 && allLoadedPosts.length == 0) {
+          if(pageNumber == 0 && allLoadedPosts.length == 0) {
             $("#noPosts").show();
           } else {
             $("#posts").show(); 
@@ -329,18 +368,35 @@
 
     return post;
   }
-  
-  loadPosts("next");
 
-  $("#viewPrevBtn").click(() => {    
+  $("#seachInput").on("keyup", (e) => {
+    searchTerm = $(e.target).val();
+    if(searchTerm.length == 0) {
+      $("#searchLayout").hide();
+      $("#normalLayout").show();
+    } else {
+      $("#normalLayout").hide();
+
+      $("#posts").html("");
+      pageNumber = -1;        
+      pageFromCall = 0;
+      allLoadedPosts = []
+      loadSearchResults(searchTerm, "next");
+      
+      $("#searchLayout").show();      
+      $("#viewMoreBtn").show();   
+    }
+  });
+
+  $("#viewPrevBtn").click(() => {
     if($("#loader").css("display") == "none") {
-      loadPosts("previous");
+      loadSearchResults($("#seachInput").val(), "previous");
     }
   });
 
   $("#viewMoreBtn").click(() => {
     if($("#loader").css("display") == "none") {
-      loadPosts("next");
+      loadSearchResults($("#seachInput").val(), "next");
     }
   });
 

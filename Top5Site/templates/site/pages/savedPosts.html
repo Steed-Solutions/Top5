@@ -3,23 +3,53 @@
 <div class="user_profile_save">
     <h2>ALL</h2>
     
-    {% for post in posts %}
-    <div class="saved_item">
-        <div class="item_img">
-            <img src="{% static 'img/post_content2.png' %}" alt="item">
-        </div>
-        <div class="item_details">
-            <p style="color: {{ post.category.color }}">{{ post.name }}</p>
-            <span>{% if "vid" in post.type %}Video{% else %}Post{% endif %}</span>
-            <div>
-                <div name="category_{{ post.category.id }}">
-                    <img src="{{ post.category.imgURL }}" alt="icon" onload="setCategoryIconBackground('{{ post.category.id }}', '{{ post.category.color }}')" />
+    {% if posts %}
+        {% for post in posts %}
+            <div class="saved_item" style="{% if "link" not in post or post.link == "" %}column-gap: 0;{% endif %}">
+                <div class="item_img">
+                    {% if "link" in post and post.link != "" %}
+                        <img src="{{ post.link }}" alt="item">
+                    {% endif %}
                 </div>
-                <p>Saved from <span>{{ post.category.name }} {% if not "vid" in post.type %}'s post{% endif %} </span></p>
-            </div>
+                <div class="item_details">
+                    <p style="color: {{ post.category.color }}">{{ post.name }}</p>
+                    <span>{% if "vid" in post.type %}Video{% else %}Post{% endif %}</span>
+                    <div>
+                        <div name="category_{{ post.category.id }}">
+                            <img src="{{ post.category.imgURL }}" alt="icon" onload="setCategoryIconBackground('{{ post.category.id }}', '{{ post.category.color }}')" />
+                        </div>
+                        <p>Saved from <span>{{ post.category.name }} {% if not "vid" in post.type %}'s post{% endif %} </span></p>
+                    </div>
+                </div>
+            </div>    
+        {% endfor %}
+    {% else %}
+        <p>No Saved Posts</p>
+    {% endif %}
+
+    <div class="controls" >
+      <div class="control_buttons">
+        <div id="viewPrevBtn" class="view_more_btn" {% if pageNum == 0 %}style="display:none;"{% else %}style="display:flex;"{% endif %}>
+          <button>View Prev</button>
         </div>
-    </div>    
-    {% endfor %}
+        <div id="viewMoreBtn" class="view_more_btn" {% if not hasNext %}style="display:none;"{% else %}style="display:flex;"{% endif %}>
+          <button>View More</button>
+        </div>
+      </div>
+      <p id="page" style="display: block;">Page <span id="pageNum">{{ pageNumForView }}</span></p>
+    </div>     
 </div>
+
+<script>
+
+    $("#viewPrevBtn > button").click(() => {
+        window.location.href = "{% url 'saved' 123456 %}".replace(/123456/, {{ pageNum }} - 1);
+    });
+
+    $("#viewMoreBtn > button").click(() => {
+        window.location.href = "{% url 'saved' 123456 %}".replace(/123456/, {{ pageNum }} + 1);
+    });
+
+</script>
     
 {% endblock %}

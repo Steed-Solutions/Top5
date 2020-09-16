@@ -27,6 +27,8 @@ nav {
 .nav_brand {
   display: flex;
   align-items: center;
+  user-select: none;
+  cursor: pointer;
 }
 
 .nav_brand > img {
@@ -130,22 +132,22 @@ nav {
 }
 
 .category_card:nth-of-type(1) {
-  background: url(./assets/food_bg.png) center center no-repeat;
+  background: url(../img/food_bg.png) center center no-repeat;
   background-size: cover;
 }
 
 .category_card:nth-of-type(2) {
-  background: url(./assets/music_bg.png) top center no-repeat;
+  background: url(../img/music_bg.png) top center no-repeat;
   background-size: cover;
 }
 
 .category_card:nth-of-type(3) {
-  background: url(./assets/paint_bg.png) top center no-repeat;
+  background: url(../img/paint_bg.png) top center no-repeat;
   background-size: cover;
 }
 
 .category_card:nth-of-type(4) {
-  background: url(./assets/plant_bg.png) top center no-repeat;
+  background: url(../img/plant_bg.png) top center no-repeat;
   background-size: cover;
 }
 
@@ -192,17 +194,17 @@ nav {
 }
 
 .popular_card:nth-of-type(1) {
-  background: url(./assets/aloe_vera_bg.png) top center no-repeat;
+  background: url(../img/aloe_vera_bg.png) top center no-repeat;
   background-size: cover;
 }
 
 .popular_card:nth-of-type(2) {
-  background: url(./assets/guitar_bg.png) top center no-repeat;
+  background: url(../img/guitar_bg.png) top center no-repeat;
   background-size: cover;
 }
 
 .popular_card:nth-of-type(3) {
-  background: url(./assets/paintbrush_bg.png) top center no-repeat;
+  background: url(../img/paintbrush_bg.png) top center no-repeat;
   background-size: cover;
 }
 
@@ -234,7 +236,7 @@ nav {
 }
 
 .post {
-  width: 45.4vw;
+  width: 87.4vw;
   margin-bottom: 90px;
   border: 1px solid #d2d0d0;
 }
@@ -251,7 +253,7 @@ nav {
 .post_header > div {
   height: 68.6%;
   margin: 1% 20px 0 2%;
-  padding: 1.7%;
+  padding: 0.7%;
   border-radius: 50%;
 }
 
@@ -267,16 +269,18 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 2vw;
 }
 
 .post_content_image,
 .post_content_video {
-  width: 100%;
+  width: 45.4vw;
   height: 21.8vw;
   object-fit: cover;
   z-index: -2;
   top: 0;
   position: absolute;
+  margin: auto;
 }
 
 .post_content > span {
@@ -285,8 +289,7 @@ nav {
 }
 
 .post_action {
-  border: 1px solid #d2d0d0;
-  border-bottom: none;
+  border-top: 1px solid #d2d0d0;
   display: flex;
   justify-content: space-between;
   padding: 1.8vw 1.7vw 0.95vw 1.7vw;
@@ -303,8 +306,6 @@ nav {
 
 .comment_sec {
   width: 100%;
-  border: 1px solid #d2d0d0;
-  border-top: none;
 }
 
 .likes {
@@ -446,14 +447,16 @@ nav {
 /* user_profile page css */
 
 .user_profile_page {
-  margin: 0.033vw 0 10vw 0;
-  width: 85.4vw;
+  margin: 2.4vw auto 10vw auto;
+  width: 85.4vw;  
 }
 
 .user_profile_page > h2 {
-  font-size: calc(20px + (25 - 20) * ((100vw - 300px) / (1600 - 300)));
+  font-size: calc(12px + (25 - 12) * ((100vw - 300px) / (1600 - 300)));
   font-weight: 600;
   letter-spacing: 5px;
+  margin-bottom: 1.04vw;
+  margin-top: 2.4vw;
 }
 
 .profile {
@@ -461,7 +464,6 @@ nav {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  margin: 70px 0;
 }
 
 .profile > span {
@@ -476,12 +478,13 @@ nav {
 
 .profile_content {
   display: grid;
-  grid-template-columns: 0.5fr 1fr;
+  grid-template-columns: 40% 60%;
   align-items: center;
   justify-content: center;
-  height: 61.1vh;
-  border-radius: 93px;
+  min-height: 34.4vw;
+  border-radius: 4.3vw;
   box-shadow: 0px 0px 25px #d2d0d0;
+  padding: 3.9vw 2vw;
 }
 
 .profile_img_container {
@@ -489,44 +492,73 @@ nav {
   flex-direction: column;
   align-items: center;
   border-right: 1px solid #d2d0d0;
+  height: 100%;
+  padding-right: 5vw;
 }
 .profile_img {
   border-radius: 50%;
-  height: 27.8vh;
+  height: 15.67vw;
+  width: 15.67vw;
 }
 
 .profile_img > img {
   border-radius: 50%;
   height: inherit;
+  object-fit: cover;
 }
 
 .profile_name {
-  font-size: calc(25px + (35 - 25) * ((100vw - 300px) / (1600 - 300)));
+  font-size: calc(12px + (30 - 12) * ((100vw - 300px) / (1600 - 300)));
   letter-spacing: 5px;
+  font-weight: bold;
+  margin-top: 20px;
 }
 
 .profile_email {
-  font-size: calc(15px + (18 - 15) * ((100vw - 300px) / (1600 - 300)));
+  font-size: calc(10px + (18 - 10) * ((100vw - 300px) / (1600 - 300)));
   color: #a6a6a6;
 }
 
 .profile_details {
-  display: flex;
-  flex-direction: column;
-  margin-left: 5.8vw;
-  justify-content: space-evenly;
+  margin-left: 5.7vw;
   height: 100%;
+  padding-top: 0.65vw;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  row-gap: 2.7vw;
 }
 
-.profile_details p {
+.profile_details h4 {
   font-size: calc(12px + (15 - 12) * ((100vw - 300px) / (1600 - 300)));
 }
 
+.profile_details p {
+  font-size: calc(10px + (14 - 8) * ((100vw - 300px) / (1600 - 300)));
+}
+
+.bio > p {
+  font-size: calc(8px + (14 - 8) * ((100vw - 300px) / (1600 - 300)));
+}
+
 .interests > div {
+  padding: 1.5vw 0;
   display: flex;
-  width: 60%;
-  justify-content: space-between;
-  padding: 30px 0;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.interests > div > div {
+  width: 2.82vw;
+  height: 2.82vw;
+  padding: 0.6vw;
+  border-radius: 50%;
+  margin-right: 2.5vw;
+  margin-bottom: 2.5vw;
+}
+
+.interests > div > div > img {
+  height: 100%;
+  display: inline-block;
 }
 
 .filters {
@@ -534,10 +566,10 @@ nav {
   grid-template-columns: 1fr 1fr;
   align-items: center;
   justify-items: center;
-  height: 61.1vh;
-  border-radius: 93px;
+  height: 34.4vw;
+  border-radius: 4.3vw;
   box-shadow: 0px 0px 25px #d2d0d0;
-  margin: 70px 0;
+  margin-top: 3vw;
 }
 
 .checkboxes_container {
@@ -546,6 +578,26 @@ nav {
 
   flex-direction: column;
   border-right: 1px solid #d2d0d0;
+}
+
+.checkbox > h4 {
+  font-size: calc(12px + (15 - 12) * ((100vw - 300px) / (1600 - 300)));
+}
+
+.interest_checkboxes_container > div {
+  margin-bottom: 1.6vw;
+}
+
+.interest_checkboxes_container > div > div {
+  width: 2.82vw;
+  height: 2.82vw;
+  padding: 0.6vw;
+  border-radius: 50%;
+}
+
+.interest_checkboxes_container > div > div > img {
+  height: 100%;
+  display: inline-block;
 }
 
 .checkbox {
@@ -565,42 +617,46 @@ nav {
 
 /* user_profile save page css */
 .user_profile_save {
-  margin: 40px 7.2vw;
+  margin: 3.3vw auto 10vw auto;
+  width: 85.4vw;
 }
 
 .user_profile_save > h2 {
   font-size: calc(20px + (25 - 20) * ((100vw - 300px) / (1600 - 300)));
   font-weight: 600;
   letter-spacing: 2px;
+  margin-bottom: 3vw;
 }
 
 .saved_item {
   display: grid;
-  grid-template-columns: 0.5fr 1fr;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  height: 36vh;
+  height: 20.3vw;
   margin-bottom: 40px;
-  border-radius: 93px;
+  border-radius: 4.2vw;
   box-shadow: 0px 0px 25px #d2d0d0;
+  padding: 3vw 2.7vw;
+  column-gap: 8.98vw;
 }
 
 .item_img {
   width: 18.9vw;
-  height: 25.4vh;
+  height: 14.3vw;
   justify-self: center;
   border-radius: 45px;
 }
 
 .item_img > img {
-  border-radius: 45px;
+  border-radius: 2.1vw;
   width: inherit;
   height: inherit;
+  object-fit: cover;
 }
 
 .item_details {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
   height: 100%;
 }
 
@@ -609,22 +665,37 @@ nav {
   align-items: center;
 }
 
-.item_details > div > img {
-  height: 40px;
-  margin-right: 20px;
+.item_details > div > div {
+  width: 2.82vw;
+  height: 2.82vw;
+  padding: 1.2%;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.item_details > div > div > img {
+  height: 100%;
+  display: inline-block;
+}
+
+.item_details > div > p {
+  color: #CBCBCB;
 }
 
 .item_details > div > p > span {
-  font-weight: bold;
+  color: black;
+  text-transform: lowercase;
 }
 
 .item_details > p:nth-of-type(1) {
   letter-spacing: 5px;
-  font-weight: 500;
+  font-weight: bold;
+  margin-top: 0.5vw;
 }
 
 .item_details > span {
   color: #d2d0d0;
+  margin-top: 0.8vw;
 }
 /* user_profile save page css */
 
