@@ -228,7 +228,7 @@
             $("#newPostForm input[type='submit']").click();
           } else {
             $("#loader").css("display", "flex");
-            let postKey = selectedPostForEdit == "" ? database.ref().child('content/posts/' + categoryID).push().key : selectedPostForEdit;
+            let postKey = selectedPostForEdit == "" ? database.ref().child('content/posts/').push().key : selectedPostForEdit;
 
             let postType = "";
 
@@ -245,7 +245,7 @@
             }
 
             if(postType != "txt") {
-              let uploadTask = storageRef.child('content/posts/' + categoryID + '/' + postKey + '.jpg').put(selectedImgOrVid);
+              let uploadTask = storageRef.child('content/posts/' + postKey + '.jpg').put(selectedImgOrVid);
               uploadTask.on('state_changed', function(snapshot){
                 var progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2);
                 $("#loaderPercen").text(progress + '%');

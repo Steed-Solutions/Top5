@@ -165,8 +165,9 @@ def categoryDash(request, category_id):
 
                 textWords = data["text"].split(" ")
                 data["words"] = {}
-                for word in textWords:
+                for word in textWords:            
                     data["words"][word.lower()] = True
+                    db.child("words/" + word.lower() + "/" + request.POST["key"]).set("postID")
 
                 db.child('content/posts/' + request.POST["key"]).set(data)
 
@@ -187,7 +188,7 @@ def categoryDash(request, category_id):
                 return JsonResponse({"result": "failure"})
 
     categoryPostsMap = {}
-    categoryPosts = db.child("content/posts/" + category_id).get().val()
+    categoryPosts = db.child("content/posts").order_by_child("category").equal_to(category_id).get().val()
 
     if categoryPosts != None:
         categoryPostsMap = dict(categoryPosts)
