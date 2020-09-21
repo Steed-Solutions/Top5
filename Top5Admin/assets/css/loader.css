@@ -1,4 +1,5 @@
-#loader {
+#loader,
+#overlayLoader {
   height: 100vh;
   display: none;
   align-items: center;

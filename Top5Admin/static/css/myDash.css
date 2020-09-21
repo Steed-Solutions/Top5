@@ -82,6 +82,14 @@ html {
   color: white;
   user-select: none;
   cursor: pointer;
+  position: relative;
+}
+
+.cat_delete_btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: none;
 }
 
 .box_icon {

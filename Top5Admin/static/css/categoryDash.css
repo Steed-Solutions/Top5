@@ -42,11 +42,12 @@ html {
   width: 100%;
   border: none;
   min-height: 200px;
-  height: 200px;
   border-right: 0.5px solid rgba(162, 125, 206, 0.5);
   border-bottom: 1px solid #a27dce;
   resize: vertical;
   padding: 25px;
+  background-color: white;
+  margin-bottom: 20px;
 }
 
 #postTxtArea::placeholder {
@@ -58,11 +59,22 @@ html {
   padding: 20px 0;
   display: grid;
   justify-content: end;
-  grid-template-columns: auto auto;
-  column-gap: 80px;
+  grid-template-columns: auto auto auto;
+  column-gap: 40px;
   color: #a27dce;
   font-size: 15px;
   user-select: none;
+}
+
+.active {
+  border: 1px solid #a27dce;
+  border-radius: 5px;
+  background: #eae3f3;
+}
+
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 .post_sec_icon {
@@ -70,10 +82,12 @@ html {
   align-items: center;
   cursor: pointer;
   user-select: none;
+  padding: 10px;
 }
 
 .post_sec_icon > img {
   margin-right: 8px;
+  height: 25px;
 }
 
 .search_sec {

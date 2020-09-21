@@ -8,6 +8,11 @@ from firebase_admin import credentials as adminCredentials, auth as adminAuth
 
 import pyrebase
 
+import json
+import re
+
+import base64
+
 cred = adminCredentials.Certificate(finders.find(
     'key/top-50-9951b-firebase-adminsdk-6n5a9-5a5dfe7f4d.json'))
 firebase_admin.initialize_app(cred)
@@ -112,39 +117,91 @@ def dashboard(request):
 def myDash(request):
     uid = request.session['uid']
 
+    user = dict(db.child("users/admin/" + uid).get().val())
+
     if request.method == "POST":
-        try:
-            if request.POST["isNameUpdated"] == "true":
-                adminAuth.update_user(
-                    uid, display_name=request.POST["username"])
-                db.child("users/admin/" + uid +
-                         "/name").set(request.POST['username'])
+        if request.POST["type"] == "profileUpdate":
+            try:
+                if request.POST["isNameUpdated"] == "true":
+                    adminAuth.update_user(
+                        uid, display_name=request.POST["username"])
+                    db.child("users/admin/" + uid +
+                             "/name").set(request.POST['username'])
 
-            if request.POST["isEmailUpdated"] == "true":
-                adminAuth.update_user(
-                    uid, email=request.POST["email"])
-                db.child("users/admin/" + uid +
-                         "/email").set(request.POST['email'])
+                if request.POST["isEmailUpdated"] == "true":
+                    adminAuth.update_user(
+                        uid, email=request.POST["email"])
+                    db.child("users/admin/" + uid +
+                             "/email").set(request.POST['email'])
 
-            if request.POST["isPasswordUpdated"] == "true":
-                adminAuth.update_user(
-                    uid, password=request.POST["password"])
+                if request.POST["isPasswordUpdated"] == "true":
+                    adminAuth.update_user(
+                        uid, password=request.POST["password"])
 
-            return JsonResponse({"result": "success"})
-        except:
-            return JsonResponse({"result": "failure"})
+                return JsonResponse({"result": "success"})
+            except:
+                return JsonResponse({"result": "failure"})
+        elif request.POST["type"] == "validatePassword":
+            try:
+                userCheck = auth.sign_in_with_email_and_password(
+                    request.POST["email"], request.POST["password"])
+                return JsonResponse({"result": "success"})
+            except:
+                return JsonResponse({"result": "failure"})
+        elif request.POST["type"] == "addCategory":
+            try:
+                id = request.POST["name"].lower()
 
-    userMap = {}
-    user = db.child("users/admin/" + uid).get().val()
-    for key, value in user.items():
-        userMap[key] = value
+                storage.child(
+                    "content/categories/" + id + ".jpg").put(base64.b64decode(str(request.POST["icon"])), request.session["user"])
+                imgURL = storage.child(
+                    "content/categories/" + id + ".jpg").get_url(request.session["user"])
 
-    categoriesMap = {}
+                categoryMap = {
+                    "name": request.POST["name"].upper(),
+                    "color": request.POST["color"],
+                    "imgURL": imgURL
+                }
+
+                db.child("content/categories/" + id).set(categoryMap)
+
+                categoryMap["id"] = id
+
+                return JsonResponse({"result": "success", "category": categoryMap})
+            except Exception as e:
+                print(e)
+                return JsonResponse({"result": "failure"})
+        elif request.POST["type"] == "deleteCategory":
+            try:
+                db.child("content/categories/" +
+                         request.POST["category_id"]).remove()
+
+                categoryPosts = None
+
+                try:
+                    categoryPosts = db.child("content/posts").order_by_child(
+                        "category").equal_to(request.POST["category_id"]).get().val()
+                except Exception:
+                    pass
+
+                categoryPosts = list(
+                    dict(categoryPosts).keys()) if categoryPosts != None else []
+
+                updateMap = {}
+                for postID in categoryPosts:
+                    updateMap[postID] = None
+
+                if len(updateMap.keys()) > 0:
+                    db.child("content/posts").update(updateMap)
+
+                return JsonResponse({"result": "success"})
+            except Exception as e:
+                return JsonResponse({"result": "failure"})
+
     categories = db.child("content/categories").get().val()
-    for key, value in categories.items():
-        categoriesMap[key] = value
+    categories = dict(categories) if categories != None else {}
 
-    return render(request, "myDash.html", {"user": userMap, "categories": categoriesMap})
+    return render(request, "myDash.html", {"user": user, "categories": categories})
 
 
 def categoryDash(request, category_id):
@@ -159,25 +216,29 @@ def categoryDash(request, category_id):
                     "name": request.POST["name"],
                     "category": category_id,
                     "link": request.POST["link"],
-                    "text": request.POST["text"],
+                    "text": str(request.POST["text"]),
                     "timestamp": request.POST["timestamp"]
                 }
 
-                textWords = data["text"].split(" ")
+                textWords = request.POST["textNoTags"].strip().split(" ")
                 data["words"] = {}
-                for word in textWords:            
-                    data["words"][word.lower()] = True
-                    db.child("words/" + word.lower() + "/" + request.POST["key"]).set("postID")
+                wordsMap = {}
+                for word in textWords:
+                    if(re.fullmatch(r"[-0-9_a-z]+", word.lower())):
+                        data["words"][word.lower()] = True
+                        db.child("words/" + word.lower() + "/" +
+                                 request.POST["key"]).set("postID")
 
-                db.child('content/posts/' + request.POST["key"]).set(data)
+                db.child('content/posts/' +
+                         request.POST["key"]).set(data)
 
                 return JsonResponse({"result": "success", "postKey": request.POST["key"], "post": {"type": request.POST["type"],
                                                                                                    "name": request.POST["name"],
                                                                                                    "link": request.POST["link"],
                                                                                                    "text": request.POST["text"],
                                                                                                    "timestamp": request.POST["timestamp"]}})
-            except:
-                print("WTH")
+            except Exception as e:
+                print(e)
                 return JsonResponse({"result": "failure"})
         elif request.POST["reqType"] == "delete":
             try:
@@ -188,13 +249,17 @@ def categoryDash(request, category_id):
                 return JsonResponse({"result": "failure"})
 
     categoryPostsMap = {}
-    categoryPosts = db.child("content/posts").order_by_child("category").equal_to(category_id).get().val()
+    categoryPosts = None
+    try:
+        categoryPosts = db.child(
+            "content/posts").order_by_child("category").equal_to(category_id).get().val()
+    except Exception:
+        pass
 
     if categoryPosts != None:
         categoryPostsMap = dict(categoryPosts)
 
     return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": categoryPostsMap})
-
 
 def logout(request):
     request.session.pop('user', None)

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{% static 'css/loader.css' %}" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-storage.js"></script>
@@ -26,6 +26,8 @@
       }
 
       function categoryDashboard(categoryID, name) {
+        $("#addCategoryBtn").remove();
+        $(".cat_delete_btn").hide();
         $("#dashboardContent").hide();
         $("#transitionLoader").css("display", "flex");
         $(".dashboard_name").text(toCamelCase(name) + " Dashboard");
@@ -34,6 +36,7 @@
           "src",
           "{% static 'img/dashboard_icon.png' %}"
         );
+        $(".category_icon").attr("src", "{% static 'img/category_icon.png' %}");
         $(".post_icon").attr("src", "{% static 'img/post_icon_clicked.png' %}");
         $("#dashboardContent").load(
           "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(
@@ -48,17 +51,47 @@
       }
 
       function showCategorySelectionView() {
+        $("#addCategoryBtn").remove();
+        $(".cat_delete_btn").hide();
         $(".dashboard_name").text("Please select a category:");
         $(".header_subtxt").hide();
         $(".dashboard_icon").attr(
           "src",
           "{% static 'img/dashboard_icon.png' %}"
         );
+        $(".category_icon").attr("src", "{% static 'img/category_icon.png' %}");
         $(".post_icon").attr("src", "{% static 'img/post_icon_clicked.png' %}");
         $(".personal_info").hide();
       }
 
+      function showCategoriesEditView() {
+        $(".dashboard_name").text("Manage Categories:");
+        $(".header_subtxt").hide();
+        $(".dashboard_icon").attr(
+          "src",
+          "{% static 'img/dashboard_icon.png' %}"
+        );
+        $(".post_icon").attr("src", "{% static 'img/post_icon.png' %}");
+        $(".category_icon").attr(
+          "src",
+          "{% static 'img/category_icon_clicked.png' %}"
+        );
+
+        $(".cat_delete_btn").show();
+        $(".personal_info").hide();
+
+        $(".categories_boxes").append(
+          "<div id='addCategoryBtn' class='cat_box' style='background-color: #f1f1f1; border: 3px solid #0f395e;'><img src='{% static 'img/add.png' %}' alt='icon' class='box_icon'/><p style='color:#0f395e;'>Add Category</p></div>"
+        );
+
+        $("#addCategoryBtn").click(() => {
+          $("#addNewCategoryModal").show();
+        });
+      }
+
       function myDashboard() {
+        $("#addCategoryBtn").remove();
+        $(".cat_delete_btn").hide();
         $("#dashboardContent").hide();
         $("#transitionLoader").css("display", "flex");
         $(".dashboard_name").text("My Dashboard");
@@ -67,6 +100,7 @@
           "src",
           "{% static 'img/dashboard_icon_clicked.png' %}"
         );
+        $(".category_icon").attr("src", "{% static 'img/category_icon.png' %}");
         $(".post_icon").attr("src", "{% static 'img/post_icon.png' %}");
         $("#dashboardContent").load("{% url 'myDash' %}", () => {
           $("#transitionLoader").hide();
@@ -96,6 +130,251 @@
         <p id="loaderPercen" style="color: white; text-align: center">0%</p>
       </div>
     </div>
+
+    <div id="overlayLoader">
+      <div class="lds-default">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <div id="embedLinkModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal_title">
+          <p id="embedFormHeader">Add Category</p>
+          <span
+            id="embedLinkModalClose"
+            class="close"
+            onclick="$('#embedLinkModal').hide();"
+            ><img src="{% static 'img/delete_circle.png' %}"
+          /></span>
+        </div>
+        <div>
+          <form id="embedLinkForm" method="POST">
+            {% csrf_token %}
+            <div class="container">
+              <label for="linkLabel" class="link_label"
+                ><b>Link Label</b></label
+              >
+              <input
+                id="linkLabel"
+                type="text"
+                class="link_label"
+                placeholder="Link Label"
+                name="linkLabel"
+                autocomplete="off"
+                required
+              />
+
+              <label for="link"><b>Link</b></label>
+              <input
+                id="link"
+                type="text"
+                placeholder="Enter Embed URL"
+                name="link"
+                autocomplete="off"
+                required
+              />
+
+              <div class="status_message"></div>
+
+              <div class="button_grid">
+                <button
+                  id="cancelEmbedBtn"
+                  type="button"
+                  onclick="$('#embedLinkModal').hide();"
+                >
+                  Cancel</button
+                ><button id="embedBtn" class="modal_button" type="submit">
+                  Add
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="addNewCategoryModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal_title">
+          <p>Add Category</p>
+          <span
+            id="addNewCategoryModalClose"
+            class="close"
+            onclick="$('#addNewCategoryModal').hide();"
+            ><img src="{% static 'img/delete_circle.png' %}"
+          /></span>
+        </div>
+        <div>
+          <form
+            id="addNewCategoryForm"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <div class="container">
+              <label for="categoryName"><b>Name</b></label>
+              <input
+                id="categoryName"
+                type="text"
+                placeholder="Enter Category Name"
+                name="categoryName"
+                autocomplete="off"
+                required
+              />
+
+              <label for="categoryColor"><b>Color</b></label>
+              <input
+                id="categoryColor"
+                type="color"
+                name="categoryColor"
+                value="#0f395e"
+              />
+
+              <div
+                style="display: flex; align-items: center; margin: 8px 0 20px 0"
+              >
+                <label for="categoryIcon"><b>Icon</b></label>
+                <input
+                  id="categoryIcon"
+                  type="file"
+                  accept="image/*"
+                  style="display: none"
+                />
+                <div id="uploadCategoryIconBtn" class="post_sec_icon">
+                  <div>
+                    <img
+                      src="{% static 'img/photo_icon.png' %}"
+                      alt="photo_icon"
+                    />
+                    <span>Upload</span>
+                  </div>
+                </div>
+
+                <p
+                  id="iconSelected"
+                  style="
+                    display: none;
+                    color: #0f395e;
+                    margin-left: 10px;
+                    font-size: 0.8em;
+                  "
+                >
+                  Icon Selected
+                </p>
+              </div>
+
+              <div class="status_message"></div>
+
+              <div class="button_grid">
+                <button
+                  id="cancelAddCategoryBtn"
+                  type="button"
+                  onclick="$('#addNewCategoryModal').hide();"
+                >
+                  Cancel</button
+                ><button
+                  id="newCategorySaveBtn"
+                  class="modal_button"
+                  type="submit"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="deleteConfirmationModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal_title">
+          <p>Delete <span class="delete_category_name"></span></p>
+          <span
+            id="deleteConfirmationModalClose"
+            class="close"
+            onclick="$('.status_message').hide();$('#deleteDefaultLayout').show();$('#deletePassworInputLayout').hide();$('#deleteConfirmationModal').hide();"
+            ><img src="{% static 'img/delete_circle.png' %}"
+          /></span>
+        </div>
+        <div id="deleteDefaultLayout" class="container">
+          <p class="modal-message">
+            Are you sure you want to delete the category
+            <span class="delete_category_name"></span> forever? This action is
+            permanent.
+          </p>
+
+          <div class="status_message"></div>
+
+          <div class="button_grid">
+            <button
+              id="cancelDeleteBtn"
+              class="modal_button"
+              onclick="$('#deleteConfirmationModal').hide();"
+            >
+              Cancel
+            </button>
+            <span id="deleteBtn">Delete</span>
+          </div>
+        </div>
+        <div id="deletePassworInputLayout" style="display: none">
+          <form id="deleteCategoryPasswordForm" method="POST">
+            {% csrf_token %}
+            <div class="container">
+              <p class="modal-message">
+                Enter your current password to confirm deletion of
+                <span class="delete_category_name"></span>.
+              </p>
+
+              <label for="deleteConfirmationPassword"
+                ><b>Current Password</b></label
+              >
+              <input
+                id="deleteConfirmationPassword"
+                type="password"
+                placeholder="Enter Password"
+                name="password"
+                autocomplete="off"
+                required
+              />
+
+              <div class="status_message"></div>
+
+              <div class="button_grid">
+                <button
+                  id="cancelEditBtn"
+                  onclick="$('.status_message').hide();$('#deleteDefaultLayout').show();$('#deletePassworInputLayout').hide();$('#deleteConfirmationModal').hide();"
+                >
+                  Cancel</button
+                ><button
+                  id="confirmDeleteBtn"
+                  class="modal_button"
+                  type="submit"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div id="main">
       <aside id="side_menu_container">
         <div id="side_menu">
@@ -119,6 +398,16 @@
               />
               <p onclick="showCategorySelectionView()" class="menu_item">
                 Posts
+              </p>
+            </div>
+            <div>
+              <img
+                class="menu_icon category_icon"
+                src="{% static 'img/category_icon.png' %}"
+                alt="category"
+              />
+              <p onclick="showCategoriesEditView()" class="menu_item">
+                Categories
               </p>
             </div>
             <div>

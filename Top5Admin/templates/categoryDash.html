@@ -4,10 +4,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Food Dashboard</title>
+    <title>{{ categoryID }} Dashboard</title>
 
     <link rel="stylesheet" href="{% static 'css/categoryDash.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap_combined.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/prettify.css' %}" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+
+    <script src="{% static 'js/jquery.hotkeys.js' %}"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    <link
+      href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css"
+      rel="stylesheet"
+    />
+    <script src="{% static 'js/prettify.js' %}"></script>
   </head>
   <body>
     <div id="category_dashboard" method="post" enctype="multipart/form-data">
@@ -16,14 +29,121 @@
           {% csrf_token %}
           <input id="name" type="text" placeholder="Name" required />
 
-          <textarea
-            name="food_post"
-            id="postTxtArea"
-            cols="30"
-            rows="10"
-            placeholder="Post here..."
-          ></textarea>
+          <div
+            class="btn-toolbar"
+            data-role="post_text_toolbar"
+            data-target="#postTxtArea"
+            style="display: none"
+          >
+            <div class="btn-group">
+              <a
+                class="btn dropdown-toggle"
+                data-toggle="dropdown"
+                title="Font Size"
+                ><i class="icon-text-height"></i>&nbsp;<b class="caret"></b
+              ></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a data-edit="fontSize 5"
+                    ><span style="font-size: 1.26em">Huge</span></a
+                  >
+                </li>
+                <li>
+                  <a data-edit="fontSize 3"
+                    ><span style="font-size: 1em">Normal</span></a
+                  >
+                </li>
+                <li>
+                  <a data-edit="fontSize 1"
+                    ><span style="font-size: 0.76em">Small</span></a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="btn-group">
+              <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"
+                ><i class="icon-bold"></i
+              ></a>
+              <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"
+                ><i class="icon-italic"></i
+              ></a>
+              <a class="btn" data-edit="strikethrough" title="Strikethrough"
+                ><i class="icon-strikethrough"></i
+              ></a>
+              <a
+                class="btn"
+                data-edit="underline"
+                title="Underline (Ctrl/Cmd+U)"
+                ><i class="icon-underline"></i
+              ></a>
+            </div>
+            <div class="btn-group">
+              <a class="btn" data-edit="insertunorderedlist" title="Bullet list"
+                ><i class="icon-list-ul"></i
+              ></a>
+              <a class="btn" data-edit="insertorderedlist" title="Number list"
+                ><i class="icon-list-ol"></i
+              ></a>
+              <a
+                class="btn"
+                data-edit="outdent"
+                title="Reduce indent (Shift+Tab)"
+                ><i class="icon-indent-left"></i
+              ></a>
+              <a class="btn" data-edit="indent" title="Indent (Tab)"
+                ><i class="icon-indent-right"></i
+              ></a>
+            </div>
+            <div class="btn-group">
+              <a
+                class="btn"
+                data-edit="justifyleft"
+                title="Align Left (Ctrl/Cmd+L)"
+                ><i class="icon-align-left"></i
+              ></a>
+              <a
+                class="btn"
+                data-edit="justifycenter"
+                title="Center (Ctrl/Cmd+E)"
+                ><i class="icon-align-center"></i
+              ></a>
+              <a
+                class="btn"
+                data-edit="justifyright"
+                title="Align Right (Ctrl/Cmd+R)"
+                ><i class="icon-align-right"></i
+              ></a>
+              <a
+                class="btn"
+                data-edit="justifyfull"
+                title="Justify (Ctrl/Cmd+J)"
+                ><i class="icon-align-justify"></i
+              ></a>
+            </div>
+            <div class="btn-group">
+              <div id="linkBtn" class="btn" title="Hyperlink">
+                <i class="icon-link"></i>
+              </div>
+            </div>
+            <div class="btn-group">
+              <div id="embedImageBtn" class="btn" title="Image">
+                <i class="fas fa-image"></i>
+              </div>
+              <div id="embedVideoBtn" class="btn" title="Video">
+                <i class="fas fa-video"></i>
+              </div>
+            </div>
+          </div>
+          <div id="postTxtArea"></div>
+
           <div id="uploadOptionsBtns" class="post_sec_icons">
+            <div>
+              <div id="articleBtn" class="post_sec_icon">
+                <img src="{% static 'img/article.png' %}" alt="article_icon" />
+                <span style="color: #2f363a">Article</span>
+              </div>
+            </div>
+
             <input
               id="imgUploadInput"
               type="file"
@@ -92,17 +212,18 @@
           placeholder="Search"
           id="search"
         />
-        {% comment %}
         <div class="search_result">
           <span>Show Result</span>
           <span class="result_count">5</span>
         </div>
-        {% endcomment %}
       </div>
       <div class="items_sec"></div>
     </div>
 
+    <script src="{% static 'js/bootstrap-wysiwyg.js' %}"></script>
+
     <script src="{% static 'js/firebaseInit.js' %}"></script>
+
     <script>
       $(document).ready(() => {
         var month = new Array();
@@ -130,9 +251,31 @@
         let categoryPosts = "{{ categoryPosts | safe }}";
         categoryPosts = categoryPosts.replace(/'/g, '"');
         categoryPosts = categoryPosts.replace(/True/g, "true");
+        categoryPosts = categoryPosts.replace(/\n/g, "\\n");
+
         categoryPosts = JSON.parse(categoryPosts);
 
+        $("#postTxtArea").wysiwyg({
+          toolbarSelector: "[data-role='post_text_toolbar']",
+        });
+        window.prettyPrint && prettyPrint();
 
+        $("#articleBtn").click(() => {
+          $("#postTxtArea").html("");
+          $("#saveBtn").hide();
+          $("#articleBtn").parent().toggleClass("active");
+          if($("#articleBtn").parent().hasClass("active")) {
+            $("#articleBtn").css("padding", "9px");
+            $("#uploadImgBtn").addClass("disabled");
+            $("#uploadVidBtn").addClass("disabled");
+            $(".btn-toolbar").show();
+          } else {
+            $("#articleBtn").css("padding", "10px");
+            $("#uploadImgBtn").removeClass("disabled");
+            $("#uploadVidBtn").removeClass("disabled");
+            $(".btn-toolbar").hide();
+          }
+        });
 
         $("#uploadImgBtn").click(() => {
           $("#imgUploadInput").click();
@@ -140,6 +283,40 @@
 
         $("#uploadVidBtn").click(() => {
           $("#vidUploadInput").click();
+        });
+
+        $("#linkBtn").click(() => {
+          $("#embedFormHeader").text("Embed Link");
+          $("#embedLinkModal").show();
+        });
+
+        $("#embedImageBtn").click(() => {
+          $("#embedFormHeader").text("Embed Image");
+          $("#embedLinkModal").show();
+        });
+
+        $("#embedVideoBtn").click(() => {
+          $("#embedFormHeader").text("Embed Video");
+          $(".link_label").hide();
+          $("#linkLabel").prop("required", false);
+          $("#embedLinkModal").show();
+        });
+
+        $("#embedLinkForm").submit((e) => {
+          e.preventDefault();
+          if($("#embedFormHeader").text().indexOf("Link") > -1) {
+            $("#postTxtArea").append("<a href=\"" + $("#link").val().trim() + "\">" + $("#linkLabel").val().trim() + "</a>");
+          } else if($("#embedFormHeader").text().indexOf("Image") > -1) {
+            $("#postTxtArea").append("<br><img src=\"" + $("#link").val().trim() + "\" alt=\"" + $("#linkLabel").val().trim() + "\"><br><br>");
+          } else if($("#embedFormHeader").text().indexOf("Video") > -1) {
+            $("#postTxtArea").append("<br><div style='text-align: center;'><video src=\"" + $("#link").val().trim() + "\" controls></video></div><br><br>");
+            $(".link_label").show();
+            $("#linkLabel").prop("required", true);
+          }
+
+          $("#link").val("");
+          $("#linkLabel").val("");
+          $("#embedLinkModal").hide();
         });
 
         $("#loaderPercen").show();
@@ -153,7 +330,7 @@
               $("#uploadPreview").show();
               $("#imgPreview").show();
               $("#saveBtn").css("display", "flex");
-              $("#uploadedImgPreview").attr("src", e.target.result)
+              $("#uploadedImgPreview").attr("src", e.target.result);
             }
             reader.readAsDataURL(this.files[0]); // convert to base64 string
 
@@ -193,7 +370,7 @@
 
           selectedImgOrVid = null;
 
-          if($("#postTxtArea").val().length == 0) {
+          if($("#postTxtArea").html().length == 0) {
             $("#saveBtn").hide();
           }
 
@@ -208,18 +385,23 @@
 
           selectedImgOrVid = null;
 
-          if($("#postTxtArea").val().length == 0) {
+          if($("#postTxtArea").html().length == 0) {
             $("#saveBtn").hide();
           }
         });
 
-        $("#postTxtArea").on("keyup", () => {
-          if($("#postTxtArea").val().length > 0) {
-            if($("#saveBtn").css("display") == "none") {
-              $("#saveBtn").css("display", "flex");
+        $(document).on("keyup", e => {
+          console.log($(e.target).attr("id") == "postTxtArea");
+          if($(e.target).attr("id") == "postTxtArea") {
+            console.log($("#postTxtArea").html().length > 0);
+            if($("#postTxtArea").html().length > 0) {
+              console.log($("#saveBtn").css("display") == "none");
+              if($("#saveBtn").css("display") == "none") {
+                $("#saveBtn").css("display", "flex");
+              }
+            } else if ($("#postTxtArea").html().length == 0 && $("#uploadPreview").css("display") == "none") {
+              $("#saveBtn").hide();
             }
-          } else if ($("#postTxtArea").val().length == 0 && $("#uploadPreview").css("display") == "none") {
-            $("#saveBtn").hide();
           }
         });
 
@@ -232,19 +414,23 @@
 
             let postType = "";
 
-            if((selectedImgOrVid != null) && ($("#postTxtArea").val().length > 0) && isSelectedImg) {
-              postType = "imgTxt";
-            } else if((selectedImgOrVid != null) && ($("#postTxtArea").val().length > 0) && !isSelectedImg) {
-              postType = "vidTxt";
-            } else if((selectedImgOrVid != null) && !isSelectedImg) {
-              postType = "vid";
-            } else if((selectedImgOrVid != null) && isSelectedImg) {
-              postType = "img";
+            if($("#articleBtn").parent().hasClass("active")) {
+              postType = "article";
             } else {
-              postType = "txt";
+              if((selectedImgOrVid != null) && ($("#postTxtArea").html().length > 0) && isSelectedImg) {
+                postType = "imgTxt";
+              } else if((selectedImgOrVid != null) && ($("#postTxtArea").html().length > 0) && !isSelectedImg) {
+                postType = "vidTxt";
+              } else if((selectedImgOrVid != null) && !isSelectedImg) {
+                postType = "vid";
+              } else if((selectedImgOrVid != null) && isSelectedImg) {
+                postType = "img";
+              } else {
+                postType = "txt";
+              }
             }
 
-            if(postType != "txt") {
+            if(postType != "txt" && postType != "article") {
               let uploadTask = storageRef.child('content/posts/' + postKey + '.jpg').put(selectedImgOrVid);
               uploadTask.on('state_changed', function(snapshot){
                 var progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2);
@@ -264,7 +450,7 @@
                       type : postType,
                       name : $("#name").val(),
                       link : downloadURL,
-                      text : $("#postTxtArea").val(),
+                      text : $("#postTxtArea").html(),
                       timestamp : (new Date()).getTime(),
                       csrfmiddlewaretoken: '{{ csrf_token }}',
                     },
@@ -278,7 +464,7 @@
                         $("#uploadPreview").hide();
                         $("#imgUploadInput, #vidUploadInput").val(null);
                         $("#name").val("");
-                        $("#postTxtArea").val("").show();
+                        $("#postTxtArea").html("").show();
                         $("#uploadOptionsBtns").show();
                         $("#saveBtn").hide();
                         selectedImgOrVid = null;s
@@ -305,7 +491,8 @@
                   type : postType,
                   name : $("#name").val(),
                   link : "",
-                  text : $("#postTxtArea").val(),
+                  text : $("#postTxtArea").html(),
+                  textNoTags: $("#postTxtArea").text(),
                   timestamp : (new Date()).getTime(),
                   csrfmiddlewaretoken: '{{ csrf_token }}',
                 },
@@ -319,7 +506,7 @@
                     $("#uploadPreview").hide();
                     $("#imgUploadInput, #vidUploadInput").val(null);
                     $("#name").val("");
-                    $("#postTxtArea").val("").show();
+                    $("#postTxtArea").html("").show();
                     $("#uploadOptionsBtns").show();
                     $("#saveBtn").hide();
                     selectedImgOrVid = null;
@@ -366,6 +553,8 @@
               itemContent.innerHTML += "<img src='" + post.link + "' width='40%' /><span>" + post.text + "</span>";
             } else if(post.type == "vidTxt") {
               itemContent.innerHTML += "<video src='" + post.link + "#t=0.5'  width='40%' preload='metadata' /><span>" + post.text + "</span>";
+            } else if(post.type == "article") {
+              itemContent.innerHTML += "<p>" + post.text + "</p>";
             }
 
             let itemDate = document.createElement("span");
@@ -398,7 +587,7 @@
               } else if(post.type == "vid") {
                 $("#imgPreview").hide();
                 $("#uploadOptionsBtns").hide();
-                $("#postTxtArea").val("").hide();
+                $("#postTxtArea").html("").hide();
                 $("#uploadPreview").show();
                 $("#vidPreview").show();
                 $("#saveBtn").css("display", "flex");
@@ -454,6 +643,8 @@
             item.appendChild(itemDate);
             item.appendChild(itemIcons);
 
+            $(itemContent).html($(itemContent).text());
+
             document.getElementsByClassName("items_sec")[0].appendChild(item);
           });
         }
@@ -468,7 +659,6 @@
           var strTime = hours + ':' + minutes + ' ' + ampm;
           return strTime;
         }
-
       });
     </script>
   </body>
