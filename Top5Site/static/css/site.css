@@ -65,6 +65,42 @@ nav {
 
 /* nav css */
 
+/* post */
+
+#selectedPost {
+  display: none;
+  width: 87.4%;
+  margin: 4.5vw auto;
+  margin-top: 4.5vw;
+}
+
+#closePostBtn {
+  margin-left: auto;
+  display: block;
+  user-select: none;
+  cursor: pointer;
+}
+
+#selectedPostTitle {
+  font-size: 1.5em;
+  text-align: center;
+  margin: 3.5vw 0;
+  font-weight: bold;
+}
+
+#postImageOrVideo {
+  width: 100%;
+  height: 41.97vw;
+  margin-bottom: 3.5vw;
+  object-fit: cover;
+}
+
+#selectedPostActionAndComments {
+  margin-top: 3.5vw;
+}
+
+/* post end */
+
 /* search page css */
 .search_page {
   display: flex;
@@ -131,7 +167,7 @@ nav {
   padding: 10px;
   align-items: flex-start;
   cursor: pointer;
-  font-size: calc(12px + (15 - 12) * ((100vw - 300px) / (1600 - 300)));  
+  font-size: calc(12px + (15 - 12) * ((100vw - 300px) / (1600 - 300)));
 }
 
 .category_card:nth-of-type(1) {
@@ -271,6 +307,8 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
+  cursor: pointer;
 }
 
 .post_content_image,
@@ -429,7 +467,7 @@ nav {
   height: 4.41vw;
   display: flex;
   justify-content: center;
-  align-items: center;  
+  align-items: center;
 }
 
 .view_more_btn > button {
@@ -471,7 +509,7 @@ nav {
 
 .user_profile_page {
   margin: 2.4vw auto 10vw auto;
-  width: 85.4vw;  
+  width: 85.4vw;
 }
 
 .user_profile_page > h2 {
@@ -705,7 +743,7 @@ nav {
 }
 
 .item_details > div > p {
-  color: #CBCBCB;
+  color: #cbcbcb;
 }
 
 .item_details > div > p > span {
@@ -740,7 +778,7 @@ footer {
 footer > div {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .footer_links > a {

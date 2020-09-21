@@ -20,13 +20,49 @@
       "
     >
       <img src="{% static 'img/search_icon_gray.png' %}" alt="search" />
-      <input id="searchInp" type="text" placeholder="Enter Keywords"/>
+      <input id="searchInp" type="text" placeholder="Enter Keywords" />
     </div>
 
     <div class="ad">AD BANNER</div>
 
+    {% comment %} Carousel Start {% endcomment %}
+
+    <!-- Slideshow container -->
+    <div id="carousel">
+      <div class="slideshow-container">
+        {% for post in recentPosts %}
+        <div class="mySlides">
+          {% if post.link != "" %}
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fposts%2Ffood%2Fbrowse_categories_dummy_image.png?alt=media&token=b9604172-051c-4b62-9be4-3e22b642b337"
+            style="width: 100%"
+          />
+          {% endif %}
+          <div>
+            <div class="text">{{ post.name }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <br />
+
+      <!-- Next and previous buttons -->
+      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+      <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+      <div id="indicators" style="text-align: center">
+        <span class="indicator" onclick="currentSlide(1)"></span>
+        <span class="indicator" onclick="currentSlide(2)"></span>
+        <span class="indicator" onclick="currentSlide(3)"></span>
+      </div>
+    </div>
+
+    {% comment %} Carousel End {% endcomment %}
+
     <div id="posts"></div>
-    <p id="noPosts" style="text-align:center; display: none;">No Posts Available</p>
+    <p id="noPosts" style="text-align: center; display: none">
+      No Posts Available
+    </p>
 
     <div id="loader">
       <div class="lds-default">
@@ -42,9 +78,9 @@
         <div></div>
         <div></div>
         <div></div>
-      </div>        
+      </div>
       <div>Loading...</div>
-    </div>  
+    </div>
 
     <div class="controls">
       <div class="control_buttons">
@@ -56,7 +92,7 @@
         </div>
       </div>
       <p id="page">Page <span id="pageNum">1</span></p>
-    </div>            
+    </div>
   </div>
 
   {% include 'site/partials/_footer.html' %}
@@ -66,22 +102,65 @@
   const posts = document.getElementById("posts");
 
   let allLoadedPosts = [];
-  let previousLastLoadedPostID = "", lastLoadedPostID = "";
+  let previousLastLoadedPostID = "",
+    lastLoadedPostID = "";
   let pageNumber = 0;
 
   $("#searchInp").click(() => {
     window.location.href = "{% url 'browse' %}";
   });
 
+  let slideIndex = 1;
+  showSlides(slideIndex);
+
+  // Next/previous controls
+  function plusSlides(n) {
+    showSlides((slideIndex += n));
+  }
+
+  // Thumbnail image controls
+  function currentSlide(n) {
+    showSlides((slideIndex = n));
+  }
+
+  function showNext() {
+    showSlides((slideIndex += 1));
+  }
+
+  function showSlides(n) {
+    let slides = document.getElementsByClassName("mySlides");
+    let indicators = document.getElementsByClassName("indicator");
+    if (n > slides.length) {
+      slideIndex = 1;
+    }
+    if (n < 1) {
+      slideIndex = slides.length;
+    }
+
+    $(".slideshow-container").css(
+      "left",
+      "calc(-87.4vw * " + (slideIndex - 1) + ")"
+    );
+
+    for (let i = 0; i < indicators.length; i++) {
+      indicators[i].className = indicators[i].className.replace(" active", "");
+    }
+
+    indicators[slideIndex - 1].className += " active";
+  }
+
+  setInterval(() => plusSlides(1), 5000);
+
   function loadPosts(direction) {
     $("#posts").hide();
     $("#page").hide();
-    $("#loader").show();       
+    $("#loader").show();
 
     data = {
       type: "load",
       direction: direction,
-      previousLastLoadedPostID: allLoadedPosts.length > 0 ? allLoadedPosts[0]["id"] : "",
+      previousLastLoadedPostID:
+        allLoadedPosts.length > 0 ? allLoadedPosts[0]["id"] : "",
       lastLoadedPost:
         allLoadedPosts.length > 0 && direction == "next"
           ? allLoadedPosts[allLoadedPosts.length - 1]["id"]
@@ -93,42 +172,42 @@
       type: "POST",
       url: "{% url 'home' %}",
       data: data,
-      success: (response) => {        
-        if(response.posts.length > 0) {
-          if(response.posts.length < 10) {
-            $("#viewMoreBtn").hide();  
+      success: (response) => {
+        if (response.posts.length > 0) {
+          if (response.posts.length < 10) {
+            $("#viewMoreBtn").hide();
           } else {
             $("#posts").html("");
           }
-          
-          $("#posts").show();          
+
+          $("#posts").show();
 
           if (direction == "previous") {
-            $("#viewMoreBtn").css("display", "flex"); 
+            $("#viewMoreBtn").css("display", "flex");
           }
-          
+
           pageNumber += direction == "next" ? 1 : -1;
           $("#page").show();
           $("#pageNum").html(pageNumber);
 
-          if(pageNumber == 1) {
+          if (pageNumber == 1) {
             $("#viewPrevBtn").hide();
           } else {
             $("#viewPrevBtn").css("display", "flex");
           }
 
-          allLoadedPosts = []
+          allLoadedPosts = [];
           response.posts.forEach((post) => {
             allLoadedPosts.push(post);
             createPostElement(post);
-          });       
+          });
         } else {
           $("#viewMoreBtn").hide();
-          
-          if(pageNumber == 1 && allLoadedPosts.length == 0) {
+
+          if (pageNumber == 1 && allLoadedPosts.length == 0) {
             $("#noPosts").show();
           } else {
-            $("#posts").show(); 
+            $("#posts").show();
             $("#page").show();
           }
         }
@@ -148,13 +227,33 @@
         type: "like",
         postID: postID,
         isLike: isLike,
-        csrfmiddlewaretoken: "{{ csrf_token }}"
+        csrfmiddlewaretoken: "{{ csrf_token }}",
       },
       success: (response) => {
-        if(response.result == "success") {
-          $("[name='like_" + postID + "'] > span:first-child").toggleClass("far").toggleClass("fas");
-          $("[name='like_" + postID + "'] > span:first-child").css("color", isLike ? "#D7443E" : "black");          
-          $("[name='like_" + postID + "'] > span:last-child").html(response.likes + " like" + (response.likes != 1 ? "s" : ""));          
+        if (response.result == "success") {
+          $(
+            "[name='like_" +
+              postID +
+              "'] > span:first-child, #selectedPostActionAndComments [name='like_" +
+              postID +
+              "'] > span:first-child"
+          )
+            .toggleClass("far")
+            .toggleClass("fas");
+          $(
+            "[name='like_" +
+              postID +
+              "'] > span:first-child, #selectedPostActionAndComments [name='like_" +
+              postID +
+              "'] > span:first-child"
+          ).css("color", isLike ? "#D7443E" : "black");
+          $(
+            "[name='like_" +
+              postID +
+              "'] > span:last-child, #selectedPostActionAndComments [name='like_" +
+              postID +
+              "'] > span:last-child"
+          ).html(response.likes + " like" + (response.likes != 1 ? "s" : ""));
         }
       },
       error: (xhr, errmsg, err) => {
@@ -163,7 +262,7 @@
     });
   }
 
-  function addNewComment(postID, message){
+  function addNewComment(postID, message) {
     let comment = document.createElement("div");
     comment.classList.add("comment");
     comment.innerHTML =
@@ -171,6 +270,9 @@
       message +
       "</span><span class='comment_action'>24h</span><span class='comment_action'>Reply</span></div>";
     document.getElementById("comments_" + postID).appendChild(comment);
+    $("#selectedPostActionAndComments #comments_" + postID).append(
+      $("#comments_" + postID + " > div:last-child").get(0).outerHTML
+    );
   }
 
   function commentOnPost(postID, comment) {
@@ -181,14 +283,30 @@
         type: "comment",
         postID: postID,
         comment: comment,
-        timestamp : (new Date()).getTime(),
+        timestamp: new Date().getTime(),
         csrfmiddlewaretoken: "{{ csrf_token }}",
       },
       success: (response) => {
-        if(response.result == "success") {
+        if (response.result == "success") {
           addNewComment(postID, comment);
-          $("#comments_count_" + postID + " > span:last-child").html(response.comments + " comment" + (response.comments != 1 ? "s" : "") + "</span>");
-          $("#comment_inp_" + postID).val("");
+          $(
+            "#comments_count_" +
+              postID +
+              " > span:last-child, #selectedPostActionAndComments #comments_count_" +
+              postID +
+              " > span:last-child"
+          ).html(
+            response.comments +
+              " comment" +
+              (response.comments != 1 ? "s" : "") +
+              "</span>"
+          );
+          $(
+            "#comment_inp_" +
+              postID +
+              ", #selectedPostActionAndComments #comment_inp_" +
+              postID
+          ).val("");
         }
       },
       error: (xhr, errmsg, err) => {
@@ -209,8 +327,16 @@
         csrfmiddlewaretoken: "{{ csrf_token }}",
       },
       success: (response) => {
-        if(response.result == "success") {
-          $("#save_" + postID + " > span").toggleClass("far").toggleClass("fas");
+        if (response.result == "success") {
+          $(
+            "[name='save_" +
+              postID +
+              "'] > span, #selectedPostActionAndComments [name='save_" +
+              postID +
+              "'] > span"
+          )
+            .toggleClass("far")
+            .toggleClass("fas");
         }
       },
       error: (xhr, errmsg, err) => {
@@ -221,6 +347,7 @@
 
   function createPostElement(postMap) {
     let post = document.createElement("div");
+    post.setAttribute("id", "post_" + postMap["id"]);
     post.classList.add("post");
 
     let postContainer = document.createElement("div");
@@ -228,10 +355,22 @@
 
     let postHeader = document.createElement("div");
     postHeader.classList.add("post_header");
-    postHeader.innerHTML ="<div name='category_" + postMap["category"]["id"] + "'><img src='" + postMap["category"]["imgURL"] +"' alt='icon' onload=\"setCategoryIconBackground('" + postMap["category"]["id"] + "','" + postMap["category"]["color"] + "')\" /></div><span>" + postMap["name"] + "</span>";
+    postHeader.innerHTML =
+      "<div name='category_" +
+      postMap["category"]["id"] +
+      "'><img src='" +
+      postMap["category"]["imgURL"] +
+      "' alt='icon' onload=\"setCategoryIconBackground('" +
+      postMap["category"]["id"] +
+      "','" +
+      postMap["category"]["color"] +
+      "')\" /></div><span>" +
+      postMap["name"] +
+      "</span>";
     postContainer.appendChild(postHeader);
 
     let postContent = document.createElement("div");
+    postContent.setAttribute("id", "postContent_" + postMap["id"]);
     postContent.classList.add("post_content");
     if (postMap["type"].indexOf("img") >= 0) {
       postContent.innerHTML =
@@ -244,12 +383,23 @@
         postMap["link"] +
         "#t=0.5' class='post_content_video' preload='metadata' />";
     }
-    if (postMap["type"].toLowerCase().indexOf("txt") >= 0) {
+    if (
+      postMap["type"].toLowerCase().indexOf("txt") >= 0 ||
+      postMap["type"] == "article"
+    ) {
+      let text = postMap["text"];
+      if (postMap["type"] == "article") {
+        text = $("<div></div>").hide().html(postMap["text"]).text();
+      }
+
       postContent.innerHTML +=
         "<span style='color: " +
         (postMap["link"] == "" ? "black" : "white") +
+        (postMap["type"] == "article"
+          ? "; width: 30ch; text-overflow: ellipsis; white-space: nowrap; overflow: hidden"
+          : "") +
         "'>" +
-        postMap["text"] +
+        text +
         "</span>";
     }
     postContainer.appendChild(postContent);
@@ -257,22 +407,38 @@
     let postAction = document.createElement("div");
     postAction.classList.add("post_action");
     let likeBtn = document.createElement("div");
-    likeBtn.classList.add("post_action_item");  
+    likeBtn.classList.add("post_action_item");
     likeBtn.setAttribute("name", "like_" + postMap["id"]);
-    likeBtn.innerHTML = "<span class='" + (postMap["isLiked"] ? "fas" : "far") + " fa-heart' style='" + (postMap["isLiked"] ? "color: #D7443E" : "") + "'></span><span>" + postMap["likes"] + " like" + (postMap["likes"] != 1 ? "s" : "") + "</span>";        
-    
-    postAction.appendChild(likeBtn);    
+    likeBtn.innerHTML =
+      "<span class='" +
+      (postMap["isLiked"] ? "fas" : "far") +
+      " fa-heart' style='" +
+      (postMap["isLiked"] ? "color: #D7443E" : "") +
+      "'></span><span>" +
+      postMap["likes"] +
+      " like" +
+      (postMap["likes"] != 1 ? "s" : "") +
+      "</span>";
+
+    postAction.appendChild(likeBtn);
 
     postAction.innerHTML +=
-      "<div id='comments_count_" + postMap["id"] + "' class='post_action_item'><span class='far fa-comment'></span><span>" +
+      "<div id='comments_count_" +
+      postMap["id"] +
+      "' class='post_action_item'><span class='far fa-comment'></span><span>" +
       postMap["comments"] +
-      " comment" + (postMap["comments"] != 1 ? "s" : "") + "</span></div>";
+      " comment" +
+      (postMap["comments"] != 1 ? "s" : "") +
+      "</span></div>";
 
     let saveBtn = document.createElement("div");
     saveBtn.classList.add("post_action_item");
-    saveBtn.setAttribute("id", "save_" + postMap["id"]);  
+    saveBtn.setAttribute("name", "save_" + postMap["id"]);
     saveBtn.setAttribute("data-category-id", postMap["category"]["id"]);
-    saveBtn.innerHTML = "<span class='" + (postMap["isSaved"] ? "fas" : "far") + " fa-bookmark'></span>";
+    saveBtn.innerHTML =
+      "<span class='" +
+      (postMap["isSaved"] ? "fas" : "far") +
+      " fa-bookmark'></span>";
     postAction.appendChild(saveBtn);
 
     postContainer.appendChild(postAction);
@@ -283,7 +449,9 @@
     let likes = document.createElement("div");
     likes.classList.add("likes");
     likes.innerHTML =
-      "<div class='user_pic'><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /></div><span>" + postMap["likeStr"] + "</span>";
+      "<div class='user_pic'><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /></div><span>" +
+      postMap["likeStr"] +
+      "</span>";
     commentSection.appendChild(likes);
 
     let comments = document.createElement("div");
@@ -303,56 +471,166 @@
     commentSection.appendChild(comments);
     postContainer.appendChild(commentSection);
 
-    if("{{ isLoggedIn }}" == "True") {
-      let commentInput = document.createElement("div");
-      commentInput.classList.add("comment_input");
-      commentInput.innerHTML =
-        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><input id='comment_inp_" + postMap["id"] + "' type='text' placeholder='Comment as Britney Alei…….' /><button id='post_" + postMap["id"] + "' >Post</button>";
-      postContainer.appendChild(commentInput);
-    }
-
+    let commentInput = document.createElement("div");
+    commentInput.classList.add("comment_input");
+    commentInput.innerHTML =
+      "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><input id='comment_inp_" +
+      postMap["id"] +
+      "' type='text' " +
+      ("{{ isLoggedIn }}" != "True" ? "disabled" : "") +
+      " placeholder='" +
+      ("{{ isLoggedIn }}" == "True"
+        ? "Enter your comment..."
+        : "Login to comment...") +
+      "' />" +
+      ("{{ isLoggedIn }}" == "True"
+        ? "<button class='postBtn_" + postMap["id"] + "' >Post</button>"
+        : "");
+    postContainer.appendChild(commentInput);
 
     post.appendChild(postContainer);
 
-    posts.appendChild(post);    
+    posts.appendChild(post);
 
-    if("{{ isLoggedIn }}" == "True") {
+    $("#postContent_" + postMap["id"]).click((e) => {
+      console.log(postMap);
+      $("#loadedPage").hide();
+      $("#selectedPost").show();
+
+      $("#selectedPostTitle").html(postMap["name"]);
+
+      if (postMap["type"].indexOf("img") >= 0) {
+        $("#selectedPostContent").append(
+          '<img id="postImageOrVideo" src="' + postMap["link"] + '">'
+        );
+      } else if (postMap["type"].indexOf("vid") >= 0) {
+        $("#selectedPostContent").append(
+          '<video id="postImageOrVideo" src="' +
+            postMap["link"] +
+            '" controls ></video>'
+        );
+      }
+
+      if (
+        postMap["type"].toLowerCase().indexOf("txt") >= 0 ||
+        postMap["type"] == "article"
+      ) {
+        $("#selectedPostContent").append("<pre>" + postMap["text"] + "</pre>");
+      }
+
+      $("#selectedPostActionAndComments").append(
+        $("#post_" + postMap["id"] + " > div > .post_action").get(0).outerHTML
+      );
+      $("#selectedPostActionAndComments").append(
+        $("#post_" + postMap["id"] + " > div > .comment_sec").get(0).outerHTML
+      );
+      $("#selectedPostActionAndComments").append(
+        $("#post_" + postMap["id"] + " > div > .comment_input").get(0).outerHTML
+      );
+
+      if ("{{ isLoggedIn }}" == "True") {
+        $(
+          "#selectedPostActionAndComments [name='like_" + postMap["id"] + "']"
+        ).click((e) => {
+          postID = $(e.target)
+            .closest(".post_action_item")
+            .attr("name")
+            .replace("like_", "");
+
+          likePost(
+            postID,
+            $(
+              "#selectedPostActionAndComments [name='like_" +
+                postID +
+                "'] > span:first-child"
+            ).hasClass("far")
+          );
+        });
+
+        $("#selectedPostActionAndComments .postBtn_" + postMap["id"]).click(
+          (e) => {
+            postID = $(e.target).attr("class").replace("postBtn_", "");
+            commentInp = $(
+              "#selectedPostActionAndComments #comment_inp_" + postID
+            ).val();
+            commentOnPost(postID, commentInp);
+          }
+        );
+
+        $(
+          "#selectedPostActionAndComments [name='save_" + postMap["id"] + "']"
+        ).click((e) => {
+          postID = $(e.target)
+            .closest(".post_action_item")
+            .attr("name")
+            .replace("save_", "");
+          categoryID = $(e.target)
+            .closest(".post_action_item")
+            .attr("data-category-id");
+          savePost(
+            postID,
+            categoryID,
+            $(
+              "#selectedPostActionAndComments [name='save_" +
+                postID +
+                "'] > span"
+            ).hasClass("far")
+          );
+        });
+      }
+    });
+
+    if ("{{ isLoggedIn }}" == "True") {
       $("[name='like_" + postMap["id"] + "']").click((e) => {
-        postID = $(e.target).closest(".post_action_item").attr("name").replace("like_", "");
-        
-        likePost(postID, $("[name='like_" + postID + "'] > span:first-child").hasClass("far"));
-      });    
-      
-      $("#post_" + postMap["id"]).click((e) => {
-        postID = $(e.target).attr("id").replace("post_", "");
-        commentInp = $("#comment_inp_" + postID).val();
-        commentOnPost(postID, commentInp);      
-      });    
+        postID = $(e.target)
+          .closest(".post_action_item")
+          .attr("name")
+          .replace("like_", "");
 
-      $("#save_" + postMap["id"]).click((e) => {
-        postID = $(e.target).closest(".post_action_item").attr("id").replace("save_", "");
-        categoryID = $(e.target).closest(".post_action_item").attr("data-category-id");
-        savePost(postID, categoryID, $("#save_" + postID + " > span").hasClass("far"));      
-      }); 
+        likePost(
+          postID,
+          $("[name='like_" + postID + "'] > span:first-child").hasClass("far")
+        );
+      });
+
+      $(".postBtn_" + postMap["id"]).click((e) => {
+        postID = $(e.target).attr("class").replace("postBtn_", "");
+        commentInp = $("#comment_inp_" + postID).val();
+        commentOnPost(postID, commentInp);
+      });
+
+      $("[name='save_" + postMap["id"] + "']").click((e) => {
+        postID = $(e.target)
+          .closest(".post_action_item")
+          .attr("name")
+          .replace("save_", "");
+        categoryID = $(e.target)
+          .closest(".post_action_item")
+          .attr("data-category-id");
+        savePost(
+          postID,
+          categoryID,
+          $("[name='save_" + postID + "'] > span").hasClass("far")
+        );
+      });
     }
 
     return post;
   }
-  
+
   loadPosts("next");
 
-  $("#viewPrevBtn").click(() => {    
-    if($("#loader").css("display") == "none") {
+  $("#viewPrevBtn").click(() => {
+    if ($("#loader").css("display") == "none") {
       loadPosts("previous");
     }
   });
 
   $("#viewMoreBtn").click(() => {
-    if($("#loader").css("display") == "none") {
+    if ($("#loader").css("display") == "none") {
       loadPosts("next");
     }
   });
-
 </script>
 
 {% endblock %}
