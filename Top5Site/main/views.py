@@ -353,6 +353,8 @@ def home(request):
 
                             allPosts.append(post)
 
+                allPosts.reverse()
+
                 return JsonResponse({"result": "success", "posts": allPosts})
             except Exception as e:
                 print(e)
@@ -639,6 +641,8 @@ def browse(request):
 
                     if len(allPosts) < loadLimit:
                         hasNext = False
+
+                allPosts.reverse()
 
                 return JsonResponse({"result": "success", "searchTerm": str(request.POST["searchTerm"]), "posts": allPosts, "pageNum": correctedPageNumber, "pageNumForView": 1 + correctedPageNumber, "hasNext": hasNext, "loadLimit": loadLimit})
             except Exception as e:
