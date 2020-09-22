@@ -205,6 +205,8 @@
         <div id="saveBtn">SAVE</div>
       </div>
       <div class="search_sec">
+        <p>Past Posts</p>
+        {% comment %}
         <input
           type="text"
           name="search"
@@ -216,6 +218,7 @@
           <span>Show Result</span>
           <span class="result_count">5</span>
         </div>
+        {% endcomment %}
       </div>
       <div class="items_sec"></div>
     </div>
@@ -248,12 +251,7 @@
         let database = firebase.database();
         let categoryID = "{{ categoryID | safe }}";
 
-        let categoryPosts = "{{ categoryPosts | safe }}";
-        categoryPosts = categoryPosts.replace(/'/g, '"');
-        categoryPosts = categoryPosts.replace(/True/g, "true");
-        categoryPosts = categoryPosts.replace(/\n/g, "\\n");
-
-        categoryPosts = JSON.parse(categoryPosts);
+        let categoryPosts = {{ categoryPosts | safe }};
 
         $("#postTxtArea").wysiwyg({
           toolbarSelector: "[data-role='post_text_toolbar']",

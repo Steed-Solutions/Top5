@@ -216,7 +216,7 @@ def categoryDash(request, category_id):
                     "name": request.POST["name"],
                     "category": category_id,
                     "link": request.POST["link"],
-                    "text": str(request.POST["text"]),
+                    "text": str(request.POST["text"]).replace("\"", "'"),
                     "timestamp": request.POST["timestamp"]
                 }
 
@@ -259,7 +259,8 @@ def categoryDash(request, category_id):
     if categoryPosts != None:
         categoryPostsMap = dict(categoryPosts)
 
-    return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": categoryPostsMap})
+    return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": json.dumps(categoryPostsMap)})
+
 
 def logout(request):
     request.session.pop('user', None)
