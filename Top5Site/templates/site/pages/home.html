@@ -33,10 +33,7 @@
         {% for post in recentPosts %}
         <div class="mySlides">
           {% if post.link != "" %}
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fposts%2Ffood%2Fbrowse_categories_dummy_image.png?alt=media&token=b9604172-051c-4b62-9be4-3e22b642b337"
-            style="width: 100%"
-          />
+          <img src="{{ post.link }}" style="width: 100%" />
           {% endif %}
           <div>
             <div class="text">{{ post.name }}</div>

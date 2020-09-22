@@ -425,6 +425,8 @@ def home(request):
     recentPosts = sorted(
         recentPosts, key=lambda post: post['id'], reverse=True)
 
+    print(recentPosts)
+
     return render(request, "site/pages/home.html", {"isLoggedIn": "user" in request.session, "recentPosts": recentPosts})
 
 
