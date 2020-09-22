@@ -449,6 +449,7 @@
                       name : $("#name").val(),
                       link : downloadURL,
                       text : $("#postTxtArea").html(),
+                      textNoTags: $("#postTxtArea").text(),
                       timestamp : (new Date()).getTime(),
                       csrfmiddlewaretoken: '{{ csrf_token }}',
                     },
@@ -465,7 +466,7 @@
                         $("#postTxtArea").html("").show();
                         $("#uploadOptionsBtns").show();
                         $("#saveBtn").hide();
-                        selectedImgOrVid = null;s
+                        selectedImgOrVid = null;
 
                         populatePostsList(true);
                       } else {

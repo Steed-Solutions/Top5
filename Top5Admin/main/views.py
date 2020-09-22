@@ -216,7 +216,7 @@ def categoryDash(request, category_id):
                     "name": request.POST["name"],
                     "category": category_id,
                     "link": request.POST["link"],
-                    "text": str(request.POST["text"]).replace("\"", "'"),
+                    "text": str(request.POST["text"]),
                     "timestamp": request.POST["timestamp"]
                 }
 
