@@ -305,7 +305,8 @@ html {
   margin-left: 10px;
 }
 
-#cancelAddCategoryBtn {
+#cancelAddCategoryBtn,
+#cancelOptionSwitchBtn {
   color: white;
   background-color: #ff2c2c;
   padding: 14px 20px;

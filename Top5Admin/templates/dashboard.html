@@ -375,6 +375,39 @@
       </div>
     </div>
 
+    <div id="optionsSwitchConfirmationModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal_title">
+          <p>Are you sure?</p>
+          <span
+            id="optionsSwitchConfirmationModalClose"
+            class="close"
+            onclick="$('#optionsSwitchConfirmationModal').hide();"
+            ><img src="{% static 'img/delete_circle.png' %}"
+          /></span>
+        </div>
+        <div class="container">
+          <p class="modal-message">
+            Switching post type will erase all the content you have added so
+            far. Are you sure you want to do this?
+          </p>
+
+          <div class="button_grid">
+            <button
+              id="cancelOptionSwitchBtn"
+              onclick="$('#optionsSwitchConfirmationModal').hide();"
+            >
+              NO
+            </button>
+            <button id="confirmOptionSwitchBtn" class="modal_button">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="main">
       <aside id="side_menu_container">
         <div id="side_menu">

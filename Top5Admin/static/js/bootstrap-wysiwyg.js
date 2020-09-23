@@ -126,8 +126,6 @@ $(document).ready(() => {
         });
         toolbar.find("div[data-toggle=dropdown]").click(restoreSelection);
 
-        console.log(options.commandRole);
-
         toolbar
           .find("input[type=text][data-" + options.commandRole + "]")
           .on("webkitspeechchange change", function () {
@@ -143,7 +141,6 @@ $(document).ready(() => {
           })
           .on("focus", function () {
             var input = $(this);
-            console.log(input);
             if (!input.data(options.selectionMarker)) {
               markSelection(input, options.selectionColor);
               input.focus();
