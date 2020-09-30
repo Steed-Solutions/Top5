@@ -1,5 +1,7 @@
 {% extends 'site/base.html' %} {% load static %} {% block content %}
 
+<title>Home</title>
+
 <style>
   .home_page_container {
     height: calc(100% - 70px);
@@ -31,7 +33,10 @@
     <div id="carousel">
       <div class="slideshow-container">
         {% for post in recentPosts %}
-        <div class="mySlides">
+        <div
+          class="mySlides"
+          onclick="onCarouselSlideClicked(this, '{{ post.name }}_~_{{ post.id }}')"
+        >
           {% if post.link != "" %}
           <img src="{{ post.link }}" style="width: 100%" />
           {% endif %}
@@ -44,8 +49,8 @@
       <br />
 
       <!-- Next and previous buttons -->
-      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-      <a class="next" onclick="plusSlides(1)">&#10095;</a>
+      <a class="prev" onclick="prevSlide()">&#10094;</a>
+      <a class="next" onclick="nextSlide()">&#10095;</a>
 
       <div id="indicators" style="text-align: center">
         <span class="indicator" onclick="currentSlide(1)"></span>
@@ -101,7 +106,7 @@
   let allLoadedPosts = [];
   let previousLastLoadedPostID = "",
     lastLoadedPostID = "";
-  let pageNumber = 0;
+  let pageNumber = {{ pageNumber }};
 
   $("#searchInp").click(() => {
     window.location.href = "{% url 'browse' %}";
@@ -110,10 +115,7 @@
   let slideIndex = 1;
   showSlides(slideIndex);
 
-  // Next/previous controls
-  function plusSlides(n) {
-    showSlides((slideIndex += n));
-  }
+
 
   // Thumbnail image controls
   function currentSlide(n) {
@@ -146,69 +148,86 @@
     indicators[slideIndex - 1].className += " active";
   }
 
-  setInterval(() => plusSlides(1), 5000);
+  function onCarouselSlideClicked(e, urlParam){
+    window.location.href = "{% url 'post' 123456 %}".replace(/123456/, encodeURI(urlParam));
+  }
 
-  function loadPosts(direction) {
+  let carouselTimer = setInterval(() => plusSlides(1), 5000);
+
+  // Next/previous controls
+  function plusSlides(n) {
+    showSlides((slideIndex += n));
+  }
+
+  function nextSlide(){
+    clearInterval(carouselTimer);
+    plusSlides(1);
+    carouselTimer = setInterval(() => plusSlides(1), 5000);
+  }
+
+  function prevSlide(){
+    clearInterval(carouselTimer);
+    plusSlides(-1);
+    carouselTimer = setInterval(() => plusSlides(1), 5000);
+  }
+
+  function loadPosts() {
+    $("#viewMoreBtn").hide();
     $("#posts").hide();
     $("#page").hide();
     $("#loader").show();
 
     data = {
       type: "load",
-      direction: direction,
-      previousLastLoadedPostID:
-        allLoadedPosts.length > 0 ? allLoadedPosts[0]["id"] : "",
-      lastLoadedPost:
-        allLoadedPosts.length > 0 && direction == "next"
-          ? allLoadedPosts[allLoadedPosts.length - 1]["id"]
-          : "",
       csrfmiddlewaretoken: "{{ csrf_token }}",
     };
 
     $.ajax({
       type: "POST",
-      url: "{% url 'home' %}",
+      url: "{% url 'home' 123456 %}".replace(/123456/, pageNumber),
       data: data,
       success: (response) => {
-        if (response.posts.length > 0) {
-          if (response.posts.length < 10) {
-            $("#viewMoreBtn").hide();
-          } else {
-            $("#posts").html("");
-          }
+        if(response.result == "success") {
+          if (response.posts.length > 0) {
+            if (response.posts.length < 10) {
+              $("#viewMoreBtn").hide();
+            } else {
+              $("#viewMoreBtn").show();
+              $("#posts").html("");
+            }
 
-          $("#posts").show();
-
-          if (direction == "previous") {
-            $("#viewMoreBtn").css("display", "flex");
-          }
-
-          pageNumber += direction == "next" ? 1 : -1;
-          $("#page").show();
-          $("#pageNum").html(pageNumber);
-
-          if (pageNumber == 1) {
-            $("#viewPrevBtn").hide();
-          } else {
-            $("#viewPrevBtn").css("display", "flex");
-          }
-
-          allLoadedPosts = [];
-          response.posts.forEach((post) => {
-            allLoadedPosts.push(post);
-            createPostElement(post);
-          });
-        } else {
-          $("#viewMoreBtn").hide();
-
-          if (pageNumber == 1 && allLoadedPosts.length == 0) {
-            $("#noPosts").show();
-          } else {
             $("#posts").show();
+
             $("#page").show();
+            $("#pageNum").html(pageNumber + 1);
+
+            if (pageNumber > 0) {
+              $("#viewPrevBtn").css("display", "flex");
+            } else {
+              $("#viewPrevBtn").hide();
+            }
+
+            allLoadedPosts = [];
+            response.posts.forEach((post) => {
+              allLoadedPosts.push(post);
+              createPostElement(post);
+            });
+          } else {
+            $("#viewMoreBtn").hide();
+
+            if (pageNumber == 1 && allLoadedPosts.length == 0) {
+              $("#noPosts").show();
+            } else {
+              $("#posts").show();
+              $("#page").show();
+            }
+          }
+          $("#loader").hide();
+        } else {
+          if('invalid' in response) {
+            window.location.href = "{% url 'invalid' %}";
           }
         }
-        $("#loader").hide();
       },
       error: (xhr, errmsg, err) => {
         console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
@@ -369,7 +388,8 @@
     let postContent = document.createElement("div");
     postContent.setAttribute("id", "postContent_" + postMap["id"]);
     postContent.classList.add("post_content");
-    if (postMap["type"].indexOf("img") >= 0) {
+    console.log(postMap["type"]);
+    if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {
       postContent.innerHTML =
         "<img src='" +
         postMap["link"] +
@@ -379,22 +399,18 @@
         "<video src='" +
         postMap["link"] +
         "#t=0.5' class='post_content_video' preload='metadata' />";
+    } else if (postMap["type"] == "article") {
+      console.log("WTH");
+      postContent.innerHTML =
+        "<img src='{% static 'img/article.png' %}' class='post_article_placeholder_image' alt='post_img' onerror='$(this).hide()' />";
     }
-    if (
-      postMap["type"].toLowerCase().indexOf("txt") >= 0 ||
-      postMap["type"] == "article"
-    ) {
+
+    if (postMap["type"].toLowerCase().indexOf("txt") >= 0) {
       let text = postMap["text"];
-      if (postMap["type"] == "article") {
-        text = $("<div></div>").hide().html(postMap["text"]).text();
-      }
 
       postContent.innerHTML +=
         "<span style='color: " +
         (postMap["link"] == "" ? "black" : "transparent") +
-        (postMap["type"] == "article"
-          ? "; width: 50ch; text-overflow: ellipsis; white-space: nowrap; overflow: hidden"
-          : "") +
         "'>" +
         text +
         "</span>";
@@ -490,8 +506,9 @@
     posts.appendChild(post);
 
     $("#postContent_" + postMap["id"]).click((e) => {
-      console.log(postMap);
-      $("#loadedPage").hide();
+      let param = encodeURI(postMap["name"] + "_~_" + postMap["id"]);
+      window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
+      /*$("#loadedPage").hide();
       $("#selectedPost").show();
 
       $("#selectedPostTitle").html(postMap["name"]);
@@ -512,7 +529,9 @@
         postMap["type"].toLowerCase().indexOf("txt") >= 0 ||
         postMap["type"] == "article"
       ) {
-        $("#selectedPostContent").append("<pre>" + postMap["text"] + "</pre>");
+        $("#selectedPostContent").append(
+          '<pre style="white-space: normal">' + postMap["text"] + "</pre>"
+        );
       }
 
       $("#selectedPostActionAndComments").append(
@@ -574,7 +593,7 @@
             ).hasClass("far")
           );
         });
-      }
+      }*/
     });
 
     if ("{{ isLoggedIn }}" == "True") {
@@ -615,17 +634,17 @@
     return post;
   }
 
-  loadPosts("next");
+  loadPosts();
 
   $("#viewPrevBtn").click(() => {
     if ($("#loader").css("display") == "none") {
-      loadPosts("previous");
+      window.location.href = "{% url 'home' 123456 %}".replace(/123456/, pageNumber - 1);
     }
   });
 
   $("#viewMoreBtn").click(() => {
     if ($("#loader").css("display") == "none") {
-      loadPosts("next");
+      window.location.href = "{% url 'home' 123456 %}".replace(/123456/, pageNumber + 1);
     }
   });
 </script>

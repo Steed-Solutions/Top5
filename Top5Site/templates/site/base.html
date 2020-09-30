@@ -45,19 +45,5 @@
     {% include 'site/partials/_header.html' %}
 
     <div id="loadedPage">{% block content %} {% endblock %}</div>
-    <div id="selectedPost">
-      <img id="closePostBtn" src="{% static 'img/next_btn.png' %}" />
-      <div id="selectedPostTitle"></div>
-      <div id="selectedPostContent"></div>
-      <div id="selectedPostActionAndComments"></div>
-    </div>
-
-    <script>
-      $("#closePostBtn").click(() => {
-        $("#selectedPostContent, #selectedPostActionAndComments").html("");
-        $("#selectedPost").hide();
-        $("#loadedPage").show();
-      });
-    </script>
   </body>
 </html>

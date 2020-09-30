@@ -23,6 +23,7 @@
   width: 87.4vw;
   height: 41.97vw;
   position: relative;
+  cursor: pointer;
 }
 
 .mySlides > img {

@@ -5,7 +5,7 @@
     
     {% if posts %}
         {% for post in posts %}
-            <div class="saved_item" style="{% if "link" not in post or post.link == "" %}column-gap: 0;{% endif %}">
+            <div class="saved_item" onclick="onPostClicked('{{ post.name }}_~_{{ post.id }}')" style="{% if "link" not in post or post.link == "" %}column-gap: 0;{% endif %}">
                 <div class="item_img">
                     {% if "link" in post and post.link != "" %}
                         <img src="{{ post.link }}" alt="item">
@@ -27,19 +27,23 @@
         <p>No Saved Posts</p>
     {% endif %}
 
-    {% if posts|length > 0 and hasNext %}
+    
         <div class="controls" >
         <div class="control_buttons">
+            {% if pageNum > 0 %}
             <div id="viewPrevBtn" class="view_more_btn" {% if pageNum == 0 %}style="display:none;"{% else %}style="display:flex;"{% endif %}>
             <button>View Prev</button>
             </div>
-            <div id="viewMoreBtn" class="view_more_btn" {% if not hasNext %}style="display:none;"{% else %}style="display:flex;"{% endif %}>
-            <button>View More</button>
-            </div>
+            {% endif %}
+            {% if posts|length > 0 and hasNext %}
+                <div id="viewMoreBtn" class="view_more_btn" {% if not hasNext %}style="display:none;"{% else %}style="display:flex;"{% endif %}>
+                    <button>View More</button>
+                </div>
+            {% endif %}
         </div>
         <p id="page" style="display: block;">Page <span id="pageNum">{{ pageNumForView }}</span></p>
         </div>
-    {% endif %}
+    
 </div>
 
 <script>
@@ -51,6 +55,10 @@
     $("#viewMoreBtn > button").click(() => {
         window.location.href = "{% url 'saved' 123456 %}".replace(/123456/, {{ pageNum }} + 1);
     });
+
+    function onPostClicked(urlParam) {
+        window.location.href = "{% url 'post' 123456 %}".replace(/123456/, encodeURI(urlParam));
+    }
 
 </script>
     

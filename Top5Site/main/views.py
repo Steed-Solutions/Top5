@@ -12,6 +12,7 @@ import random
 import pyrebase
 
 import json
+from urllib.parse import unquote
 
 cred = adminCredentials.Certificate(finders.find(
     'key/top-50-9951b-firebase-adminsdk-6n5a9-5a5dfe7f4d.json'))
@@ -128,8 +129,10 @@ def credentials(request):
     return render(request, "credentials/credentials.html", {"categories": categories})
 
 
-def home(request):
+def home(request, page_number=0):
     global loggedInUserCategoricalPosts
+
+    loadLimit = 10
 
     if request.method == "POST":
         if request.POST['type'] == "load":
@@ -167,8 +170,6 @@ def home(request):
                     userPrefCategories = [] if userPrefCategories == None else [
                         k for k, v in userPrefCategories.items()]
 
-                    print("TEST01")
-
                     if len(loggedInUserCategoricalPosts) == 0:
                         allCategoricalPosts = {}
                         for categoryID in userPrefCategories:
@@ -180,29 +181,13 @@ def home(request):
                                         {k: v for k, v in categoricalPosts.items()})
 
                         loggedInUserCategoricalPosts = sorted(
-                            allCategoricalPosts.items())
-
-                    print("TEST02")
-
-                    startAt = 0
-                    if request.POST["lastLoadedPost"] != "":
-                        for i in range(0, len(loggedInUserCategoricalPosts)):
-                            if loggedInUserCategoricalPosts[i][0] == request.POST["lastLoadedPost"] and request.POST["direction"] == "next":
-                                startAt = i + 1
-                                break
-                            elif loggedInUserCategoricalPosts[i][0] == request.POST["previousLastLoadedPostID"] and request.POST["direction"] != "next":
-                                startAt = i
-                                break
-
-                    currentlyLoadedCategoricalPosts = []
-                    for i in range(startAt, startAt + loadLimit):
-                        if i < len(loggedInUserCategoricalPosts):
-                            currentlyLoadedCategoricalPosts.append(
-                                loggedInUserCategoricalPosts[i])
-
-                    for currPost in currentlyLoadedCategoricalPosts:
+                            allCategoricalPosts.items(), reverse=True)
+                
+                    validPosts = []
+                    for currPost in loggedInUserCategoricalPosts:
                         post = dict(currPost[1])
                         postID = currPost[0]
+                        post["id"] = postID
                         postTags = post["tags"] if "tags" in post else list()
                         hasCommonTags = False
                         for postTag in postTags:
@@ -214,151 +199,174 @@ def home(request):
                         hasChance = random.randint(1, 3) % 3 == 0
 
                         if (userPrefFilter == 0 and hasCommonTags) or (userPrefFilter == 1 and isRecentlyViewed) or (userPrefFilter == 2 and (hasChance or hasCommonTags)) or (userPrefFilter == 3):
-                            post["id"] = postID
-                            post["category"] = categories[post["category"]]
+                            validPosts.append(post)
 
-                            isLiked = db.child(
-                                "likes/" + postID + "/" + request.session['uid']).get().val() != None
-                            post["isLiked"] = 1 if isLiked else 0
+                    startAt = page_number * loadLimit
 
-                            likeStr = "You" if isLiked else ""
-                            likes = db.child("likes/" + postID).get().val()
-                            if likes != None:
-                                likes = list(dict(likes).keys())
-                                likesCount = len(likes) + \
-                                    (-1 if isLiked else 0)
-                                limit = 2 if isLiked else 3
-
-                                namedUsers = []
-                                for i in range(0, limit):
-                                    if i < len(likes) and likes[i] != request.session['uid']:
-                                        namedUsers.append(
-                                            db.child("users/regularUsers/" + likes[i] + "/name").get().val())
-
-                                if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
-                                    remainingLikes = likesCount - \
-                                        len(namedUsers)
-
-                                    for i in range(0, len(namedUsers)):
-                                        if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
-                                            likeStr += " and "
-                                        else:
-                                            if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
-                                                likeStr += ", "
-
-                                        likeStr += namedUsers[i]
-
-                                    likeStr += " and " + remainingLikes + \
-                                        " other like this" if remainingLikes > 0 else " like this"
-                                elif len(namedUsers) == 0:
-                                    likeStr = "You like this"
-
-                                post["likeStr"] = likeStr
-
-                            else:
-                                post["likeStr"] = "Be the first to like this"
-
-                            isSaved = db.child(
-                                "users/regularUsers/" + request.session['uid'] + "/saved/" + postID).get().val() != None
-                            post["isSaved"] = 1 if isSaved else 0
-
-                            comments = list()
-                            commentItems = db.child(
-                                "comments/" + postID).get().val()
-                            if commentItems != None:
-                                for key, val in commentItems.items():
-                                    val["id"] = key
-
-                                    val["username"] = "You" if val["userID"] == request.session['uid'] else db.child(
-                                        "users/regularUsers/" + val["userID"] + "/name").get().val()
-
-                                    comments.append(val)
-
-                            post["allComments"] = comments
-
-                            allPosts.append(post)
-                else:
-                    # posts = db.child("content").child("posts").order_by_child("category").equal_to("music").get().val()
-                    posts = None
-
-                    if request.POST["lastLoadedPost"] == "":
-                        posts = db.child("content").child(
-                            "posts").order_by_key().limit_to_first(loadLimit).get().val()
+                    selectedPosts = []
+                    if(startAt < len(validPosts)):
+                        endAt = startAt + loadLimit
+                        if(endAt >= len(validPosts)):
+                            endAt = len(validPosts)
+                        selectedPosts = validPosts[startAt:endAt]
                     else:
-                        if request.POST["direction"] == "next":
-                            posts = db.child("content").child("posts").order_by_key().start_at(
-                                request.POST["lastLoadedPost"]).limit_to_first(loadLimit + 1).get().val()
+                        return JsonResponse({"result": "failure", "invalid": True})
+
+                    for post in selectedPosts:
+                        post["category"] = categories[post["category"]]
+
+                        if post['type'] == "article" and post['text'].find("<img") > -1:
+                            post['link'] = post['text'][post['text'].find(
+                                "<img src=") + 10: post['text'].find("alt") - 2]
+
+                        isLiked = db.child(
+                            "likes/" + post['id'] + "/" + request.session['uid']).get().val() != None
+                        post["isLiked"] = 1 if isLiked else 0
+
+                        likeStr = "You" if isLiked else ""
+                        likes = db.child("likes/" + post['id']).get().val()
+                        if likes != None:
+                            likes = list(dict(likes).keys())
+                            likesCount = len(likes) + \
+                                (-1 if isLiked else 0)
+                            limit = 2 if isLiked else 3
+
+                            namedUsers = []
+                            for i in range(0, limit):
+                                if i < len(likes) and likes[i] != request.session['uid']:
+                                    namedUsers.append(
+                                        db.child("users/regularUsers/" + likes[i] + "/name").get().val())
+
+                            if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
+                                remainingLikes = likesCount - \
+                                    len(namedUsers)
+
+                                for i in range(0, len(namedUsers)):
+                                    if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
+                                        likeStr += " and "
+                                    else:
+                                        if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
+                                            likeStr += ", "
+
+                                    likeStr += namedUsers[i]
+
+                                likeStr += " and " + remainingLikes + \
+                                    " other like this" if remainingLikes > 0 else " like this"
+                            elif len(namedUsers) == 0:
+                                likeStr = "You like this"
+
+                            post["likeStr"] = likeStr
+
                         else:
-                            posts = db.child("content").child("posts").order_by_key().start_at(
-                                request.POST["previousLastLoadedPostID"]).limit_to_first(loadLimit).get().val()
-                    posts = {} if posts == None else dict(posts)
+                            post["likeStr"] = "Be the first to like this"
+
+                        isSaved = db.child(
+                            "users/regularUsers/" + request.session['uid'] + "/saved/" + post['id']).get().val() != None
+                        post["isSaved"] = 1 if isSaved else 0
+
+                        comments = list()
+                        commentItems = db.child(
+                            "comments/" + postID).get().val()
+                        if commentItems != None:
+                            for key, val in commentItems.items():
+                                val["id"] = key
+
+                                val["username"] = "You" if val["userID"] == request.session['uid'] else db.child(
+                                    "users/regularUsers/" + val["userID"] + "/name").get().val()
+
+                                comments.append(val)
+
+                        post["allComments"] = comments
+
+                        allPosts.append(post)
+                else:
+                    posts = {}
+
+                    postIDs = db.child("content/posts").shallow().get().val()
+
+                    startAt = page_number * loadLimit
+
+                    selectedPostIds = []
+                    if(postIDs != None and startAt < len(postIDs)):
+                        postIDs = list(sorted(postIDs, reverse=True))
+                        endAt = startAt + loadLimit
+                        if(endAt >= len(postIDs)):
+                            endAt = len(postIDs)
+                        selectedPostIds = postIDs[startAt:endAt]
+                    else:
+                        return JsonResponse({"result": "failure", "invalid": True})
+
+                    for postID in selectedPostIds:
+                        posts[postID] = dict(
+                            db.child("content/posts/" + postID).get().val())
 
                     for postID in posts:
-                        if postID != request.POST["lastLoadedPost"]:
-                            post = posts[postID]
-                            post["id"] = postID
-                            post["category"] = categories[post["category"]]
+                        post = posts[postID]
+                        post["id"] = postID
+                        post["category"] = categories[post["category"]]
 
-                            post["isLiked"] = 0
+                        if post['type'] == "article" and post['text'].find("<img") > -1:
+                            post['link'] = post['text'][post['text'].find(
+                                "<img src=") + 10: post['text'].find("alt") - 2]
 
-                            likeStr = ""
-                            likes = db.child("likes/" + postID).get().val()
-                            if likes != None:
-                                likes = list(dict(likes).keys())
-                                likesCount = len(likes)
-                                limit = 3
+                        post["isLiked"] = 0
 
-                                namedUsers = []
-                                for i in range(0, limit):
-                                    if i < len(likes):
-                                        namedUsers.append(
-                                            db.child("users/regularUsers/" + likes[i] + "/name").get().val())
+                        likeStr = ""
+                        likes = db.child("likes/" + postID).get().val()
+                        if likes != None:
+                            likes = list(dict(likes).keys())
+                            likesCount = len(likes)
+                            limit = 3
 
-                                if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
-                                    remainingLikes = likesCount - \
-                                        len(namedUsers)
+                            namedUsers = []
+                            for i in range(0, limit):
+                                if i < len(likes):
+                                    namedUsers.append(
+                                        db.child("users/regularUsers/" + likes[i] + "/name").get().val())
 
-                                    for i in range(0, len(namedUsers)):
-                                        if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
-                                            likeStr += " and "
-                                        else:
-                                            if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
-                                                likeStr += ", "
+                            if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
+                                remainingLikes = likesCount - \
+                                    len(namedUsers)
 
-                                        likeStr += namedUsers[i]
+                                for i in range(0, len(namedUsers)):
+                                    if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
+                                        likeStr += " and "
+                                    else:
+                                        if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
+                                            likeStr += ", "
 
-                                    likeStr += " and " + remainingLikes + \
-                                        " other like this" if remainingLikes > 0 else " like this"
-                                elif len(namedUsers) == 0:
-                                    likeStr = "Be the first to like this"
+                                    likeStr += namedUsers[i]
 
-                                post["likeStr"] = likeStr
+                                likeStr += " and " + remainingLikes + \
+                                    " other like this" if remainingLikes > 0 else " like this"
+                            elif len(namedUsers) == 0:
+                                likeStr = "Be the first to like this"
 
-                            else:
-                                post["likeStr"] = "Be the first to like this"
+                            post["likeStr"] = likeStr
 
-                            comments = list()
-                            commentItems = db.child(
-                                "comments/" + postID).get().val()
-                            if commentItems != None:
-                                for key, val in commentItems.items():
-                                    val["id"] = key
+                        else:
+                            post["likeStr"] = "Be the first to like this"
 
-                                    val["username"] = db.child(
-                                        "users/regularUsers/" + val["userID"] + "/name").get().val()
+                        comments = list()
+                        commentItems = db.child(
+                            "comments/" + postID).get().val()
+                        if commentItems != None:
+                            for key, val in commentItems.items():
+                                val["id"] = key
 
-                                    comments.append(val)
+                                val["username"] = db.child(
+                                    "users/regularUsers/" + val["userID"] + "/name").get().val()
 
-                            post["allComments"] = comments
+                                comments.append(val)
 
-                            allPosts.append(post)
+                        post["allComments"] = comments
 
-                allPosts.reverse()
+                        allPosts.append(post)
 
                 return JsonResponse({"result": "success", "posts": allPosts})
             except Exception as e:
                 print(e)
-                return JsonResponse({"result": "failure", "posts": list()})
+                return JsonResponse({"result": "failure"})
         elif request.POST['type'] == "like":
             try:
                 currLikeCount = db.child(
@@ -420,14 +428,92 @@ def home(request):
     for postID in lastThreePosts:
         post = lastThreePosts[postID]
         post['id'] = postID
+
+        if post['type'] == "article" and post['text'].find("<img") > -1:
+            post['link'] = post['text'][post['text'].find(
+                "<img src=") + 10: post['text'].find("alt") - 2]
+
         recentPosts.append(post)
 
     recentPosts = sorted(
         recentPosts, key=lambda post: post['id'], reverse=True)
 
-    print(recentPosts)
+    return render(request, "site/pages/home.html", {"isLoggedIn": "user" in request.session, "pageNumber": page_number, "recentPosts": recentPosts})
 
-    return render(request, "site/pages/home.html", {"isLoggedIn": "user" in request.session, "recentPosts": recentPosts})
+
+def post(request, post_title_id):
+    post_title_id = unquote(post_title_id)
+    postID = post_title_id.split("_~_")[1]
+
+    post = db.child("content/posts/" + postID).get().val()
+    if post != None:
+        categories = {}
+
+        categoriesItems = db.child("content/categories").get().val()
+        for key, val in categoriesItems.items():
+            val["id"] = key
+            categories[key] = val
+        categoryIDs = categories.keys()
+
+        post = dict(post)
+        post["id"] = postID
+        post["category"] = categories[post["category"]]
+
+        post["isLiked"] = 0
+
+        likeStr = ""
+        likes = db.child("likes/" + postID).get().val()
+        if likes != None:
+            likes = list(dict(likes).keys())
+            likesCount = len(likes)
+            limit = 3
+
+            namedUsers = []
+            for i in range(0, limit):
+                if i < len(likes):
+                    namedUsers.append(
+                        db.child("users/regularUsers/" + likes[i] + "/name").get().val())
+
+            if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
+                remainingLikes = likesCount - \
+                    len(namedUsers)
+
+                for i in range(0, len(namedUsers)):
+                    if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
+                        likeStr += " and "
+                    else:
+                        if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
+                            likeStr += ", "
+
+                    likeStr += namedUsers[i]
+
+                likeStr += " and " + remainingLikes + \
+                    " other like this" if remainingLikes > 0 else " like this"
+            elif len(namedUsers) == 0:
+                likeStr = "Be the first to like this"
+
+            post["likeStr"] = likeStr
+
+        else:
+            post["likeStr"] = "Be the first to like this"
+
+        comments = list()
+        commentItems = db.child(
+            "comments/" + postID).get().val()
+        if commentItems != None:
+            for key, val in commentItems.items():
+                val["id"] = key
+
+                val["username"] = db.child(
+                    "users/regularUsers/" + val["userID"] + "/name").get().val()
+
+                comments.append(val)
+
+        post["allComments"] = comments
+    else:
+        return redirect("invalid")
+
+    return render(request, "site/pages/post.html", {"isLoggedIn": "user" in request.session, "post": post, "postMap": json.dumps(dict(post))})
 
 
 def profile(request):
@@ -706,7 +792,7 @@ def browse(request):
     return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session})
 
 
-def saved(request, page_number):
+def saved(request, page_number=0):
     global loggedInUserCategoricalPosts
     loggedInUserCategoricalPosts = []
 
@@ -714,34 +800,6 @@ def saved(request, page_number):
         return redirect('home')
 
     loadLimit = 10
-
-    # if request.method == "POST":
-    #     if request.POST['type'] == "load":
-    #         categories = {}
-    #         allPosts = list()
-
-    #         categoriesItems = db.child("content/categories").get().val()
-    #         for key, val in categoriesItems.items():
-    #             val["id"] = key
-    #             categories[key] = val
-
-    #         userSavedPostIDs = db.child(
-    #             "users/regularUsers/" + request.session['uid'] + "/saved").get().val()
-    #         userSavedPostIDs = {} if userSavedPostIDs == None else {
-    #             k: v for k, v in userSavedPostIDs.items()}
-
-    #         for postID, categoryID in userSavedPostIDs:
-    #             post = db.child("content/posts/" + categoryID +
-    #                             "/" + postID).get().val()
-    #             if post == None:
-    #                 break
-    #             post = dict(post)
-    #             post["id"] = postID
-    #             post["category"] = categories[categoryID]
-
-    #         allPosts.append(post)
-
-    #         return JsonResponse({"posts": allPosts})
 
     categories = {}
     allPosts = list()
@@ -764,9 +822,12 @@ def saved(request, page_number):
 
     userSavedPostIDs = tempUserSavedPostIDs
 
-    userSavedPostIDsSorted = sorted(userSavedPostIDs.items())
+    userSavedPostIDsSorted = sorted(userSavedPostIDs.items(), reverse=True)
 
-    maxPossiblePages = (len(userSavedPostIDsSorted) % loadLimit) + 1
+    maxPossiblePages = (len(userSavedPostIDsSorted) % loadLimit) + 2
+
+    if page_number >= maxPossiblePages:
+        return redirect("invalid")
 
     correctedPageNumber = maxPossiblePages - \
         1 if page_number >= maxPossiblePages else page_number
@@ -802,6 +863,10 @@ def saved(request, page_number):
 
 def comingSoon(request):
     return render(request, "coming_soon.html", {"isLoggedIn": "user" in request.session})
+
+
+def invalid(request):
+    return render(request, "invalid.html")
 
 
 def logout(request):

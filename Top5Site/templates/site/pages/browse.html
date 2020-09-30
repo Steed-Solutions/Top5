@@ -109,7 +109,7 @@
   let allLoadedPosts = [];
   let previousLastLoadedPostID = "",
     lastLoadedPostID = "";
-  let pageNumber = -1;
+  let pageNumber = {{ pageNumber }};
 
   let pageFromCall = 0;
 
@@ -359,7 +359,8 @@
     let postContent = document.createElement("div");
     postContent.setAttribute("id", "postContent_" + postMap["id"]);
     postContent.classList.add("post_content");
-    if (postMap["type"].indexOf("img") >= 0) {
+    console.log(postMap["type"]);
+    if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {
       postContent.innerHTML =
         "<img src='" +
         postMap["link"] +
@@ -369,22 +370,19 @@
         "<video src='" +
         postMap["link"] +
         "#t=0.5' class='post_content_video' preload='metadata' />";
+    } else if (postMap["type"] == "article") {
+      console.log("WTH");
+      postContent.innerHTML =
+        "<img src='{% static 'img/article.png' %}' class='post_article_placeholder_image' alt='post_img' onerror='$(this).hide()' />";
     }
-    if (
-      postMap["type"].toLowerCase().indexOf("txt") >= 0 ||
-      postMap["type"] == "article"
-    ) {
+
+
+    if (postMap["type"].toLowerCase().indexOf("txt") >= 0) {
       let text = postMap["text"];
-      if (postMap["type"] == "article") {
-        text = $("<div></div>").hide().html(postMap["text"]).text();
-      }
 
       postContent.innerHTML +=
         "<span style='color: " +
         (postMap["link"] == "" ? "black" : "transparent") +
-        (postMap["type"] == "article"
-          ? "; width: 50ch; text-overflow: ellipsis; white-space: nowrap; overflow: hidden"
-          : "") +
         "'>" +
         text +
         "</span>";
@@ -486,10 +484,11 @@
 
       $("#selectedPostTitle").html(postMap["name"]);
 
-      if (postMap["type"].indexOf("img") >= 0) {
-        $("#selectedPostContent").append(
-          '<img id="postImageOrVideo" src="' + postMap["link"] + '">'
-        );
+      if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {
+      postContent.innerHTML =
+        "<img src='" +
+        postMap["link"] +
+        "' class='post_content_image' alt='post_img' onerror='$(this).hide()' />";
       } else if (postMap["type"].indexOf("vid") >= 0) {
         $("#selectedPostContent").append(
           '<video id="postImageOrVideo" src="' +
@@ -502,7 +501,9 @@
         postMap["type"].toLowerCase().indexOf("txt") >= 0 ||
         postMap["type"] == "article"
       ) {
-        $("#selectedPostContent").append("<pre>" + postMap["text"] + "</pre>");
+        $("#selectedPostContent").append(
+          "<pre style='white-space: normal'>" + postMap["text"] + "</pre>"
+        );
       }
 
       $("#selectedPostActionAndComments").append(
@@ -626,6 +627,7 @@
 
   $("#viewPrevBtn").click(() => {
     if ($("#loader").css("display") == "none") {
+      window.location.href = "{% url 'home' 123456 %}".replace(/123456/, pageNumber - 1);
       loadSearchResults($("#seachInput").val(), "previous");
     }
   });
