@@ -202,7 +202,10 @@
             <video id="uploadedVidPreview" width="25%%" preload="metadata" />
           </div>
         </div>
-        <div id="saveBtn">SAVE</div>
+        <div style="display: flex; justify-content: flex-end">
+          <div id="previewBtn">Preview</div>
+          <div id="saveBtn">SAVE</div>
+        </div>
       </div>
       <div class="search_sec">
         <p>Past Posts</p>
@@ -290,7 +293,7 @@
             $("#optionsSwitchConfirmationModal").hide();
           } else {
             $("#postTxtArea").html("");
-            $("#saveBtn").hide();
+            $("#saveBtn, #previewBtn").hide();
             $("#articleBtn").parent().toggleClass("active");
             if($("#articleBtn").parent().hasClass("active")) {
               $("#articleBtn").css("padding", "9px");
@@ -353,7 +356,7 @@
               $("#uploadOptionsBtns").hide();
               $("#uploadPreview").show();
               $("#imgPreview").show();
-              $("#saveBtn").css("display", "flex");
+              $("#saveBtn, #previewBtn").css("display", "flex");
               $("#uploadedImgPreview").attr("src", e.target.result);
             }
             reader.readAsDataURL(this.files[0]); // convert to base64 string
@@ -370,7 +373,7 @@
               $("#uploadOptionsBtns").hide();
               $("#uploadPreview").show();
               $("#vidPreview").show();
-              $("#saveBtn").css("display", "flex");
+              $("#saveBtn, #previewBtn").css("display", "flex");
               $("#uploadedVidPreview").attr("src", e.target.result)
 
               document.getElementById("uploadedVidPreview").onloadedmetadata = function() {
@@ -395,7 +398,7 @@
           selectedImgOrVid = null;
 
           if($("#postTxtArea").html().length == 0) {
-            $("#saveBtn").hide();
+            $("#saveBtn, #previewBtn").hide();
           }
 
         });
@@ -410,22 +413,47 @@
           selectedImgOrVid = null;
 
           if($("#postTxtArea").html().length == 0) {
-            $("#saveBtn").hide();
+            $("#saveBtn, #previewBtn").hide();
           }
         });
 
         $(document).on("keyup", e => {
           if($(e.target).attr("id") == "postTxtArea") {
-            console.log($("#postTxtArea").html().length > 0);
             if($("#postTxtArea").html().length > 0) {
-              console.log($("#saveBtn").css("display") == "none");
-              if($("#saveBtn").css("display") == "none") {
-                $("#saveBtn").css("display", "flex");
+              if($("#saveBtn, #previewBtn").css("display") == "none") {
+                $("#saveBtn, #previewBtn").css("display", "flex");
               }
             } else if ($("#postTxtArea").html().length == 0 && $("#uploadPreview").css("display") == "none") {
-              $("#saveBtn").hide();
+              $("#saveBtn, #previewBtn").hide();
             }
           }
+        });
+
+        $("#previewBtn").click(() => {
+          let postType = "";
+
+          if($("#articleBtn").parent().hasClass("active")) {
+            postType = "article";
+          } else {
+            if((selectedImgOrVid != null) && ($("#postTxtArea").html().length > 0) && isSelectedImg) {
+              postType = "imgTxt";
+            } else if((selectedImgOrVid != null) && ($("#postTxtArea").html().length > 0) && !isSelectedImg) {
+              postType = "vidTxt";
+            } else if((selectedImgOrVid != null) && !isSelectedImg) {
+              postType = "vid";
+            } else if((selectedImgOrVid != null) && isSelectedImg) {
+              postType = "img";
+            } else {
+              postType = "txt";
+            }
+          }
+
+          sessionStorage.setItem("postName", $("#name").val());
+          sessionStorage.setItem("postType", postType);
+          sessionStorage.setItem("postContent", $("#postTxtArea").html());
+          sessionStorage.setItem(isSelectedImg ? "postContentImage" : "postImageOrVideo", isSelectedImg ? $("#uploadedImgPreview").attr("src") : $("#uploadedVidPreview").attr("src"));
+
+          window.open("{% url 'postPreview' %}", '_blank');
         });
 
         $("#saveBtn").click(() => {
@@ -490,7 +518,7 @@
                         $("#name").val("");
                         $("#postTxtArea").html("").show();
                         $("#uploadOptionsBtns").show();
-                        $("#saveBtn").hide();
+                        $("#saveBtn, #previewBtn").hide();
                         selectedImgOrVid = null;
 
                         populatePostsList(true);
@@ -532,7 +560,7 @@
                     $("#name").val("");
                     $("#postTxtArea").html("").show();
                     $("#uploadOptionsBtns").show();
-                    $("#saveBtn").hide();
+                    $("#saveBtn, #previewBtn").hide();
                     selectedImgOrVid = null;
 
                     populatePostsList();
@@ -599,7 +627,7 @@
               selectedPostForEdit = postID;
               if(post.type == "txt") {
                 $("#postTxtArea").val($("[data-item-content-post-id='" + postID + "'] > p").html());
-                $("#saveBtn").css("display", "flex");
+                $("#saveBtn, #previewBtn").css("display", "flex");
               } else if(post.type == "img") {
                 $("#vidPreview").hide();
                 $("#uploadOptionsBtns").hide();
@@ -614,7 +642,7 @@
                 $("#postTxtArea").html("").hide();
                 $("#uploadPreview").show();
                 $("#vidPreview").show();
-                $("#saveBtn").css("display", "flex");
+                $("#saveBtn, #previewBtn").css("display", "flex");
                 $("#uploadedVidPreview").attr("src", $("[data-item-content-post-id='" + postID + "'] > video").attr("src"))
               } else if(post.type == "imgTxt") {
                 $("#vidPreview").hide();
@@ -622,7 +650,7 @@
                 $("#postTxtArea").show();
                 $("#uploadPreview").show();
                 $("#imgPreview").show();
-                $("#saveBtn").css("display", "flex");
+                $("#saveBtn, #previewBtn").css("display", "flex");
                 $("#uploadedImgPreview").attr("src", $("[data-item-content-post-id='" + postID + "'] > img").attr("src"));
 
                 $("#postTxtArea").val($("[data-item-content-post-id='" + postID + "'] > span").html());

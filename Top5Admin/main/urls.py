@@ -7,4 +7,5 @@ urlpatterns = [
     path('logout', views.logout, name="logout"),
     path('myDash', views.myDash, name='myDash'),
     path('categoryDash/<category_id>', views.categoryDash, name='categoryDash'),
+    path('postPreview/', views.postPreview, name='postPreview')
 ]

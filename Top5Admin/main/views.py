@@ -261,6 +261,8 @@ def categoryDash(request, category_id):
 
     return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": json.dumps(categoryPostsMap)})
 
+def postPreview(request):
+    return render(request, "postPreview.html")
 
 def logout(request):
     request.session.pop('user', None)

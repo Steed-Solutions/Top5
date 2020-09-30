@@ -24,7 +24,8 @@ html {
   border-top-left-radius: 10px;
   background-color: #f5f4f9;
   height: 100%;
-  padding: 80px 20% 50px 80px;
+  padding: 80px 80px 50px 80px;    
+  width: 78vw;
 }
 
 .post_sec {
@@ -41,13 +42,14 @@ html {
 #postTxtArea {
   width: 100%;
   border: none;
-  min-height: 200px;
+  height: 400px;
   border-right: 0.5px solid rgba(162, 125, 206, 0.5);
   border-bottom: 1px solid #a27dce;
   resize: vertical;
   padding: 25px;
   background-color: white;
   margin-bottom: 20px;
+  overflow: scroll;
 }
 
 #postTxtArea::placeholder {
@@ -171,17 +173,26 @@ html {
   z-index: 1;
 }
 
-#saveBtn {
+#saveBtn, #previewBtn {
   display: none;
   width: 20%;
   height: 40px;
   background-color: #a27dce;
   border-radius: 50px;
   color: white;
-  margin: 10px 0 10px auto;
+  margin: 10px 0 10px 30px;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+#previewBtn {
+  background-color: #e9e3f3;
+  color: #a27dce;
+}
+
+#previewBtn:hover {
+  background-color: #dacbf1;  
 }
 
 #saveBtn:hover {
