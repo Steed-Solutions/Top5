@@ -16,6 +16,9 @@
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-storage.js"></script>
     <script>
+      let isCategoryDash = false,
+        isDashLoaded = false;
+
       function toCamelCase(str) {
         return str
           .split(" ")
@@ -26,6 +29,9 @@
       }
 
       function categoryDashboard(categoryID, name) {
+        isDashLoaded = false;
+        isCategoryDash = true;
+
         $("#addCategoryBtn").remove();
         $(".cat_delete_btn").hide();
         $("#dashboardContent").hide();
@@ -51,67 +57,117 @@
       }
 
       function showCategorySelectionView() {
-        $("#addCategoryBtn").remove();
-        $(".cat_delete_btn").hide();
-        $(".dashboard_name").text("Please select a category:");
-        $(".header_subtxt").hide();
-        $(".dashboard_icon").attr(
-          "src",
-          "{% static 'img/dashboard_icon.png' %}"
-        );
-        $(".category_icon").attr("src", "{% static 'img/category_icon.png' %}");
-        $(".post_icon").attr("src", "{% static 'img/post_icon_clicked.png' %}");
-        $(".personal_info").hide();
+        if (isCategoryDash) {
+          myDashboard(showCategorySelectionView);
+        } else {
+          $("#addCategoryBtn").remove();
+          $(".cat_delete_btn").hide();
+          $(".dashboard_name").text("Please select a category:");
+          $(".header_subtxt").hide();
+          $(".dashboard_icon").attr(
+            "src",
+            "{% static 'img/dashboard_icon.png' %}"
+          );
+          $(".category_icon").attr(
+            "src",
+            "{% static 'img/category_icon.png' %}"
+          );
+          $(".post_icon").attr(
+            "src",
+            "{% static 'img/post_icon_clicked.png' %}"
+          );
+          $(".personal_info").hide();
+        }
       }
 
       function showCategoriesEditView() {
-        $(".dashboard_name").text("Manage Categories:");
-        $(".header_subtxt").hide();
-        $(".dashboard_icon").attr(
-          "src",
-          "{% static 'img/dashboard_icon.png' %}"
-        );
-        $(".post_icon").attr("src", "{% static 'img/post_icon.png' %}");
-        $(".category_icon").attr(
-          "src",
-          "{% static 'img/category_icon_clicked.png' %}"
-        );
+        if (isCategoryDash) {
+          myDashboard(showCategoriesEditView);
+        } else {
+          $(".dashboard_name").text("Manage Categories:");
+          $(".header_subtxt").hide();
+          $(".dashboard_icon").attr(
+            "src",
+            "{% static 'img/dashboard_icon.png' %}"
+          );
+          $(".post_icon").attr("src", "{% static 'img/post_icon.png' %}");
+          $(".category_icon").attr(
+            "src",
+            "{% static 'img/category_icon_clicked.png' %}"
+          );
 
-        $(".cat_delete_btn").show();
-        $(".personal_info").hide();
+          $(".cat_delete_btn").show();
+          $(".personal_info").hide();
 
-        $(".categories_boxes").append(
-          "<div id='addCategoryBtn' class='cat_box' style='background-color: #f1f1f1; border: 3px solid #0f395e;'><img src='{% static 'img/add.png' %}' alt='icon' class='box_icon'/><p style='color:#0f395e;'>Add Category</p></div>"
-        );
+          $(".categories_boxes").append(
+            "<div id='addCategoryBtn' class='cat_box' style='background-color: #f1f1f1; border: 3px solid #0f395e;'><img src='{% static 'img/add.png' %}' alt='icon' class='box_icon'/><p style='color:#0f395e;'>Add Category</p></div>"
+          );
 
-        $("#addCategoryBtn").click(() => {
-          $("#addNewCategoryModal").show();
-        });
+          $("#addCategoryBtn").click(() => {
+            $("#addNewCategoryModal").show();
+          });
+        }
       }
 
-      function myDashboard() {
-        $("#addCategoryBtn").remove();
-        $(".cat_delete_btn").hide();
-        $("#dashboardContent").hide();
-        $("#transitionLoader").css("display", "flex");
-        $(".dashboard_name").text("My Dashboard");
-        $(".header_subtxt").show();
-        $(".dashboard_icon").attr(
-          "src",
-          "{% static 'img/dashboard_icon_clicked.png' %}"
-        );
-        $(".category_icon").attr("src", "{% static 'img/category_icon.png' %}");
-        $(".post_icon").attr("src", "{% static 'img/post_icon.png' %}");
-        $("#dashboardContent").load("{% url 'myDash' %}", () => {
-          $("#transitionLoader").hide();
-          $("#dashboardContent").show();
-          $(".personal_info").show();
-        });
+      function myDashboard(callbackFunc) {
+        isCategoryDash = false;
+        if (!isDashLoaded) {
+          $("#dashboardContent").hide();
+          $("#transitionLoader").css("display", "flex");
+
+          if (callbackFunc == null) {
+            $("#addCategoryBtn").remove();
+            $(".cat_delete_btn").hide();
+            $(".dashboard_name").text("My Dashboard");
+            $(".header_subtxt").show();
+
+            $(".dashboard_icon").attr(
+              "src",
+              "{% static 'img/dashboard_icon_clicked.png' %}"
+            );
+            $(".category_icon").attr(
+              "src",
+              "{% static 'img/category_icon.png' %}"
+            );
+            $(".post_icon").attr("src", "{% static 'img/post_icon.png' %}");
+          }
+
+          $("#dashboardContent").load("{% url 'myDash' %}", () => {
+            $("#dashboardContent").show();
+            $(".personal_info").show();
+            $("#transitionLoader").hide();
+
+            isDashLoaded = true;
+
+            if (callbackFunc != null) callbackFunc();
+          });
+        } else {
+          if (callbackFunc == null) {
+            $("#addCategoryBtn").remove();
+            $(".cat_delete_btn").hide();
+
+            $(".dashboard_name").text("My Dashboard");
+            $(".header_subtxt").show();
+
+            $(".dashboard_icon").attr(
+              "src",
+              "{% static 'img/dashboard_icon_clicked.png' %}"
+            );
+            $(".category_icon").attr(
+              "src",
+              "{% static 'img/category_icon.png' %}"
+            );
+            $(".post_icon").attr("src", "{% static 'img/post_icon.png' %}");
+            $(".personal_info").show();
+          } else {
+            callbackFunc();
+          }
+        }
       }
     </script>
   </head>
   <body>
-    <div id="loader" style="display: none;">
+    <div id="loader" style="display: none">
       <div>
         <div class="lds-default">
           <div></div>
@@ -131,7 +187,7 @@
       </div>
     </div>
 
-    <div id="overlayLoader" style="display: none;"  >
+    <div id="overlayLoader" style="display: none">
       <div class="lds-default">
         <div></div>
         <div></div>
@@ -401,7 +457,71 @@
               NO
             </button>
             <button id="confirmOptionSwitchBtn" class="modal_button">
-              Save
+              YES
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="postCommentDeletionConfirmationModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal_title">
+          <p>Are you sure?</p>
+          <span
+            id="postCommentDeletionConfirmationModalClose"
+            class="close"
+            onclick="$('#postCommentDeletionConfirmationModal').hide();"
+            ><img src="{% static 'img/delete_circle.png' %}"
+          /></span>
+        </div>
+        <div class="container">
+          <p class="modal-message">
+            Are you sure you want to delete this comment?
+          </p>
+
+          <div class="button_grid">
+            <button
+              id="cancelCommentDeletionBtn"
+              onclick="$('#postCommentDeletionConfirmationModal').hide();"
+            >
+              NO
+            </button>
+            <button id="confirmCommentDeletionBtn" class="modal_button">
+              YES
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="postDeletionConfirmationModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal_title">
+          <p>Are you sure?</p>
+          <span
+            id="postDeletionConfirmationModalClose"
+            class="close"
+            onclick="$('#postDeletionConfirmationModal').hide();"
+            ><img src="{% static 'img/delete_circle.png' %}"
+          /></span>
+        </div>
+        <div class="container">
+          <p class="modal-message">
+            Are you sure you want to delete this post forever?
+          </p>
+
+          <div class="button_grid">
+            <button
+              id="cancelPostDeletionBtn"
+              onclick="$('#postDeletionConfirmationModal').hide();"
+            >
+              NO
+            </button>
+            <button id="confirmPostDeletionBtn" class="modal_button">
+              YES
             </button>
           </div>
         </div>
@@ -421,7 +541,7 @@
                 src="{% static 'img/dashboard_icon_clicked.png' %}"
                 alt="dashboard"
               />
-              <p onclick="myDashboard()" class="menu_item">My Dashboard</p>
+              <p onclick="myDashboard(null)" class="menu_item">My Dashboard</p>
             </div>
             <div>
               <img
@@ -501,7 +621,7 @@
 
     <script>
       $(document).ready(() => {
-        myDashboard();
+        myDashboard(null);
 
         $("#continueBtn").click(() => {
           if ($("#categorySelect").val() != null) {

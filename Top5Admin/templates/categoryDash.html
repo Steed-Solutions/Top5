@@ -202,9 +202,12 @@
             <video id="uploadedVidPreview" width="25%%" preload="metadata" />
           </div>
         </div>
-        <div style="display: flex; justify-content: flex-end">
-          <div id="previewBtn">Preview</div>
-          <div id="saveBtn">SAVE</div>
+        <div style="display: flex">
+          <div id="clearBtn">Clear</div>
+          <div style="display: flex; justify-content: flex-end; width: 100%">
+            <div id="previewBtn">Preview</div>
+            <div id="saveBtn">SAVE</div>
+          </div>
         </div>
       </div>
       <div class="search_sec">
@@ -293,7 +296,7 @@
             $("#optionsSwitchConfirmationModal").hide();
           } else {
             $("#postTxtArea").html("");
-            $("#saveBtn, #previewBtn").hide();
+            $("#saveBtn, #previewBtn, #clearBtn").hide();
             $("#articleBtn").parent().toggleClass("active");
             if($("#articleBtn").parent().hasClass("active")) {
               $("#articleBtn").css("padding", "9px");
@@ -356,7 +359,7 @@
               $("#uploadOptionsBtns").hide();
               $("#uploadPreview").show();
               $("#imgPreview").show();
-              $("#saveBtn, #previewBtn").css("display", "flex");
+              $("#saveBtn, #previewBtn, #clearBtn").css("display", "flex");
               $("#uploadedImgPreview").attr("src", e.target.result);
             }
             reader.readAsDataURL(this.files[0]); // convert to base64 string
@@ -373,7 +376,7 @@
               $("#uploadOptionsBtns").hide();
               $("#uploadPreview").show();
               $("#vidPreview").show();
-              $("#saveBtn, #previewBtn").css("display", "flex");
+              $("#saveBtn, #previewBtn, #clearBtn").css("display", "flex");
               $("#uploadedVidPreview").attr("src", e.target.result)
 
               document.getElementById("uploadedVidPreview").onloadedmetadata = function() {
@@ -398,7 +401,7 @@
           selectedImgOrVid = null;
 
           if($("#postTxtArea").html().length == 0) {
-            $("#saveBtn, #previewBtn").hide();
+            $("#saveBtn, #previewBtn, #clearBtn").hide();
           }
 
         });
@@ -413,45 +416,60 @@
           selectedImgOrVid = null;
 
           if($("#postTxtArea").html().length == 0) {
-            $("#saveBtn, #previewBtn").hide();
+            $("#saveBtn, #previewBtn, #clearBtn").hide();
           }
         });
 
         $(document).on("keyup", e => {
           if($(e.target).attr("id") == "postTxtArea") {
             if($("#postTxtArea").html().length > 0) {
-              if($("#saveBtn, #previewBtn").css("display") == "none") {
-                $("#saveBtn, #previewBtn").css("display", "flex");
+              if($("#saveBtn, #previewBtn, #clearBtn").css("display") == "none") {
+                $("#saveBtn, #previewBtn, #clearBtn").css("display", "flex");
               }
             } else if ($("#postTxtArea").html().length == 0 && $("#uploadPreview").css("display") == "none") {
-              $("#saveBtn, #previewBtn").hide();
+              $("#saveBtn, #previewBtn, #clearBtn").hide();
             }
           }
         });
 
-        $("#previewBtn").click(() => {
-          let postType = "";
+        $("#clearBtn").click(() => {
+          isSelectedImg ? $("#uploadedImgPreview").removeAttr("src") : $("#uploadedVidPreview").removeAttr("src");
+          $("#vidPreview, #imgPreview").hide();
+          $("#uploadPreview").hide();
+          $("#imgUploadInput, #vidUploadInput").val(null);
+          $("#name").val("");
+          $("#postTxtArea").html("").show();
+          $("#uploadOptionsBtns").show();
+          $("#saveBtn, #previewBtn, #clearBtn").hide();
+          selectedImgOrVid = null;
+          selectedPostForEdit = "";
+        });
 
-          if($("#articleBtn").parent().hasClass("active")) {
-            postType = "article";
-          } else {
-            if((selectedImgOrVid != null) && ($("#postTxtArea").html().length > 0) && isSelectedImg) {
-              postType = "imgTxt";
-            } else if((selectedImgOrVid != null) && ($("#postTxtArea").html().length > 0) && !isSelectedImg) {
-              postType = "vidTxt";
-            } else if((selectedImgOrVid != null) && !isSelectedImg) {
-              postType = "vid";
-            } else if((selectedImgOrVid != null) && isSelectedImg) {
-              postType = "img";
+        $("#previewBtn").click(() => {
+          let postType = selectedPostForEdit == "" ? "" : categoryPosts[selectedPostForEdit].type;
+
+          if (postType == "") {
+            if($("#articleBtn").parent().hasClass("active")) {
+              postType = "article";
             } else {
-              postType = "txt";
+              if((selectedImgOrVid != null) && ($("#postTxtArea").html().length > 0) && isSelectedImg) {
+                postType = "imgTxt";
+              } else if((selectedImgOrVid != null) && ($("#postTxtArea").html().length > 0) && !isSelectedImg) {
+                postType = "vidTxt";
+              } else if((selectedImgOrVid != null) && !isSelectedImg) {
+                postType = "vid";
+              } else if((selectedImgOrVid != null) && isSelectedImg) {
+                postType = "img";
+              } else {
+                postType = "txt";
+              }
             }
           }
 
           sessionStorage.setItem("postName", $("#name").val());
           sessionStorage.setItem("postType", postType);
           sessionStorage.setItem("postContent", $("#postTxtArea").html());
-          sessionStorage.setItem(isSelectedImg ? "postContentImage" : "postImageOrVideo", isSelectedImg ? $("#uploadedImgPreview").attr("src") : $("#uploadedVidPreview").attr("src"));
+          sessionStorage.setItem("postContentMedia", isSelectedImg ? $("#uploadedImgPreview").attr("src") : $("#uploadedVidPreview").attr("src"));
 
           window.open("{% url 'postPreview' %}", '_blank');
         });
@@ -481,18 +499,8 @@
               }
             }
 
-            if(postType != "txt" && postType != "article") {
-              let uploadTask = storageRef.child('content/posts/' + postKey + '.jpg').put(selectedImgOrVid);
-              uploadTask.on('state_changed', function(snapshot){
-                var progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2);
-                $("#loaderPercen").text(progress + '%');
-
-              }, function(error) {
-                console.log(error);
-                // Handle unsuccessful uploads
-              }, function() {
-                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                  $.ajax({
+            function savePost(downloadURL) {
+              $.ajax({
                     type: "POST",
                     url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
                     data: {
@@ -518,10 +526,10 @@
                         $("#name").val("");
                         $("#postTxtArea").html("").show();
                         $("#uploadOptionsBtns").show();
-                        $("#saveBtn, #previewBtn").hide();
+                        $("#saveBtn, #previewBtn, #clearBtn").hide();
                         selectedImgOrVid = null;
 
-                        populatePostsList(true);
+                        populatePostsList();
                       } else {
                         alert("Failed to add post!");
                         $("#loader").hide();
@@ -531,48 +539,29 @@
                       console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
                     }
                   });
+            }
+
+            if(postType != "txt" && postType != "article") {
+              if(selectedImgOrVid.indexOf("http") > -1) {
+                savePost(selectedImgOrVid);
+              } else {
+                let uploadTask = storageRef.child('content/posts/' + postKey + '.jpg').put(selectedImgOrVid);
+                uploadTask.on('state_changed', function(snapshot){
+                  var progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2);
+                  $("#loaderPercen").text(progress + '%');
+
+                }, function(error) {
+                  console.log(error);
+                  // Handle unsuccessful uploads
+                }, function() {
+                  uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    savePost(downloadURL);
+                  });
                 });
-              });
+              }
             } else {
-              $.ajax({
-                type: "POST",
-                url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
-                data: {
-                  reqType : "add",
-                  key : postKey,
-                  type : postType,
-                  name : $("#name").val(),
-                  link : "",
-                  text : $("#postTxtArea").html(),
-                  textNoTags: $("#postTxtArea").text(),
-                  timestamp : (new Date()).getTime(),
-                  csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: (response) => {
-                  if(response.result == "success") {
-                    categoryPosts[response.postKey] = response.post;
 
-                    $("#loader").hide();
-                    isSelectedImg ? $("#uploadedImgPreview").removeAttr("src") : $("#uploadedVidPreview").removeAttr("src");
-                    $("#vidPreview, #imgPreview").hide();
-                    $("#uploadPreview").hide();
-                    $("#imgUploadInput, #vidUploadInput").val(null);
-                    $("#name").val("");
-                    $("#postTxtArea").html("").show();
-                    $("#uploadOptionsBtns").show();
-                    $("#saveBtn, #previewBtn").hide();
-                    selectedImgOrVid = null;
-
-                    populatePostsList();
-                  } else {
-                    alert("Failed to add post!");
-                    $("#loader").hide();
-                  }
-                },
-                error: (xhr, errmsg, err) => {
-                  console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-                }
-              });
+              savePost("");
             }
           }
         });
@@ -595,19 +584,7 @@
             itemContent.classList.add("item_content");
             itemContent.setAttribute("data-item-content-post-id", postID);
 
-            if(post.type == "txt") {
-              itemContent.innerHTML += "<p>" + post.name + "</p>";
-            } else if(post.type == "img") {
-              itemContent.innerHTML += "<img src='" + post.link + "' width='40%' />";
-            } else if(post.type == "vid") {
-              itemContent.innerHTML += "<video src='" + post.link + "#t=0.5'  width='40%' preload='metadata' />";
-            } else if(post.type == "imgTxt") {
-              itemContent.innerHTML += "<img src='" + post.link + "' width='40%' /><span>" + post.name + "</span>";
-            } else if(post.type == "vidTxt") {
-              itemContent.innerHTML += "<video src='" + post.link + "#t=0.5'  width='40%' preload='metadata' /><span>" + post.name + "</span>";
-            } else if(post.type == "article") {
-              itemContent.innerHTML += "<p>" + post.name + "</p>";
-            }
+            itemContent.innerHTML += "<p>" + post.name + "</p>";
 
             let itemDate = document.createElement("span");
             itemDate.classList.add("item_date");
@@ -619,15 +596,26 @@
             let itemIcons = document.createElement("div");
             itemIcons.classList.add("item_icons");
 
-            {% comment %} let editBtn = document.createElement("img");
+            let editBtn = document.createElement("img");
             editBtn.setAttribute("src", "{% static 'img/edit_icon.png' %}");
             editBtn.setAttribute("alt", "edit");
 
             editBtn.addEventListener("click", () => {
+              $("#loader").hide();
+              isSelectedImg ? $("#uploadedImgPreview").removeAttr("src") : $("#uploadedVidPreview").removeAttr("src");
+              $("#vidPreview, #imgPreview").hide();
+              $("#uploadPreview").hide();
+              $("#imgUploadInput, #vidUploadInput").val(null);
+              $("#name").val("");
+              $("#postTxtArea").html("").show();
+              $("#uploadOptionsBtns").show();
+              $("#saveBtn, #previewBtn, #clearBtn").hide();
+              selectedImgOrVid = null;
+
               selectedPostForEdit = postID;
-              if(post.type == "txt") {
-                $("#postTxtArea").val($("[data-item-content-post-id='" + postID + "'] > p").html());
-                $("#saveBtn, #previewBtn").css("display", "flex");
+              console.log(post.type);
+              if(post.type == "txt" || post.type == "article") {
+                $("#postTxtArea").html(post.text);
               } else if(post.type == "img") {
                 $("#vidPreview").hide();
                 $("#uploadOptionsBtns").hide();
@@ -635,33 +623,60 @@
                 $("#uploadPreview").show();
                 $("#imgPreview").show();
 
-                $("#uploadedImgPreview").attr("src", $("[data-item-content-post-id='" + postID + "'] > img").attr("src"));
+                $("#uploadedImgPreview").attr("src", post.link);
+
+                isSelectedImg = true;
+                selectedImgOrVid = post.link;
               } else if(post.type == "vid") {
                 $("#imgPreview").hide();
                 $("#uploadOptionsBtns").hide();
                 $("#postTxtArea").html("").hide();
                 $("#uploadPreview").show();
                 $("#vidPreview").show();
-                $("#saveBtn, #previewBtn").css("display", "flex");
-                $("#uploadedVidPreview").attr("src", $("[data-item-content-post-id='" + postID + "'] > video").attr("src"))
+                $("#uploadedVidPreview").attr("src", post.link)
+
+                isSelectedImg = false;
+                selectedImgOrVid = post.link;
               } else if(post.type == "imgTxt") {
                 $("#vidPreview").hide();
                 $("#uploadOptionsBtns").hide();
                 $("#postTxtArea").show();
                 $("#uploadPreview").show();
                 $("#imgPreview").show();
-                $("#saveBtn, #previewBtn").css("display", "flex");
-                $("#uploadedImgPreview").attr("src", $("[data-item-content-post-id='" + postID + "'] > img").attr("src"));
+                $("#uploadedImgPreview").attr("src", post.link);
 
-                $("#postTxtArea").val($("[data-item-content-post-id='" + postID + "'] > span").html());
+                $("#postTxtArea").text(post.text);
+
+                isSelectedImg = true;
+                selectedImgOrVid = post.link;
+                $("#name").val(post.name);
+              }  else if(post.type == "vidTxt") {
+                $("#imgPreview").hide();
+                $("#uploadOptionsBtns").hide();
+                $("#postTxtArea").html("").hide();
+                $("#uploadPreview").show();
+                $("#vidPreview").show();
+                $("#uploadedVidPreview").attr("src", post.link)
+
+                $("#postTxtArea").text(post.text);
+
+                isSelectedImg = false;
+                selectedImgOrVid = post.link;
               }
-            }); {% endcomment %}
+
+              $("#name").val(post.name);
+              $("#saveBtn, #previewBtn, #clearBtn").css("display", "flex");
+            });
 
             let deleteBtn = document.createElement("img");
             deleteBtn.setAttribute("src", "{% static 'img/del_icon.png' %}");
             deleteBtn.setAttribute("alt", "delete");
 
             deleteBtn.addEventListener("click", () => {
+              $("#postDeletionConfirmationModal").show();
+            });
+
+            $("#confirmPostDeletionBtn").click(() => {
               $("#loader").css("display", "flex");
               $.ajax({
                 type: "POST",
@@ -688,7 +703,7 @@
               });
             });
 
-            {% comment %} itemIcons.appendChild(editBtn); {% endcomment %}
+            itemIcons.appendChild(editBtn);
             itemIcons.appendChild(deleteBtn);
 
             item.appendChild(itemContent);

@@ -11,6 +11,8 @@ import pyrebase
 import json
 import re
 
+from collections import OrderedDict
+
 import base64
 
 cred = adminCredentials.Certificate(finders.find(
@@ -230,7 +232,7 @@ def categoryDash(request, category_id):
                                  request.POST["key"]).set("postID")
 
                 db.child('content/posts/' +
-                         request.POST["key"]).set(data)
+                         request.POST["key"]).update(data)
 
                 return JsonResponse({"result": "success", "postKey": request.POST["key"], "post": {"type": request.POST["type"],
                                                                                                    "name": request.POST["name"],
@@ -257,12 +259,15 @@ def categoryDash(request, category_id):
         pass
 
     if categoryPosts != None:
-        categoryPostsMap = dict(categoryPosts)
+        categoryPostsMap = OrderedDict(sorted(
+            categoryPosts.items(), key=lambda post: post[1]['timestamp']))
 
     return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": json.dumps(categoryPostsMap)})
 
+
 def postPreview(request):
     return render(request, "postPreview.html")
+
 
 def logout(request):
     request.session.pop('user', None)

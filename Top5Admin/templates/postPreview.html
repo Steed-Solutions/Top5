@@ -20,12 +20,14 @@
       ).innerHTML = sessionStorage.getItem("postName");
       const postType = sessionStorage.getItem("postType");
 
+      console.log(postType);
+
       if (postType.indexOf("img") > -1) {
         let contentImage = document.createElement("img");
         contentImage.setAttribute("id", "postImageOrVideo");
         contentImage.setAttribute(
           "src",
-          sessionStorage.getItem("postContentImage")
+          sessionStorage.getItem("postContentMedia")
         );
         document
           .getElementById("selectedPostContent")
@@ -35,7 +37,7 @@
         contentVideo.setAttribute("id", "postImageOrVideo");
         contentVideo.setAttribute(
           "src",
-          sessionStorage.getItem("postContentVideo")
+          sessionStorage.getItem("postContentMedia")
         );
         document
           .getElementById("selectedPostContent")

@@ -257,24 +257,6 @@ html {
   background-color: #ff5858;
 }
 
-#cancelEditBtn,
-#cancelEmbedBtn {
-  color: white;
-  background-color: #ff2c2c;
-  padding: 14px 20px;
-  margin-top: 8px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  font-size: 18px;
-  text-align: center;
-}
-
-#cancelEditBtn:hover,
-#cancelEmbedBtn:hover {
-  background-color: #ff5858;
-}
-
 .status_message {
   margin-top: 20px;
   margin-bottom: 15px;
@@ -305,8 +287,11 @@ html {
   margin-left: 10px;
 }
 
+#cancelEditBtn,
+#cancelEmbedBtn,
 #cancelAddCategoryBtn,
-#cancelOptionSwitchBtn {
+#cancelOptionSwitchBtn,
+#cancelCommentDeletionBtn {
   color: white;
   background-color: #ff2c2c;
   padding: 14px 20px;
@@ -316,6 +301,14 @@ html {
   width: 100%;
   font-size: 18px;
   text-align: center;
+}
+
+#cancelEditBtn:hover,
+#cancelEmbedBtn:hover,
+#cancelAddCategoryBtn:hover,
+#cancelOptionSwitchBtn:hover,
+#cancelCommentDeletionBtn:hover {
+  background-color: #ff5858;
 }
 
 /* Modal End */

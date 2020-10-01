@@ -50,19 +50,37 @@
         let categoryIDs = Object.keys(categories);
 
         categoryIDs.forEach((id) => {
-          $(".categories_boxes").append(
-            "<div class='cat_box' name='" +
-              id +
-              "' style='background-color: " +
-              categories[id].color +
-              "'><div class='cat_delete_btn' name='cat_delete_" +
-              id +
-              "'><img src=\"{% static 'img/delete_circle.png' %}\" height=25 /></div><img src='" +
-              categories[id].imgURL +
-              "' alt='icon' class='box_icon'/><p>" +
-              categories[id].name +
-              "</p></div>"
-          );
+          if ($("#addCategoryBtn").length > 0) {
+            $(
+              "<div class='cat_box' name='" +
+                id +
+                "' style='background-color: " +
+                categories[id].color +
+                "'><div class='cat_delete_btn' name='cat_delete_" +
+                id +
+                "'><img src=\"{% static 'img/delete_circle.png' %}\" height=25 /></div><img src='" +
+                categories[id].imgURL +
+                "' alt='icon' class='box_icon'/><p>" +
+                categories[id].name +
+                "</p></div>"
+            ).insertBefore("#addCategoryBtn");
+
+            $("[name='cat_delete_" + id + "']").show();
+          } else {
+            $(".categories_boxes").append(
+              "<div class='cat_box' name='" +
+                id +
+                "' style='background-color: " +
+                categories[id].color +
+                "'><div class='cat_delete_btn' name='cat_delete_" +
+                id +
+                "'><img src=\"{% static 'img/delete_circle.png' %}\" height=25 /></div><img src='" +
+                categories[id].imgURL +
+                "' alt='icon' class='box_icon'/><p>" +
+                categories[id].name +
+                "</p></div>"
+            );
+          }
           $("[name='" + id + "']").click((e) => {
             if (
               $(e.target).closest("[name='cat_delete_" + id + "']").length > 0
@@ -78,7 +96,6 @@
             }
           });
         });
-
         $("#loaderPercen").hide();
 
         $("#personalInfoEditBtn").click(() => {
@@ -221,6 +238,7 @@
                   selectedIcon = null;
 
                   $("#addNewCategoryModal").hide();
+                  console.log($("#addCategoryBtn"));
                   $(
                     "<div class='cat_box' name='" +
                       response.category.id +

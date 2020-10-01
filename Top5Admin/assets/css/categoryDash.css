@@ -24,7 +24,7 @@ html {
   border-top-left-radius: 10px;
   background-color: #f5f4f9;
   height: 100%;
-  padding: 80px 80px 50px 80px;    
+  padding: 80px 80px 50px 80px;
   width: 78vw;
 }
 
@@ -173,7 +173,9 @@ html {
   z-index: 1;
 }
 
-#saveBtn, #previewBtn {
+#saveBtn,
+#previewBtn,
+#clearBtn {
   display: none;
   width: 20%;
   height: 40px;
@@ -191,10 +193,19 @@ html {
   color: #a27dce;
 }
 
+#clearBtn {
+  background-color: transparent;
+  color: #ff5656;
+}
+
 #previewBtn:hover {
-  background-color: #dacbf1;  
+  background-color: #dacbf1;
 }
 
 #saveBtn:hover {
   background-color: #9460d4;
+}
+
+#clearBtn:hover {
+  color: #ff2c2c;
 }
