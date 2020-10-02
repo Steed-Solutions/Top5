@@ -109,7 +109,6 @@
   let allLoadedPosts = [];
   let previousLastLoadedPostID = "",
     lastLoadedPostID = "";
-  let pageNumber = {{ pageNumber }};
 
   let pageFromCall = 0;
 
@@ -120,6 +119,7 @@
   });
 
   function loadSearchResults(searchTerm, direction) {
+    $("#viewMoreBtn, #viewPrevBtn").hide();
     $("#noPosts").hide();
     $("#posts").hide();
     $("#page").hide();
@@ -249,17 +249,21 @@
     });
   }
 
-  function addNewComment(postID, message) {
+  function addNewComment(postID, commentID, message) {
     let comment = document.createElement("div");
     comment.classList.add("comment");
+    comment.setAttribute("id", commentID);
+    comment.setAttribute("data-post-id", postID);
     comment.innerHTML =
-      "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><div class='comment_content'><span>You</span><span>" +
+      "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><div class='comment_content'><span>You</span><span style='grid-column: 2/4;'>" +
       message +
-      "</span><span class='comment_action'>24h</span><span class='comment_action'>Reply</span></div>";
+      "</span><span class='comment_action' style='cursor: unset;'>24h</span>" +
+      ("{{ isLoggedIn }}" == "True"
+        ? "<span class='comment_action'>Reply</span><span class='comment_action' style='color:#ff5656; margin-left:10px' onclick='onDeleteComment(this)'>Delete</span>"
+        : "") +
+      "</div>";
+
     document.getElementById("comments_" + postID).appendChild(comment);
-    $("#selectedPostActionAndComments #comments_" + postID).append(
-      $("#comments_" + postID + " > div:last-child").get(0).outerHTML
-    );
   }
 
   function commentOnPost(postID, comment) {
@@ -275,26 +279,46 @@
       },
       success: (response) => {
         if (response.result == "success") {
-          addNewComment(postID, comment);
-          $(
-            "#comments_count_" +
-              postID +
-              " > span:last-child, #selectedPostActionAndComments #comments_count_" +
-              postID +
-              " > span:last-child"
-          ).html(
+          addNewComment(postID, response.commentID, comment);
+          $("#comments_count_" + postID + " > span:last-child").html(
             response.comments +
               " comment" +
               (response.comments != 1 ? "s" : "") +
               "</span>"
           );
-          $(
-            "#comment_inp_" +
-              postID +
-              ", #selectedPostActionAndComments #comment_inp_" +
-              postID
-          ).val("");
+          $("#comment_inp_" + postID).val("");
         }
+      },
+      error: (xhr, errmsg, err) => {
+        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+      },
+    });
+  }
+
+  function deleteComment(postID, commentID) {
+    $.ajax({
+      type: "POST",
+      url: "{% url 'home' %}",
+      data: {
+        type: "delete_comment",
+        postID: postID,
+        commentID: commentID,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      success: (response) => {
+        if (response.result == "success") {
+          $("#" + commentID).remove();
+          $("#comments_count_" + postID + " > span:last-child").html(
+            response.comments +
+              " comment" +
+              (response.comments != 1 ? "s" : "") +
+              "</span>"
+          );
+        } else {
+          alert("Failed to delete comment!");
+        }
+
+        $("#postCommentDeletionConfirmationModal").hide();
       },
       error: (xhr, errmsg, err) => {
         console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
@@ -315,13 +339,7 @@
       },
       success: (response) => {
         if (response.result == "success") {
-          $(
-            "[name='save_" +
-              postID +
-              "'] > span, #selectedPostActionAndComments [name='save_" +
-              postID +
-              "'] > span"
-          )
+          $("[name='save_" + postID + "'] > span")
             .toggleClass("far")
             .toggleClass("fas");
         }
@@ -360,7 +378,10 @@
     postContent.setAttribute("id", "postContent_" + postMap["id"]);
     postContent.classList.add("post_content");
     console.log(postMap["type"]);
-    if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {
+    if (
+      postMap["type"].indexOf("img") >= 0 ||
+      (postMap["type"] == "article" && postMap["link"] != "")
+    ) {
       postContent.innerHTML =
         "<img src='" +
         postMap["link"] +
@@ -375,7 +396,6 @@
       postContent.innerHTML =
         "<img src='{% static 'img/article.png' %}' class='post_article_placeholder_image' alt='post_img' onerror='$(this).hide()' />";
     }
-
 
     if (postMap["type"].toLowerCase().indexOf("txt") >= 0) {
       let text = postMap["text"];
@@ -445,12 +465,21 @@
     postMap["allComments"].forEach((commentMap) => {
       let comment = document.createElement("div");
       comment.classList.add("comment");
+      comment.setAttribute("id", commentMap["id"]);
+      comment.setAttribute("data-post-id", postMap["id"]);
       comment.innerHTML =
         "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><div class='comment_content'><span>" +
         commentMap["username"] +
-        "</span><span>" +
+        "</span><span style='grid-column: 2/4;'>" +
         commentMap["comment"] +
-        "</span><span class='comment_action'>24h</span><span class='comment_action'>Reply</span></div>";
+        "</span><span class='comment_action' style='cursor: unset;'>24h</span>" +
+        ("{{ isLoggedIn }}" == "True"
+          ? "<span class='comment_action'>Reply</span>" +
+            ("{{ userID }}" == commentMap["userID"]
+              ? "<span class='comment_action' style='color:#ff5656; margin-left:10px' onclick='onDeleteComment(this)'>Delete</span>"
+              : "")
+          : "") +
+        "</div>";
       comments.appendChild(comment);
     });
     commentSection.appendChild(comments);
@@ -478,94 +507,8 @@
     posts.appendChild(post);
 
     $("#postContent_" + postMap["id"]).click((e) => {
-      console.log(postMap);
-      $("#loadedPage").hide();
-      $("#selectedPost").show();
-
-      $("#selectedPostTitle").html(postMap["name"]);
-
-      if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {
-      postContent.innerHTML =
-        "<img src='" +
-        postMap["link"] +
-        "' class='post_content_image' alt='post_img' onerror='$(this).hide()' />";
-      } else if (postMap["type"].indexOf("vid") >= 0) {
-        $("#selectedPostContent").append(
-          '<video id="postImageOrVideo" src="' +
-            postMap["link"] +
-            '" controls ></video>'
-        );
-      }
-
-      if (
-        postMap["type"].toLowerCase().indexOf("txt") >= 0 ||
-        postMap["type"] == "article"
-      ) {
-        $("#selectedPostContent").append(
-          "<pre style='white-space: normal'>" + postMap["text"] + "</pre>"
-        );
-      }
-
-      $("#selectedPostActionAndComments").append(
-        $("#post_" + postMap["id"] + " > div > .post_action").get(0).outerHTML
-      );
-      $("#selectedPostActionAndComments").append(
-        $("#post_" + postMap["id"] + " > div > .comment_sec").get(0).outerHTML
-      );
-      $("#selectedPostActionAndComments").append(
-        $("#post_" + postMap["id"] + " > div > .comment_input").get(0).outerHTML
-      );
-
-      if ("{{ isLoggedIn }}" == "True") {
-        $(
-          "#selectedPostActionAndComments [name='like_" + postMap["id"] + "']"
-        ).click((e) => {
-          postID = $(e.target)
-            .closest(".post_action_item")
-            .attr("name")
-            .replace("like_", "");
-
-          likePost(
-            postID,
-            $(
-              "#selectedPostActionAndComments [name='like_" +
-                postID +
-                "'] > span:first-child"
-            ).hasClass("far")
-          );
-        });
-
-        $("#selectedPostActionAndComments .postBtn_" + postMap["id"]).click(
-          (e) => {
-            postID = $(e.target).attr("class").replace("postBtn_", "");
-            commentInp = $(
-              "#selectedPostActionAndComments #comment_inp_" + postID
-            ).val();
-            commentOnPost(postID, commentInp);
-          }
-        );
-
-        $(
-          "#selectedPostActionAndComments [name='save_" + postMap["id"] + "']"
-        ).click((e) => {
-          postID = $(e.target)
-            .closest(".post_action_item")
-            .attr("name")
-            .replace("save_", "");
-          categoryID = $(e.target)
-            .closest(".post_action_item")
-            .attr("data-category-id");
-          savePost(
-            postID,
-            categoryID,
-            $(
-              "#selectedPostActionAndComments [name='save_" +
-                postID +
-                "'] > span"
-            ).hasClass("far")
-          );
-        });
-      }
+      let param = encodeURI(postMap["name"] + "_~_" + postMap["id"]);
+      window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
     });
 
     if ("{{ isLoggedIn }}" == "True") {
@@ -606,6 +549,24 @@
     return post;
   }
 
+  let selectedCommentForDeletion = {};
+
+  function onDeleteComment(e) {
+    selectedCommentForDeletion = {
+      postID: $(e).closest(".comment").attr("data-post-id"),
+      commentID: $(e).closest(".comment").attr("id"),
+    };
+
+    $("#postCommentDeletionConfirmationModal").show();
+  }
+
+  $("#confirmCommentDeletionBtn").click(() => {
+    deleteComment(
+      selectedCommentForDeletion.postID,
+      selectedCommentForDeletion.commentID
+    );
+  });
+
   $("#seachInput").on("keyup", (e) => {
     searchTerm = $(e.target).val();
     if (searchTerm.length == 0) {
@@ -621,13 +582,15 @@
       loadSearchResults(searchTerm, "next");
 
       $("#searchLayout").show();
-      $("#viewMoreBtn").show();
     }
   });
 
   $("#viewPrevBtn").click(() => {
     if ($("#loader").css("display") == "none") {
-      window.location.href = "{% url 'home' 123456 %}".replace(/123456/, pageNumber - 1);
+      window.location.href = "{% url 'home' 123456 %}".replace(
+        /123456/,
+        pageNumber - 1
+      );
       loadSearchResults($("#seachInput").val(), "previous");
     }
   });

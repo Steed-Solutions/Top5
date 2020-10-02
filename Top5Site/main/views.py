@@ -182,7 +182,7 @@ def home(request, page_number=0):
 
                         loggedInUserCategoricalPosts = sorted(
                             allCategoricalPosts.items(), reverse=True)
-                
+
                     validPosts = []
                     for currPost in loggedInUserCategoricalPosts:
                         post = dict(currPost[1])
@@ -266,7 +266,7 @@ def home(request, page_number=0):
 
                         comments = list()
                         commentItems = db.child(
-                            "comments/" + postID).get().val()
+                            "comments/" + post['id']).get().val()
                         if commentItems != None:
                             for key, val in commentItems.items():
                                 val["id"] = key
@@ -396,13 +396,32 @@ def home(request, page_number=0):
                 db.child(
                     "content/posts/" + request.POST["postID"] + "/comments").set(currCommentsCount + 1)
 
-                db.child("comments/" + request.POST["postID"]).push({
+                comment = db.child("comments/" + request.POST["postID"]).push({
                     "comment": request.POST["comment"],
                     "timestamp": int(request.POST["timestamp"]),
                     "userID": request.session['uid']
                 })
 
-                return JsonResponse({"result": "success", "comments": currCommentsCount + 1})
+                commentID = comment['name']
+
+                return JsonResponse({"result": "success", "commentID": commentID, "comments": currCommentsCount + 1})
+            except Exception as e:
+                print(e)
+                return JsonResponse({"result": "failure"})
+        elif request.POST['type'] == "delete_comment":
+            try:
+                currCommentsCount = db.child(
+                    "content/posts/" + request.POST["postID"] + "/comments").get().val()
+                currCommentsCount = 1 if currCommentsCount == None else currCommentsCount
+
+                if(currCommentsCount > 0):
+                    db.child(
+                        "content/posts/" + request.POST["postID"] + "/comments").set(currCommentsCount - 1)
+
+                db.child(
+                    "comments/" + request.POST["postID"] + "/" + request.POST["commentID"]).remove()
+
+                return JsonResponse({"result": "success", "comments": currCommentsCount - 1})
             except Exception as e:
                 print(e)
                 return JsonResponse({"result": "failure"})
@@ -438,12 +457,85 @@ def home(request, page_number=0):
     recentPosts = sorted(
         recentPosts, key=lambda post: post['id'], reverse=True)
 
-    return render(request, "site/pages/home.html", {"isLoggedIn": "user" in request.session, "pageNumber": page_number, "recentPosts": recentPosts})
+    return render(request, "site/pages/home.html", {"isLoggedIn": "user" in request.session, "userID": request.session['uid'], "pageNumber": page_number, "recentPosts": recentPosts})
 
 
 def post(request, post_title_id):
     post_title_id = unquote(post_title_id)
     postID = post_title_id.split("_~_")[1]
+
+    if request.method == "POST":
+        if request.POST['type'] == "like":
+            try:
+                currLikeCount = db.child(
+                    "content/posts/" + postID + "/likes").get().val()
+                currLikeCount = 0 if currLikeCount == None else currLikeCount
+
+                currLikeCount += 1 if request.POST["isLike"] == "true" else -1
+                db.child("content/posts/" +
+                         postID + "/likes").set(currLikeCount)
+
+                if request.POST["isLike"] == "true":
+                    db.child(
+                        "likes/" + postID + "/" + request.session['uid']).set("userID")
+                else:
+                    db.child(
+                        "likes/" + postID + "/" + request.session['uid']).remove()
+
+                return JsonResponse({"result": "success", "likes": currLikeCount})
+            except:
+                return JsonResponse({"result": "failure"})
+        elif request.POST['type'] == "comment":
+            try:
+                currCommentsCount = db.child(
+                    "content/posts/" + postID + "/comments").get().val()
+                currCommentsCount = 0 if currCommentsCount == None else currCommentsCount
+
+                db.child(
+                    "content/posts/" + postID + "/comments").set(currCommentsCount + 1)
+
+                comment = db.child("comments/" + postID).push({
+                    "comment": request.POST["comment"],
+                    "timestamp": int(request.POST["timestamp"]),
+                    "userID": request.session['uid']
+                })
+
+                commentID = comment['name']
+
+                return JsonResponse({"result": "success", "commentID": commentID, "comments": currCommentsCount + 1})
+            except Exception as e:
+                print(e)
+                return JsonResponse({"result": "failure"})
+        elif request.POST['type'] == "delete_comment":
+            try:
+                currCommentsCount = db.child(
+                    "content/posts/" + postID + "/comments").get().val()
+                currCommentsCount = 1 if currCommentsCount == None else currCommentsCount
+
+                if(currCommentsCount > 0):
+                    db.child(
+                        "content/posts/" + postID + "/comments").set(currCommentsCount - 1)
+
+                db.child(
+                    "comments/" + postID + "/" + request.POST["commentID"]).remove()
+
+                return JsonResponse({"result": "success", "comments": currCommentsCount - 1})
+            except Exception as e:
+                print(e)
+                return JsonResponse({"result": "failure"})
+        elif request.POST['type'] == "save":
+            try:
+                if request.POST["isSave"] == "true":
+                    db.child("users/regularUsers/" + request.session['uid'] + "/saved/" + postID).set(
+                        request.POST["categoryID"])
+                else:
+                    db.child("users/regularUsers/" +
+                             request.session['uid'] + "/saved/" + postID).remove()
+
+                return JsonResponse({"result": "success"})
+            except Exception as e:
+                print(e)
+                return JsonResponse({"result": "failure"})
 
     post = db.child("content/posts/" + postID).get().val()
     if post != None:
@@ -459,24 +551,31 @@ def post(request, post_title_id):
         post["id"] = postID
         post["category"] = categories[post["category"]]
 
-        post["isLiked"] = 0
+        isLiked = False if not "user" in request.session else db.child(
+            "likes/" + postID + "/" + request.session['uid']).get().val() != None
+        post["isLiked"] = 1 if isLiked else 0
 
-        likeStr = ""
+        likeStr = "You" if isLiked else ""
         likes = db.child("likes/" + postID).get().val()
         if likes != None:
             likes = list(dict(likes).keys())
-            likesCount = len(likes)
-            limit = 3
+            likesCount = len(likes) + (-1 if isLiked else 0)
+            limit = 2 if isLiked else 3
 
             namedUsers = []
             for i in range(0, limit):
                 if i < len(likes):
-                    namedUsers.append(
-                        db.child("users/regularUsers/" + likes[i] + "/name").get().val())
+                    if "user" in request.session and likes[i] == request.session['uid']:
+                        continue
+
+                    namedUserName = db.child(
+                        "users/regularUsers/" + likes[i] + "/name").get().val()
+                    if namedUserName != None:
+                        namedUsers.append(
+                            db.child("users/regularUsers/" + likes[i] + "/name").get().val())
 
             if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
-                remainingLikes = likesCount - \
-                    len(namedUsers)
+                remainingLikes = likesCount - len(namedUsers)
 
                 for i in range(0, len(namedUsers)):
                     if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
@@ -490,12 +589,16 @@ def post(request, post_title_id):
                 likeStr += " and " + remainingLikes + \
                     " other like this" if remainingLikes > 0 else " like this"
             elif len(namedUsers) == 0:
-                likeStr = "Be the first to like this"
+                likeStr = "You like this"
 
             post["likeStr"] = likeStr
 
         else:
             post["likeStr"] = "Be the first to like this"
+
+        isSaved = False if not "user" in request.session else db.child(
+            "users/regularUsers/" + request.session['uid'] + "/saved/" + postID).get().val() != None
+        post["isSaved"] = 1 if isSaved else 0
 
         comments = list()
         commentItems = db.child(
@@ -504,7 +607,7 @@ def post(request, post_title_id):
             for key, val in commentItems.items():
                 val["id"] = key
 
-                val["username"] = db.child(
+                val["username"] = "You" if val["userID"] == request.session['uid'] else db.child(
                     "users/regularUsers/" + val["userID"] + "/name").get().val()
 
                 comments.append(val)
@@ -513,7 +616,7 @@ def post(request, post_title_id):
     else:
         return redirect("invalid")
 
-    return render(request, "site/pages/post.html", {"isLoggedIn": "user" in request.session, "post": post, "postMap": json.dumps(dict(post))})
+    return render(request, "site/pages/post.html", {"isLoggedIn": "user" in request.session, "userID": request.session['uid'], "urlQuery": post_title_id, "post": post, "postMap": json.dumps(dict(post))})
 
 
 def profile(request):
@@ -765,13 +868,35 @@ def browse(request):
                 db.child(
                     "content/posts/" + request.POST["postID"] + "/comments").set(currCommentsCount + 1)
 
-                db.child("comments/" + request.POST["postID"]).push({
+                comment = db.child("comments/" + request.POST["postID"]).push({
                     "comment": request.POST["comment"],
                     "timestamp": int(request.POST["timestamp"]),
                     "userID": request.session['uid']
                 })
 
-                return JsonResponse({"result": "success", "comments": currCommentsCount + 1})
+                commentID = comment['name']
+
+                return JsonResponse({"result": "success", "commentID": commentID, "comments": currCommentsCount + 1})
+            except Exception as e:
+                print(e)
+                return JsonResponse({"result": "failure"})
+        elif request.POST['type'] == "delete_comment":
+            try:
+                currCommentsCount = db.child(
+                    "content/posts/" + request.POST["postID"] + "/comments").get().val()
+                currCommentsCount = 1 if currCommentsCount == None else currCommentsCount
+
+                if(currCommentsCount > 0):
+                    db.child(
+                        "content/posts/" + request.POST["postID"] + "/comments").set(currCommentsCount - 1)
+
+                db.child(
+                    "comments/" + request.POST["postID"] + "/" + request.POST["commentID"]).remove()
+
+                print(request.POST["postID"])
+                print(request.POST["commentID"])
+
+                return JsonResponse({"result": "success", "comments": currCommentsCount - 1})
             except Exception as e:
                 print(e)
                 return JsonResponse({"result": "failure"})
@@ -789,7 +914,7 @@ def browse(request):
                 print(e)
                 return JsonResponse({"result": "failure"})
 
-    return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session})
+    return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session, "userID": request.session['uid']})
 
 
 def saved(request, page_number=0):
@@ -866,7 +991,7 @@ def comingSoon(request):
 
 
 def invalid(request):
-    return render(request, "invalid.html")
+    return render(request, "invalid.html", {"isLoggedIn": "user" in request.session})
 
 
 def logout(request):

@@ -38,6 +38,38 @@
     </script>
   </head>
   <body>
+    <div id="postCommentDeletionConfirmationModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal_title">
+          <p>Are you sure?</p>
+          <span
+            id="postCommentDeletionConfirmationModalClose"
+            class="close"
+            onclick="$('#postCommentDeletionConfirmationModal').hide();"
+            ><img src="{% static 'img/delete_circle.png' %}"
+          /></span>
+        </div>
+        <div class="container">
+          <p class="modal-message">
+            Are you sure you want to delete this comment?
+          </p>
+
+          <div class="button_grid">
+            <button
+              id="cancelCommentDeletionBtn"
+              onclick="$('#postCommentDeletionConfirmationModal').hide();"
+            >
+              NO
+            </button>
+            <button id="confirmCommentDeletionBtn" class="modal_button">
+              YES
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     {% include 'site/partials/_header.html' %}
 
     <div id="loadedPage">{% block content %} {% endblock %}</div>
