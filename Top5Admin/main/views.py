@@ -222,7 +222,9 @@ def categoryDash(request, category_id):
                     "timestamp": request.POST["timestamp"]
                 }
 
-                textWords = request.POST["textNoTags"].strip().split(" ")
+                searchDomain = request.POST["name"] + \
+                    " " + request.POST["textNoTags"]
+                textWords = searchDomain.strip().split(" ")
                 data["words"] = {}
                 wordsMap = {}
                 for word in textWords:
