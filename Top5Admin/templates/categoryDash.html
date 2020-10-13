@@ -136,6 +136,10 @@
           </div>
           <div id="postTxtArea"></div>
 
+          <div id="tagsSelector">
+            <input id="form-tags-4" name="tags-4" type="text" value="">
+          </div>
+
           <div id="uploadOptionsBtns" class="post_sec_icons">
             <div>
               <div id="articleBtn" class="post_sec_icon">
@@ -233,6 +237,8 @@
 
     <script src="{% static 'js/firebaseInit.js' %}"></script>
 
+    <script src="{% static 'js/tagsSelector.js' %}"></script>
+
     <script>
       $(document).ready(() => {
         var month = new Array();
@@ -263,6 +269,14 @@
           toolbarSelector: "[data-role='post_text_toolbar']",
         });
         window.prettyPrint && prettyPrint();
+
+        $('#form-tags-4').tagsInput({
+          'autocomplete': {
+            source: {{ words | safe }}
+          }
+        });
+
+        for(let i = 0; i < categoryPosts.length; i++)
 
         $("#articleBtn").click(() => {
           if(!$("#articleBtn").parent().hasClass("active")) {
@@ -440,6 +454,14 @@
           $("#name").val("");
           $("#postTxtArea").html("").show();
           $("#uploadOptionsBtns").show();
+          
+          let postTags = [];
+          $.each($("#tagsSelector .tag-text"), (index, tag) => postTags.push($(tag).text()));
+
+          for(let i = 0; i < postTags.length; i++) {
+            $('#form-tags-4').removeTag(postTags[i]);
+          }
+
           $("#saveBtn, #previewBtn, #clearBtn").hide();
           selectedImgOrVid = null;
           selectedPostForEdit = "";
@@ -500,6 +522,9 @@
             }
 
             function savePost(downloadURL) {
+              let postTags = [];
+              $.each($("#tagsSelector .tag-text"), (index, tag) => postTags.push($(tag).text()));
+
               $.ajax({
                     type: "POST",
                     url: "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(/CATEGORY_ID/, categoryID),
@@ -512,10 +537,13 @@
                       text : $("#postTxtArea").html(),
                       textNoTags: $("#postTxtArea").text(),
                       timestamp : (new Date()).getTime(),
+                      newTags: JSON.stringify(postTags),
+                      oldTags: selectedPostForEdit != "" ? JSON.stringify(categoryPosts[selectedPostForEdit]['tags']) : [],
                       csrfmiddlewaretoken: '{{ csrf_token }}',
                     },
                     success: (response) => {
                       if(response.result == "success") {
+                        console.log(response.post);
                         categoryPosts[response.postKey] = response.post;
 
                         $("#loader").hide();
@@ -526,6 +554,11 @@
                         $("#name").val("");
                         $("#postTxtArea").html("").show();
                         $("#uploadOptionsBtns").show();
+                        
+                        for(let i = 0; i < postTags.length; i++) {
+                          $('#form-tags-4').removeTag(postTags[i]);
+                        }
+
                         $("#saveBtn, #previewBtn, #clearBtn").hide();
                         selectedImgOrVid = null;
 
@@ -539,31 +572,31 @@
                       console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
                     }
                   });
-            }
-
-            if(postType != "txt" && postType != "article") {
-              if(selectedImgOrVid.indexOf("http") > -1) {
-                savePost(selectedImgOrVid);
-              } else {
-                let uploadTask = storageRef.child('content/posts/' + postKey + '.jpg').put(selectedImgOrVid);
-                uploadTask.on('state_changed', function(snapshot){
-                  var progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2);
-                  $("#loaderPercen").text(progress + '%');
-
-                }, function(error) {
-                  console.log(error);
-                  // Handle unsuccessful uploads
-                }, function() {
-                  uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                    savePost(downloadURL);
-                  });
-                });
               }
-            } else {
 
-              savePost("");
+              if(postType != "txt" && postType != "article") {
+                if(selectedImgOrVid.indexOf("http") > -1) {
+                  savePost(selectedImgOrVid);
+                } else {
+                  let uploadTask = storageRef.child('content/posts/' + postKey + '.jpg').put(selectedImgOrVid);
+                  uploadTask.on('state_changed', function(snapshot){
+                    var progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2);
+                    $("#loaderPercen").text(progress + '%');
+
+                  }, function(error) {
+                    console.log(error);
+                    // Handle unsuccessful uploads
+                  }, function() {
+                    uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                      savePost(downloadURL);
+                    });
+                  });
+                }
+              } else {
+                console.log("WTF");
+                //savePost("");
+              }
             }
-          }
         });
 
         populatePostsList();
@@ -613,7 +646,6 @@
               selectedImgOrVid = null;
 
               selectedPostForEdit = postID;
-              console.log(post.type);
               if(post.type == "txt" || post.type == "article") {
                 $("#postTxtArea").html(post.text);
               } else if(post.type == "img") {
@@ -664,8 +696,35 @@
                 selectedImgOrVid = post.link;
               }
 
+              if(categoryPosts[selectedPostForEdit]["type"] != "article") {
+                $("#articleBtn").css("padding", "10px");
+                $("#uploadImgBtn").removeClass("disabled");
+                $("#uploadVidBtn").removeClass("disabled");
+                $("#articleBtn").parent().removeClass("active");
+                $(".btn-toolbar").hide();
+                $("#optionsSwitchConfirmationModal").hide();
+              } else {
+                $("#postTxtArea").html("");
+                $("#saveBtn, #previewBtn, #clearBtn").hide();
+                $("#articleBtn").parent().toggleClass("active");
+                if($("#articleBtn").parent().hasClass("active")) {
+                  $("#articleBtn").css("padding", "9px");
+                  $("#uploadImgBtn").addClass("disabled");
+                  $("#uploadVidBtn").addClass("disabled");
+                  $(".btn-toolbar").show();
+                } else {
+                  $("#articleBtn").css("padding", "10px");
+                  $("#uploadImgBtn").removeClass("disabled");
+                  $("#uploadVidBtn").removeClass("disabled");
+                  $(".btn-toolbar").hide();
+                }
+                $("#optionsSwitchConfirmationModal").hide();
+              }
+
               $("#name").val(post.name);
               $("#saveBtn, #previewBtn, #clearBtn").css("display", "flex");
+
+              populateSelectedPostTagsList();
             });
 
             let deleteBtn = document.createElement("img");
@@ -714,6 +773,18 @@
 
             document.getElementsByClassName("items_sec")[0].appendChild(item);
           });
+        }
+
+        function populateSelectedPostTagsList(){
+          console.log(selectedPostForEdit);
+          const postTags = categoryPosts[selectedPostForEdit]["tags"];
+
+          console.log(postTags);
+
+          for(let i = 0 ; i < postTags.length; i++) {
+            //$("#form-tags-4_addTag").before("<span class='tag'><span class='tag-text'>" + postTags[i] + "</span><button class='tag-remove'></button></span>");
+            $('#form-tags-4').addTag(postTags[i]);
+          }
         }
 
         function formatAMPM(date) {

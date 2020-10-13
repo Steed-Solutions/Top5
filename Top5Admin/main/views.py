@@ -210,6 +210,35 @@ def categoryDash(request, category_id):
     if request.method == "POST":
         if request.POST["reqType"] == "add":
             try:
+                newTags = json.loads(request.POST["newTags"]) if "newTags" in request.POST else []
+                oldTags = json.loads(request.POST["oldTags"]) if "oldTags" in request.POST else []
+
+                tagsForDeletion = list()
+                tagsForAddition = list()
+
+                for tag in oldTags:
+                    if tag not in newTags:
+                        tagsForDeletion.append(tag)
+
+                for tag in newTags:
+                    if tag not in oldTags:
+                        tagsForAddition.append(tag)
+
+                for tag in tagsForDeletion:
+                    tagCurrentCount = db.child("tags/count/" + tag).get().val()
+                    tagCurrentCount = 1 if tagCurrentCount == None else tagCurrentCount
+                    db.child("tags/count/" + tag).set(None if tagCurrentCount - 1 == 0 else tagCurrentCount - 1)
+
+                    db.child("tags/postsAgainstTag/" + tag + "/" + request.POST["key"]).remove()
+
+                for tag in tagsForAddition:
+                    tagCurrentCount = db.child("tags/count/" + tag).get().val()
+                    tagCurrentCount = 0 if tagCurrentCount == None else tagCurrentCount
+                    db.child("tags/count/" + tag).set(tagCurrentCount + 1)
+
+                    db.child("tags/postsAgainstTag/" + tag + "/" + request.POST["key"]).set('postID')
+
+                newTagsMap = {tag:'tagVal' for tag in newTags}
 
                 data = {
                     "comments": 0,
@@ -219,7 +248,8 @@ def categoryDash(request, category_id):
                     "category": category_id,
                     "link": request.POST["link"],
                     "text": str(request.POST["text"]),
-                    "timestamp": request.POST["timestamp"]
+                    "timestamp": request.POST["timestamp"],
+                    "tags": newTagsMap,
                 }
 
                 searchDomain = request.POST["name"] + \
@@ -236,11 +266,14 @@ def categoryDash(request, category_id):
                 db.child('content/posts/' +
                          request.POST["key"]).update(data)
 
+                print(list(json.loads(request.POST["newTags"])) if "newTags" in request.POST else [])
+
                 return JsonResponse({"result": "success", "postKey": request.POST["key"], "post": {"type": request.POST["type"],
                                                                                                    "name": request.POST["name"],
                                                                                                    "link": request.POST["link"],
                                                                                                    "text": request.POST["text"],
-                                                                                                   "timestamp": request.POST["timestamp"]}})
+                                                                                                   "timestamp": request.POST["timestamp"],
+                                                                                                   "tags": list(json.loads(request.POST["newTags"])) if "newTags" in request.POST else []}})
             except Exception as e:
                 print(e)
                 return JsonResponse({"result": "failure"})
@@ -261,10 +294,20 @@ def categoryDash(request, category_id):
         pass
 
     if categoryPosts != None:
+        categoryPosts = dict(categoryPosts)
+        for categoryID in categoryPosts:
+            if('tags' not in categoryPosts[categoryID]):
+                categoryPosts[categoryID]['tags'] = []
+            else:
+                categoryPosts[categoryID]['tags'] = list(categoryPosts[categoryID]['tags'].keys())
+
         categoryPostsMap = OrderedDict(sorted(
             categoryPosts.items(), key=lambda post: post[1]['timestamp']))
 
-    return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": json.dumps(categoryPostsMap)})
+    words = db.child("words").shallow().get().val()
+    words = [] if words == None else list(words)
+
+    return render(request, "categoryDash.html", {"categoryID": category_id, "categoryPosts": json.dumps(categoryPostsMap), "words": words})
 
 
 def postPreview(request):
