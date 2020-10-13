@@ -1,9 +1,10 @@
 {% extends 'site/base.html' %} {% load static %} {% block content %}
 
 <div class="search_page">
-  <div class="search_field">
+  <div class="search_field" {% if lang != 'en' %}style="transform: scaleX(-1);"{% endif %}>
     <img src="{% static 'img/search_icon.png' %}" alt="search" />
-    <input id="seachInput" type="text" placeholder="Enter Keywords" />
+    <input id="seachInput" type="text" style="transform: inherit; direction: {% if lang == 'en' %}ltr{% else %}rtl{% endif %};"
+      placeholder="{% if lang == 'en' %}{{ staticTextMap.search_placeholder_en }}{% else %}{{ staticTextMap.search_placeholder_fa }}{% endif %}" />
   </div>
 
   <div id="normalLayout">
@@ -11,58 +12,28 @@
       <img id="nextBtn" src="{% static 'img/next_btn.png' %}" alt="next_btn" />
     </div>
     <div class="categories_sec">
+      {% for tagID, imgLink in tags.items %}
       <div
         class="category_card"
-        onclick="window.location = '{% url 'comingSoon' %}'"
+        style="background: url({{ imgLink }}) center center no-repeat; background-size: cover;"
+        onclick="window.location.href = '{% url 'tags' 123456 %}'.replace(/123456/, '{{ tagID }}')"
       >
-        <img src="{% static 'img/food_icon.png' %}" alt="food_icon" />
-        <span>Spanish food</span>
+        <span>{{ tagID }}</span>
       </div>
-      <div
-        class="category_card"
-        onclick="window.location = '{% url 'comingSoon' %}'"
-      >
-        <img src="{% static 'img/music_icon.png' %}" alt="music_icon" />
-        <span>Pop music</span>
-      </div>
-      <div
-        class="category_card"
-        onclick="window.location = '{% url 'comingSoon' %}'"
-      >
-        <img src="{% static 'img/paint_icon.png' %}" alt="paint_icon" />
-        <span>Abstract art</span>
-      </div>
-      <div
-        class="category_card"
-        onclick="window.location = '{% url 'comingSoon' %}'"
-      >
-        <img src="{% static 'img/plant_icon.png' %}" alt="plant_icon" />
-        <span>Planting</span>
-      </div>
+      {% endfor %}
     </div>
     <div class="popular_sec">
-      <h2>POPULAR</h2>
+      <h2>{% if lang == 'en' %}{{ staticTextMap.browse_heading_popular_en }}{% else %}{{ staticTextMap.browse_heading_popular_fa }}{% endif %}</h2>
       <div class="popular_content">
-        <div
-          class="popular_card"
-          onclick="window.location = '{% url 'comingSoon' %}'"
-        >
-          <span>Grow Aloe vera </span>
-        </div>
-
-        <div
-          class="popular_card"
-          onclick="window.location = '{% url 'comingSoon' %}'"
-        >
-          <span>Guitar basics </span>
-        </div>
-
-        <div
-          class="popular_card"
-          onclick="window.location = '{% url 'comingSoon' %}'"
-        >
-          <span>Trending paint brush </span>
-        </div>
+        {% for post in popularPosts %}
+          <div
+            class="popular_card"
+            style="background: url({{ post.link }}) top center no-repeat; background-size: cover;"
+            onclick="window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI({{ post.name }}_~_{{ post.id }}))"
+          >
+            <span>{{ post.name }}</span>
+          </div>
+        {% endfor %}
       </div>
     </div>
   </div>
@@ -70,7 +41,7 @@
   <div id="searchLayout" style="display: none; margin-top: 65px">
     <div id="posts"></div>
     <p id="noPosts" style="text-align: center; display: none">
-      No Posts Available
+      {% if lang == 'en' %}{{ staticTextMap.no_posts_available_en }}{% else %}{{ staticTextMap.no_posts_available_fa }}{% endif %}
     </p>
 
     <div id="loader">
@@ -88,19 +59,19 @@
         <div></div>
         <div></div>
       </div>
-      <div>Loading...</div>
+      <div>{% if lang == 'en' %}{{ staticTextMap.loading_en }}{% else %}{{ staticTextMap.loading_fa }}{% endif %}</div>
     </div>
 
     <div class="controls">
       <div class="control_buttons">
         <div id="viewPrevBtn" class="view_more_btn">
-          <button>View Prev</button>
+          <button>{% if lang == 'en' %}{{ staticTextMap.view_prev_en }}{% else %}{{ staticTextMap.view_prev_fa }}{% endif %}</button>
         </div>
         <div id="viewMoreBtn" class="view_more_btn">
-          <button>View More</button>
+          <button>{% if lang == 'en' %}{{ staticTextMap.view_more_en }}{% else %}{{ staticTextMap.view_more_fa }}{% endif %}</button>
         </div>
       </div>
-      <p id="page">Page <span id="pageNum">1</span></p>
+      <p id="page">{% if lang == 'en' %}{{ staticTextMap.page_en }}{% else %}{{ staticTextMap.page_fa }}{% endif %} <span id="pageNum">1</span></p>
     </div>
   </div>
 </div>
@@ -249,19 +220,16 @@
     });
   }
 
-  function addNewComment(postID, commentID, message) {
+  /*function addNewComment(postID, commentID, message) {
     let comment = document.createElement("div");
     comment.classList.add("comment");
     comment.setAttribute("id", commentID);
     comment.setAttribute("data-post-id", postID);
-    comment.innerHTML =
-      "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><div class='comment_content'><span>You</span><span style='grid-column: 2/4;'>" +
-      message +
-      "</span><span class='comment_action' style='cursor: unset;'>24h</span>" +
-      ("{{ isLoggedIn }}" == "True"
-        ? "<span class='comment_action'>Reply</span><span class='comment_action' style='color:#ff5656; margin-left:10px' onclick='onDeleteComment(this)'>Delete</span>"
-        : "") +
-      "</div>";
+    comment.setAttribute("style", "transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});");
+      comment.innerHTML =
+        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><div class='comment_content'><span style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>You</span><span style='grid-column: 2/4; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
+        message +
+        "</span><span class='comment_action' style='cursor: unset; pointer-events: none; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>24h</span>" + ("{{ isLoggedIn }}" == "True" ? "<span class='comment_action' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>Reply</span><span class='comment_action' style='color:#ff5656; margin-left:10px; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' onclick='onDeleteComment(this)'>Delete</span>" : "") + "</div>";
 
     document.getElementById("comments_" + postID).appendChild(comment);
   }
@@ -324,7 +292,7 @@
         console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
       },
     });
-  }
+  }*/
 
   function savePost(postID, categoryID, isSave) {
     $.ajax({
@@ -352,201 +320,24 @@
 
   function createPostElement(postMap) {
     let post = document.createElement("div");
-    post.setAttribute("id", "post_" + postMap["id"]);
-    post.classList.add("post");
+    post.classList.add("saved_item");
+    post.setAttribute("onclick", "window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI(\'" + postMap['name'] + "_~_" + postMap['id'] + "\'))");
+    post.setAttribute("style", (!("link" in postMap) || (postMap["link"] == "")) ? "width: 85.4vw; column-gap: 0;" : "width: 85.4vw;");
 
-    let postContainer = document.createElement("div");
-    postContainer.classList.add("post_container");
+    let itemImg = document.createElement("div");
+    itemImg.classList.add("item_img");
 
-    let postHeader = document.createElement("div");
-    postHeader.classList.add("post_header");
-    postHeader.innerHTML =
-      "<div name='category_" +
-      postMap["category"]["id"] +
-      "'><img src='" +
-      postMap["category"]["imgURL"] +
-      "' alt='icon' onload=\"setCategoryIconBackground('" +
-      postMap["category"]["id"] +
-      "','" +
-      postMap["category"]["color"] +
-      "')\" /></div><span>" +
-      postMap["name"] +
-      "</span>";
-    postContainer.appendChild(postHeader);
-
-    let postContent = document.createElement("div");
-    postContent.setAttribute("id", "postContent_" + postMap["id"]);
-    postContent.classList.add("post_content");
-    console.log(postMap["type"]);
-    if (
-      postMap["type"].indexOf("img") >= 0 ||
-      (postMap["type"] == "article" && postMap["link"] != "")
-    ) {
-      postContent.innerHTML =
-        "<img src='" +
-        postMap["link"] +
-        "' class='post_content_image' alt='post_img' onerror='$(this).hide()' />";
-    } else if (postMap["type"].indexOf("vid") >= 0) {
-      postContent.innerHTML =
-        "<video src='" +
-        postMap["link"] +
-        "#t=0.5' class='post_content_video' preload='metadata' />";
-    } else if (postMap["type"] == "article") {
-      console.log("WTH");
-      postContent.innerHTML =
-        "<img src='{% static 'img/article.png' %}' class='post_article_placeholder_image' alt='post_img' onerror='$(this).hide()' />";
+    if(("link" in postMap) && (postMap["link"] != "")) {
+      itemImg.innerHTML = "<img src=" + postMap["link"] + " alt='item'>";
     }
+    post.appendChild(itemImg);
 
-    if (postMap["type"].toLowerCase().indexOf("txt") >= 0) {
-      let text = postMap["text"];
-
-      postContent.innerHTML +=
-        "<span style='color: " +
-        (postMap["link"] == "" ? "black" : "transparent") +
-        "'>" +
-        text +
-        "</span>";
-    }
-    postContainer.appendChild(postContent);
-
-    let postAction = document.createElement("div");
-    postAction.classList.add("post_action");
-    let likeBtn = document.createElement("div");
-    likeBtn.classList.add("post_action_item");
-    likeBtn.setAttribute("name", "like_" + postMap["id"]);
-    likeBtn.innerHTML =
-      "<span class='" +
-      (postMap["isLiked"] ? "fas" : "far") +
-      " fa-heart' style='" +
-      (postMap["isLiked"] ? "color: #D7443E" : "") +
-      "'></span><span>" +
-      postMap["likes"] +
-      " like" +
-      (postMap["likes"] != 1 ? "s" : "") +
-      "</span>";
-
-    postAction.appendChild(likeBtn);
-
-    postAction.innerHTML +=
-      "<div id='comments_count_" +
-      postMap["id"] +
-      "' class='post_action_item'><span class='far fa-comment'></span><span>" +
-      postMap["comments"] +
-      " comment" +
-      (postMap["comments"] != 1 ? "s" : "") +
-      "</span></div>";
-
-    let saveBtn = document.createElement("div");
-    saveBtn.classList.add("post_action_item");
-    saveBtn.setAttribute("name", "save_" + postMap["id"]);
-    saveBtn.setAttribute("data-category-id", postMap["category"]["id"]);
-    saveBtn.innerHTML =
-      "<span class='" +
-      (postMap["isSaved"] ? "fas" : "far") +
-      " fa-bookmark'></span>";
-    postAction.appendChild(saveBtn);
-
-    postContainer.appendChild(postAction);
-
-    let commentSection = document.createElement("div");
-    commentSection.classList.add("comment_sec");
-
-    let likes = document.createElement("div");
-    likes.classList.add("likes");
-    likes.innerHTML =
-      "<div class='user_pic'><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /></div><span>" +
-      postMap["likeStr"] +
-      "</span>";
-    commentSection.appendChild(likes);
-
-    let comments = document.createElement("div");
-    comments.setAttribute("id", "comments_" + postMap["id"]);
-    comments.classList.add("comments");
-    postMap["allComments"].forEach((commentMap) => {
-      let comment = document.createElement("div");
-      comment.classList.add("comment");
-      comment.setAttribute("id", commentMap["id"]);
-      comment.setAttribute("data-post-id", postMap["id"]);
-      comment.innerHTML =
-        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><div class='comment_content'><span>" +
-        commentMap["username"] +
-        "</span><span style='grid-column: 2/4;'>" +
-        commentMap["comment"] +
-        "</span><span class='comment_action' style='cursor: unset;'>24h</span>" +
-        ("{{ isLoggedIn }}" == "True"
-          ? "<span class='comment_action'>Reply</span>" +
-            ("{{ userID }}" == commentMap["userID"]
-              ? "<span class='comment_action' style='color:#ff5656; margin-left:10px' onclick='onDeleteComment(this)'>Delete</span>"
-              : "")
-          : "") +
-        "</div>";
-      comments.appendChild(comment);
-    });
-    commentSection.appendChild(comments);
-    postContainer.appendChild(commentSection);
-
-    let commentInput = document.createElement("div");
-    commentInput.classList.add("comment_input");
-    commentInput.innerHTML =
-      "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><input id='comment_inp_" +
-      postMap["id"] +
-      "' type='text' " +
-      ("{{ isLoggedIn }}" != "True" ? "disabled" : "") +
-      " placeholder='" +
-      ("{{ isLoggedIn }}" == "True"
-        ? "Enter your comment..."
-        : "Login to comment...") +
-      "' />" +
-      ("{{ isLoggedIn }}" == "True"
-        ? "<button class='postBtn_" + postMap["id"] + "' >Post</button>"
-        : "");
-    postContainer.appendChild(commentInput);
-
-    post.appendChild(postContainer);
-
+    let itemDetails = document.createElement("div");
+    itemDetails.classList.add("item_details");
+    itemDetails.innerHTML = "<p style='color: " + postMap['category']['color'] + "'>" + postMap['name'] + "</p><span>" + (postMap['type'].indexOf("vid") > -1 ? "Video" : "Post") + "</span><div><div name='category_" + postMap['category']['id'] + "'><img src='" + postMap['category']['imgURL'] + "' alt='icon' onload='setCategoryIconBackground(\"" + postMap['category']['id'] + "\", \"" + postMap['category']['color'] + "\")' /></div><p><span>" + postMap['category']['name'] + "</span></p></div>";
+    post.appendChild(itemDetails);
+    
     posts.appendChild(post);
-
-    $("#postContent_" + postMap["id"]).click((e) => {
-      let param = encodeURI(postMap["name"] + "_~_" + postMap["id"]);
-      window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
-    });
-
-    if ("{{ isLoggedIn }}" == "True") {
-      $("[name='like_" + postMap["id"] + "']").click((e) => {
-        postID = $(e.target)
-          .closest(".post_action_item")
-          .attr("name")
-          .replace("like_", "");
-
-        likePost(
-          postID,
-          $("[name='like_" + postID + "'] > span:first-child").hasClass("far")
-        );
-      });
-
-      $(".postBtn_" + postMap["id"]).click((e) => {
-        postID = $(e.target).attr("class").replace("postBtn_", "");
-        commentInp = $("#comment_inp_" + postID).val();
-        commentOnPost(postID, commentInp);
-      });
-
-      $("[name='save_" + postMap["id"] + "']").click((e) => {
-        postID = $(e.target)
-          .closest(".post_action_item")
-          .attr("name")
-          .replace("save_", "");
-        categoryID = $(e.target)
-          .closest(".post_action_item")
-          .attr("data-category-id");
-        savePost(
-          postID,
-          categoryID,
-          $("[name='save_" + postID + "'] > span").hasClass("far")
-        );
-      });
-    }
-
-    return post;
   }
 
   let selectedCommentForDeletion = {};

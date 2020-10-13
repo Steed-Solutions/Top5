@@ -35,6 +35,33 @@
           "" + color + ""
         );
       }
+
+      function timeSince(date) {
+        var seconds = Math.floor((new Date() - date) / 1000);
+
+        var interval = seconds / 31536000;
+
+        if (interval > 1) {
+          return Math.floor(interval) + "Y";
+        }
+        interval = seconds / 2592000;
+        if (interval > 1) {
+          return Math.floor(interval) + "M";
+        }
+        interval = seconds / 86400;
+        if (interval > 1) {
+          return Math.floor(interval) + "d";
+        }
+        interval = seconds / 3600;
+        if (interval > 1) {
+          return Math.floor(interval) + "hr";
+        }
+        interval = seconds / 60;
+        if (interval > 1) {
+          return Math.floor(interval) + "m";
+        }
+        return Math.floor(seconds) + "s";
+      }
     </script>
   </head>
   <body>
@@ -42,7 +69,7 @@
       <!-- Modal content -->
       <div class="modal-content">
         <div class="modal_title">
-          <p>Are you sure?</p>
+          <p>{% if lang == 'en'%}{{ staticTextMap.comment_deletion_confirmation_heading_en }}{% else %}{{ staticTextMap.comment_deletion_confirmation_heading_fa }}{% endif %}</p>
           <span
             id="postCommentDeletionConfirmationModalClose"
             class="close"
@@ -51,8 +78,8 @@
           /></span>
         </div>
         <div class="container">
-          <p class="modal-message">
-            Are you sure you want to delete this comment?
+          <p class="modal-message" {% if lang != 'en' %}style="direction: rtl;"{% endif %}>
+            {% if lang == 'en'%}{{ staticTextMap.comment_deletion_confirmation_message_en }}{% else %}{{ staticTextMap.comment_deletion_confirmation_message_fa }}{% endif %}
           </p>
 
           <div class="button_grid">
@@ -60,10 +87,10 @@
               id="cancelCommentDeletionBtn"
               onclick="$('#postCommentDeletionConfirmationModal').hide();"
             >
-              NO
+              {% if lang == 'en' %}{{ staticTextMap.comment_deletion_confirmation_option_no_en }}{% else %}{{ staticTextMap.comment_deletion_confirmation_option_no_fa }}{% endif %}
             </button>
             <button id="confirmCommentDeletionBtn" class="modal_button">
-              YES
+              {% if lang == 'en' %}{{ staticTextMap.comment_deletion_confirmation_option_yes_en }}{% else %}{{ staticTextMap.comment_deletion_confirmation_option_yes_fa }}{% endif %}
             </button>
           </div>
         </div>

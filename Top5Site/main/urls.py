@@ -4,8 +4,13 @@ from . import views
 urlpatterns = [
     path('', views.home, name="home"),
     path('<int:page_number>/', views.home, name="home"),
+    path('categories/', views.categories, name="categories"),
+    path('categories/<str:category_id>/', views.categories, name="categories"),
+    path('categories/<str:category_id>/<int:page_number>/', views.categories, name="categories"),
     path('profile/', views.profile, name="profile"),
     path('browse/', views.browse, name="browse"),
+    path('tags/<str:tag>/', views.tags, name="tags"),
+    path('tags/<str:tag>/<int:page_number>/', views.tags, name="tags"),
     path('saved/<int:page_number>/', views.saved, name="saved"),
     path('posts/<str:post_title_id>/', views.post, name="post"),
     path('auth/', views.credentials, name='credentials'),

@@ -1,7 +1,7 @@
 {% extends 'site/base.html' %} {% load static %} {% block content %}
 
 <div class="user_profile_save">
-    <h2 {% if lang != 'en' %}style="text-align: right;"{% endif %}>{% if lang == 'en'%}{{ staticTextMap.saved_heading_all_en }}{% else %}{{ staticTextMap.saved_heading_all_fa }}{% endif %}</h2>
+    <h2 {% if lang != 'en' %}style="text-align: right;"{% endif %}>{% if lang == 'en'%}{{ staticTextMap.tags_posts_by_tag_en }}{% else %}{{ staticTextMap.tags_posts_by_tag_fa }}{% endif %}</h2>
     
     {% if posts %}
         {% for post in posts %}
@@ -18,7 +18,7 @@
                         <div name="category_{{ post.category.id }}">
                             <img src="{{ post.category.imgURL }}" alt="icon" onload="setCategoryIconBackground('{{ post.category.id }}', '{{ post.category.color }}')" />
                         </div>
-                        <p>Saved from <span>{{ post.category.name }} {% if not "vid" in post.type %}'s post{% endif %} </span></p>
+                        <p><span>{{ post.category.name }}</span></p>
                     </div>
                 </div>
             </div>    
