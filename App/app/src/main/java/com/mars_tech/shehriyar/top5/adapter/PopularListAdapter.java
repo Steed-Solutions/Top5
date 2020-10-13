@@ -1,5 +1,6 @@
 package com.mars_tech.shehriyar.top5.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.mars_tech.shehriyar.top5.R;
 import com.mars_tech.shehriyar.top5.databinding.PopularListSingleItemViewBinding;
 import com.mars_tech.shehriyar.top5.listener.PopularListItemClickListener;
@@ -17,10 +19,12 @@ import java.util.ArrayList;
 
 public class PopularListAdapter extends RecyclerView.Adapter<PopularListAdapter.PopularListViewHolder> {
 
-    private ArrayList<String> popularItems;
+    private Context context;
+    private ArrayList<Post> popularItems;
     private PopularListItemClickListener popularListItemClickListener;
 
-    public PopularListAdapter(ArrayList<String> popularItems, PopularListItemClickListener popularListItemClickListener) {
+    public PopularListAdapter(Context context, ArrayList<Post> popularItems, PopularListItemClickListener popularListItemClickListener) {
+        this.context = context;
         this.popularItems = popularItems;
         this.popularListItemClickListener = popularListItemClickListener;
     }
@@ -34,6 +38,16 @@ public class PopularListAdapter extends RecyclerView.Adapter<PopularListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final PopularListViewHolder holder, int position) {
+        Post post = popularItems.get(position);
+
+        if (post.type.contains("img")) {
+            Glide.with(context).load(post.link).into(holder.binding.itemImage);
+        } else if (post.type.contains("vid")) {
+            Glide.with(context).asBitmap().load(post.link).into(holder.binding.itemImage);
+        }
+
+        holder.binding.itemName.setText(post.type.toLowerCase().contains("txt") ? post.name : "");
+
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

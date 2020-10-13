@@ -46,6 +46,7 @@
                         android:id="@+id/backBtn"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/back"
                         app:layout_constraintDimensionRatio="0.711"
                         app:layout_constraintStart_toEndOf="@+id/back_btn_start_gap"
@@ -393,9 +394,9 @@
             android:alpha="0.4"
             android:animateLayoutChanges="true"
             android:background="#000000"
-            android:visibility="gone"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+            android:visibility="gone">
 
             <ProgressBar
                 style="?android:attr/progressBarStyleLarge"

@@ -14,12 +14,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/itemImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/popular_list_item_border_box"
                 android:padding="1dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/popular_list_dummy_image"
                 app:riv_corner_radius="30dp"
                 android:alpha="0.5"/>
 
@@ -36,15 +36,14 @@
                 android:id="@+id/itemName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_margin="5dp"
                 android:background="@null"
                 android:fontFamily="@font/titillium_medium"
                 android:includeFontPadding="false"
                 android:text="Grow Aloe vera"
                 android:textAlignment="center"
                 android:textColor="#000"
-                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMaxTextSize="13sp"
                 app:autoSizeMinTextSize="10sp"
                 app:autoSizeStepGranularity="0.5sp"
                 app:autoSizeTextType="uniform"

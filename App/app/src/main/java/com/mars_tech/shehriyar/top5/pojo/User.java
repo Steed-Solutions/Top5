@@ -11,8 +11,8 @@ public class User implements Serializable {
     public String name;
     public String email;
     public String password;
-    public String gender;
-    public String bio;
+//    public String gender;
+//    public String bio;
     public ArrayList<String> categories;
     public boolean isAuthenticated;
     public boolean isNew;
@@ -25,20 +25,16 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public User(String name, String email, String password, String gender, String bio) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.gender = gender;
-        this.bio = bio;
     }
 
     public HashMap<String, String> toJson(){
         HashMap<String, String> json = new HashMap<>();
         json.put("name", name);
         json.put("email", email);
-        json.put("gender", gender);
-        json.put("bio", bio);
         return json;
     }
 }

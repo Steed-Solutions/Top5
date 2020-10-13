@@ -15,6 +15,7 @@ import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
 import com.mars_tech.shehriyar.top5.pojo.Post;
 import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
 import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
+import com.mars_tech.shehriyar.top5.pojo.TagsResponse;
 
 import java.util.ArrayList;
 
@@ -24,8 +25,9 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<Boolean> signOutLiveData;
     public LiveData<LikeResponse> postLikedOrUnlikedLiveData;
     public LiveData<ArrayList<Category>> allCategoriesLiveData, queriedCategoriesLiveData, selectedCategoriesLiveData;
-    public LiveData<SaveResponse> saveResponseLiveData, filtersAndCategoriesSaveResponseLiveData, savePostLiveData, completionResponseLiveData;
-    public LiveData<PostsResponse> allPostsLiveData, allSavedPostsLiveData;
+    public LiveData<SaveResponse> saveResponseLiveData, filtersAndCategoriesSaveResponseLiveData, savePostLiveData, completionResponseLiveData, filterIDSavedLiveData;
+    public LiveData<PostsResponse> allPostsLiveData, allSavedPostsLiveData, allQueriedPostsLiveData, mostPopularPosts;
+    public LiveData<TagsResponse> topTaggedPosts;
     public LiveData<FiltersResponse> filtersResponseLiveData;
     public LiveData<CommentsResponse> allPostCommentsLiveData, commentOnPostLiveData, deleteCommentLiveData;
     public LiveData<String> allPostLikerStringLiveData;
@@ -67,6 +69,10 @@ public class MainViewModel extends AndroidViewModel {
         filtersResponseLiveData = mainModel.getFiltersAndSelectedCategories();
     }
 
+    public void setFilterID(String filerID) {
+        filterIDSavedLiveData = mainModel.setFilterID(filerID);
+    }
+
     public void saveFiltersAndCategories(ArrayList<String> categories) {
         filtersAndCategoriesSaveResponseLiveData = mainModel.saveFiltersAndCategories(categories);
     }
@@ -95,11 +101,23 @@ public class MainViewModel extends AndroidViewModel {
         allSavedPostsLiveData = mainModel.getAllSavedPosts();
     }
 
-    public void savePost(String categoryID, String postID) {
-        savePostLiveData = mainModel.savePost(categoryID, postID);
+    public void savePost(Post post) {
+        savePostLiveData = mainModel.savePost(post);
     }
 
     public void updateFiltersData(Post post) {
         mainModel.updateFiltersData(post);
+    }
+
+    public void getQueriedPosts(String searchTerm) {
+        allQueriedPostsLiveData = mainModel.getQueriedPosts(searchTerm);
+    }
+
+    public void getTopTaggedPosts() {
+        topTaggedPosts = mainModel.getTopTaggedPosts();
+    }
+
+    public void getMostPopularPosts() {
+        mostPopularPosts = mainModel.getMostPopularPosts();
     }
 }

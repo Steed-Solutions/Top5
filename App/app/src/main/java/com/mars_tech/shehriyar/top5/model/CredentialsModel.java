@@ -30,9 +30,7 @@ public class CredentialsModel {
 
             user.isAuthenticated = false;
             authenticatedUserMutableLiveData.setValue(user);
-            Log.d("USER", "WTH NO");
         } else {
-            Log.d("USER", firebaseUser.getDisplayName());
             user.uid = firebaseUser.getUid();
             user.name = firebaseUser.getDisplayName();
             user.email = firebaseUser.getEmail();

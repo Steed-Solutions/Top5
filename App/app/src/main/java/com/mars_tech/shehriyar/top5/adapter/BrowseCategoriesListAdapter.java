@@ -24,11 +24,11 @@ import java.util.HashMap;
 public class BrowseCategoriesListAdapter extends RecyclerView.Adapter<BrowseCategoriesListAdapter.BrowseCategoriesListViewHolder> {
 
     private Context context;
-    private ArrayList<HashMap<String, Object>> items;
+    private ArrayList<HashMap<String, String>> items;
     private BrowseCategoriesListItemClickListener browseCategoriesListItemClickListener;
 
 
-    public BrowseCategoriesListAdapter(Context context, ArrayList<HashMap<String, Object>> items, BrowseCategoriesListItemClickListener browseCategoriesListItemClickListener) {
+    public BrowseCategoriesListAdapter(Context context, ArrayList<HashMap<String, String>> items, BrowseCategoriesListItemClickListener browseCategoriesListItemClickListener) {
         this.context = context;
         this.items = items;
         this.browseCategoriesListItemClickListener = browseCategoriesListItemClickListener;
@@ -43,16 +43,11 @@ public class BrowseCategoriesListAdapter extends RecyclerView.Adapter<BrowseCate
 
     @Override
     public void onBindViewHolder(@NonNull final BrowseCategoriesListAdapter.BrowseCategoriesListViewHolder holder, int position) {
-        HashMap<String, Object> map = items.get(position);
+        HashMap<String, String> map = items.get(position);
 
-        holder.binding.itemName.setText(map.get("name").toString());
+        holder.binding.itemName.setText(map.get("tag").toString());
 
         Glide.with(context).load(map.get("image").toString()).into(holder.binding.image);
-
-        Drawable backgroundDrawable = DrawableCompat.wrap(holder.binding.itemTypeImageContainer.getBackground()).mutate();
-        DrawableCompat.setTint(backgroundDrawable, Color.parseColor(map.get("typeColor").toString()));
-
-        Glide.with(context).load(map.get("typeImage").toString()).into(holder.binding.itemTypeImage);
 
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override

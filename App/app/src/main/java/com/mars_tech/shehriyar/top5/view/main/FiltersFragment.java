@@ -62,6 +62,8 @@ public class FiltersFragment extends Fragment {
     private CheckBox lastCheckedCheckBox;
     private int lastCheckedCheckBoxIndex;
 
+    private boolean isFilterSaved, areInterestsSaved;
+
     public FiltersFragment() {
         // Required empty public constructor
     }
@@ -81,16 +83,25 @@ public class FiltersFragment extends Fragment {
         viewModel.allCategoriesLiveData.observe(requireActivity(), new Observer<ArrayList<Category>>() {
             @Override
             public void onChanged(ArrayList<Category> categories) {
-                viewModel.allCategoriesLiveData.removeObservers(requireActivity());
+                if(viewModel.allCategoriesLiveData.hasActiveObservers()) {
+                    viewModel.allCategoriesLiveData.removeObservers(requireActivity());
+                }
                 viewModel.getFiltersAndSelectedCategories();
                 viewModel.filtersResponseLiveData.observe(requireActivity(), new Observer<FiltersResponse>() {
                     @Override
                     public void onChanged(FiltersResponse filtersResponse) {
-                        viewModel.filtersResponseLiveData.removeObservers(requireActivity());
+                        if(viewModel.filtersResponseLiveData.hasActiveObservers()) {
+                            viewModel.filtersResponseLiveData.removeObservers(requireActivity());
+                        }
                         allInterests = filtersResponse.allCategories;
                         selectedInterests = filtersResponse.selectedCategories;
                         updatedInterests = new ArrayList<>();
                         updatedInterests.addAll(selectedInterests);
+
+                        SharedPreferences preferenceSharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor preferenceSharedPreferencesEditor = preferenceSharedPreferences.edit();
+                        preferenceSharedPreferencesEditor.putInt(Constants.PREFERRED_FILTER_INDEX, filtersResponse.filterID);
+                        preferenceSharedPreferencesEditor.apply();
 
                         afterDBLoad();
                     }
@@ -130,7 +141,7 @@ public class FiltersFragment extends Fragment {
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!checkboxes.get(layout).isChecked()) {
+                    if (!checkboxes.get(layout).isChecked()) {
                         lastCheckedCheckBox.setChecked(false);
                         checkboxes.get(layout).setChecked(true);
                         lastCheckedCheckBox = checkboxes.get(layout);
@@ -185,31 +196,54 @@ public class FiltersFragment extends Fragment {
                 SharedPreferences preferenceSharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
                 int previouslySavedFilterIndex = preferenceSharedPreferences.getInt(Constants.PREFERRED_FILTER_INDEX, Constants.PREFERRED_FILTER_INDEX_DEFAULT);
 
-                if(lastCheckedCheckBoxIndex != previouslySavedFilterIndex) {
-                    SharedPreferences.Editor preferenceSharedPreferencesEditor = preferenceSharedPreferences.edit();
-                    preferenceSharedPreferencesEditor.putInt(Constants.PREFERRED_FILTER_INDEX, lastCheckedCheckBoxIndex);
-                    preferenceSharedPreferencesEditor.apply();
-                }
-
-                if (!selectedInterests.containsAll(updatedInterests) || !updatedInterests.containsAll(selectedInterests) || selectedInterests.size() != updatedInterests.size()) {
+                if (lastCheckedCheckBoxIndex != previouslySavedFilterIndex) {
                     showOverlay();
-
-                    viewModel.saveFiltersAndCategories(updatedInterests);
-                    viewModel.filtersAndCategoriesSaveResponseLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
+                    viewModel.setFilterID("" + lastCheckedCheckBoxIndex);
+                    viewModel.filterIDSavedLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
                         @Override
                         public void onChanged(SaveResponse saveResponse) {
-                            viewModel.filtersAndCategoriesSaveResponseLiveData.removeObservers(requireActivity());
-                            hideOverlay();
-                            if (saveResponse.isError) {
-                                Toast.makeText(getContext(), saveResponse.statusMessage, Toast.LENGTH_SHORT).show();
-                            } else {
+                            viewModel.filterIDSavedLiveData.removeObservers(requireActivity());
+
+                            SharedPreferences.Editor preferenceSharedPreferencesEditor = preferenceSharedPreferences.edit();
+                            preferenceSharedPreferencesEditor.putInt(Constants.PREFERRED_FILTER_INDEX, lastCheckedCheckBoxIndex);
+                            preferenceSharedPreferencesEditor.apply();
+
+                            isFilterSaved = true;
+
+                            if (areInterestsSaved) {
+                                hideOverlay();
                                 controller.navigateUp();
                             }
                         }
                     });
                 } else {
-                    controller.navigateUp();
+                    isFilterSaved = true;
                 }
+
+                if (!selectedInterests.containsAll(updatedInterests) || !updatedInterests.containsAll(selectedInterests) || selectedInterests.size() != updatedInterests.size()) {
+                    if (!isOverlayVisible())
+                        showOverlay();
+
+                    viewModel.saveFiltersAndCategories(updatedInterests);
+                    viewModel.filtersAndCategoriesSaveResponseLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
+                        @Override
+                        public void onChanged(SaveResponse saveResponse) {
+                            if(viewModel.filtersAndCategoriesSaveResponseLiveData.hasActiveObservers()) {
+                                viewModel.filtersAndCategoriesSaveResponseLiveData.removeObservers(requireActivity());
+                            }
+                            areInterestsSaved = true;
+                            if(isFilterSaved) {
+                                hideOverlay();
+                                controller.navigateUp();
+                            }
+                        }
+                    });
+                } else {
+                    areInterestsSaved = true;
+                }
+
+                if (isFilterSaved && areInterestsSaved)
+                    controller.navigateUp();
             }
         });
 
@@ -221,6 +255,10 @@ public class FiltersFragment extends Fragment {
         inAnimation.setDuration(200);
         binding.progressBarHolder.setAnimation(inAnimation);
         binding.progressBarHolder.setVisibility(View.VISIBLE);
+    }
+
+    private boolean isOverlayVisible() {
+        return binding.progressBarHolder.getVisibility() == View.VISIBLE;
     }
 
     private void hideOverlay() {

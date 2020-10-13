@@ -52,7 +52,7 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
         holder.binding.likes.setText(post.likes + " like" + (post.likes != 1 ? "s" : ""));
         holder.binding.comments.setText(post.comments + " comment" + (post.comments != 1 ? "s" : ""));
 
-        if (post.type.contains("img")) {
+        if (post.type.contains("img") || (post.type.equals("article") && !post.link.equals(""))) {
             Glide.with(context).load(post.link).into(holder.binding.itemContentImage);
         } else if (post.type.contains("vid")) {
             holder.binding.playBtn.setVisibility(View.VISIBLE);
@@ -60,8 +60,9 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
         }
 
         holder.binding.liked.setImageResource(post.isLiked ? R.drawable.ic_fav_true : R.drawable.ic_fav_false);
+        holder.binding.saveBtnImg.setImageResource(post.isSaved ? R.drawable.ic_download_true : R.drawable.ic_download_false);
 
-        holder.binding.itemContentText.setText(post.type.toLowerCase().contains("txt") ? post.text : "");
+//        holder.binding.itemContentText.setText(post.type.toLowerCase().contains("txt") ? post.text : "");
 
         Drawable backgroundDrawable = DrawableCompat.wrap(holder.binding.itemTypeImageContainer.getBackground()).mutate();
         DrawableCompat.setTint(backgroundDrawable, Color.parseColor(post.category.color));
@@ -70,13 +71,11 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
 
         if (lastSelectedPos == position) {
             holder.binding.itemImageOverlay.setVisibility(View.GONE);
-            holder.binding.itemContentText.setVisibility(View.VISIBLE);
             ViewGroup.LayoutParams topGap = holder.binding.itemImageContainerTopSpace.getLayoutParams();
             topGap.height = 0;
             holder.binding.itemImageContainerTopSpace.setLayoutParams(topGap);
         } else {
             holder.binding.itemImageOverlay.setVisibility(View.VISIBLE);
-            holder.binding.itemContentText.setVisibility(View.GONE);
             ViewGroup.LayoutParams topGap = holder.binding.itemImageContainerTopSpace.getLayoutParams();
             topGap.height = 1;
             holder.binding.itemImageContainerTopSpace.setLayoutParams(topGap);
@@ -96,16 +95,12 @@ public class PreferenceItemsListAdapter extends RecyclerView.Adapter<PreferenceI
             }
         });
 
-        if (post.isSaved) {
-            holder.binding.saveBtn.setVisibility(View.INVISIBLE);
-        } else {
-            holder.binding.saveBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    preferenceItemsListItemClickListener.OnPostSaveBtnClicked(holder.getLayoutPosition());
-                }
-            });
-        }
+        holder.binding.saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                preferenceItemsListItemClickListener.OnPostSaveBtnClicked(holder.getLayoutPosition());
+            }
+        });
 
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override

@@ -8,239 +8,42 @@
         android:background="@drawable/border_box"
         android:padding="1dp">
 
-        <ImageView
-            android:id="@+id/itemImage"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:alpha="0.5"
-            android:scaleType="centerCrop"
-            android:src="@drawable/dummy_image"
+            android:orientation="horizontal"
+            android:weightSum="3"
             app:layout_constraintDimensionRatio="W, 0.481:1"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/itemImageOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:alpha="0.4"
-            android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="W, 0.481:1"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layoutDirection="ltr">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/itemTypeImageContainerOuter"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@null"
-                app:layout_constraintDimensionRatio="H, 1:1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.114">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/itemTypeImageContainer"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="6dp"
-                    android:background="@drawable/category_circle"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="W, 1:1"
-                    app:layout_constraintHeight_percent="0.686"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/itemTypeImage"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="@null"
-                        android:src="@drawable/food"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="W, 1:1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintWidth_percent="0.567" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <View
-                android:id="@+id/item_type_top_gap"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@null"
-                app:layout_constraintDimensionRatio="W, 0.032:1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/itemType"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="@null"
-                android:fontFamily="@font/titillium_medium"
-                android:includeFontPadding="false"
-                android:text="Recipe"
-                android:textAlignment="center"
-                android:textColor="#000"
-                app:autoSizeMaxTextSize="19sp"
-                app:autoSizeMinTextSize="16sp"
-                app:autoSizeStepGranularity="2sp"
-                app:autoSizeTextType="uniform"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/item_type_top_gap" />
-
-            <TextView
-                android:id="@+id/itemName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:background="@null"
-                android:fontFamily="@font/titillium_medium"
-                android:includeFontPadding="false"
-                android:text="Chocolate wheat cake"
-                android:textAlignment="center"
-                android:textColor="#000"
-                app:autoSizeMaxTextSize="19sp"
-                app:autoSizeMinTextSize="16sp"
-                app:autoSizeStepGranularity="2sp"
-                app:autoSizeTextType="uniform"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemType" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layoutDirection="ltr"
-            app:layout_constraintDimensionRatio="W, 0.114"
-            app:layout_constraintTop_toBottomOf="@+id/itemImage">
-
-            <View
-                android:id="@+id/bottom_bar_start_gap"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintWidth_percent="0.039" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/likes_container"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/bottom_bar_start_gap"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/liked"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@null"
-                    android:src="@drawable/ic_fav_false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="W, 1:1"
-                    app:layout_constraintHeight_percent="0.334"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/likes"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="5dp"
-                    android:fontFamily="@font/titillium_regular"
-                    android:includeFontPadding="false"
-                    android:text="450 likes"
-                    android:textColor="#000"
-                    app:autoSizeMaxTextSize="11sp"
-                    app:autoSizeMinTextSize="8sp"
-                    app:autoSizeStepGranularity="0.5sp"
-                    app:autoSizeTextType="uniform"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/liked"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/comments_container"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/downloadBtn"
-                app:layout_constraintStart_toEndOf="@+id/likes_container"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/ic_comments"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@null"
-                    android:src="@drawable/comment"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="W, 1:1"
-                    app:layout_constraintHeight_percent="0.334"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/comments"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="5dp"
-                    android:fontFamily="@font/titillium_regular"
-                    android:includeFontPadding="false"
-                    android:text="450 comments"
-                    android:textColor="#000"
-                    app:autoSizeMaxTextSize="11sp"
-                    app:autoSizeMinTextSize="8sp"
-                    app:autoSizeStepGranularity="0.5sp"
-                    app:autoSizeTextType="uniform"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/ic_comments"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/downloadBtn"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@null"
-                android:src="@drawable/download_black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="W, 1:1"
-                app:layout_constraintEnd_toStartOf="@+id/bottom_bar_end_gap"
-                app:layout_constraintHeight_percent="0.334"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/bottom_bar_end_gap"
-                android:layout_width="0dp"
+                android:id="@+id/itemImage"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintWidth_percent="0.039" />
+                android:layout_weight="2"
+                android:scaleType="centerCrop"
+                android:visibility="visible"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/itemText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@null"-->
+<!--                android:ellipsize="end"-->
+<!--                android:fontFamily="@font/titillium_bold"-->
+<!--                android:text="@string/bio_placeholder"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textColor="#000"-->
+<!--                android:visibility="visible"-->
+<!--                app:autoSizeMaxTextSize="12sp"-->
+<!--                app:autoSizeMinTextSize="10sp"-->
+<!--                app:autoSizeStepGranularity="1sp"-->
+<!--                app:autoSizeTextType="uniform" />-->
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

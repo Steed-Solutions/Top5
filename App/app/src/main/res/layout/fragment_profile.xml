@@ -46,6 +46,7 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:src="@drawable/back"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         app:layout_constraintDimensionRatio="0.711"
                         app:layout_constraintStart_toEndOf="@+id/back_btn_start_gap"
                         app:layout_constraintTop_toBottomOf="@+id/back_btn_top_gap"
@@ -158,75 +159,75 @@
                     app:layout_constraintTop_toBottomOf="@+id/main_content_top_gap"
                     app:layout_constraintWidth_percent="0.878">
 
-                    <TextView
-                        android:id="@+id/gender_heading_txt"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="2dp"
-                        android:fontFamily="@font/titillium_regular"
-                        android:includeFontPadding="false"
-                        android:text="@string/gender"
-                        app:autoSizeMaxTextSize="17sp"
-                        app:autoSizeMinTextSize="15sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform"
-                        app:layout_constraintTop_toTopOf="parent" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/gender_heading_txt"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_marginStart="2dp"-->
+<!--                        android:fontFamily="@font/titillium_regular"-->
+<!--                        android:includeFontPadding="false"-->
+<!--                        android:text="@string/gender"-->
+<!--                        app:autoSizeMaxTextSize="17sp"-->
+<!--                        app:autoSizeMinTextSize="15sp"-->
+<!--                        app:autoSizeStepGranularity="1sp"-->
+<!--                        app:autoSizeTextType="uniform"-->
+<!--                        app:layout_constraintTop_toTopOf="parent" />-->
 
-                    <TextView
-                        android:id="@+id/genderTxt"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="@font/titillium_regular"
-                        android:includeFontPadding="false"
-                        android:text="@string/gender_placeholder"
-                        app:autoSizeMaxTextSize="12sp"
-                        app:autoSizeMinTextSize="8sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform"
-                        app:layout_constraintTop_toBottomOf="@+id/gender_heading_txt" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/genderTxt"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="5dp"-->
+<!--                        android:fontFamily="@font/titillium_regular"-->
+<!--                        android:includeFontPadding="false"-->
+<!--                        android:text="@string/gender_placeholder"-->
+<!--                        app:autoSizeMaxTextSize="12sp"-->
+<!--                        app:autoSizeMinTextSize="8sp"-->
+<!--                        app:autoSizeStepGranularity="1sp"-->
+<!--                        app:autoSizeTextType="uniform"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/gender_heading_txt" />-->
 
-                    <View
-                        android:id="@+id/bio_top_gap"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="W, 0.052:1"
-                        app:layout_constraintTop_toBottomOf="@+id/genderTxt" />
+<!--                    <View-->
+<!--                        android:id="@+id/bio_top_gap"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="0dp"-->
+<!--                        app:layout_constraintDimensionRatio="W, 0.052:1"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/genderTxt" />-->
 
-                    <TextView
-                        android:id="@+id/bio_heading_txt"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="2dp"
-                        android:fontFamily="@font/titillium_regular"
-                        android:includeFontPadding="false"
-                        android:text="@string/bio"
-                        app:autoSizeMaxTextSize="17sp"
-                        app:autoSizeMinTextSize="15sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform"
-                        app:layout_constraintTop_toBottomOf="@+id/bio_top_gap" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/bio_heading_txt"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_marginStart="2dp"-->
+<!--                        android:fontFamily="@font/titillium_regular"-->
+<!--                        android:includeFontPadding="false"-->
+<!--                        android:text="@string/bio"-->
+<!--                        app:autoSizeMaxTextSize="17sp"-->
+<!--                        app:autoSizeMinTextSize="15sp"-->
+<!--                        app:autoSizeStepGranularity="1sp"-->
+<!--                        app:autoSizeTextType="uniform"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/bio_top_gap" />-->
 
-                    <TextView
-                        android:id="@+id/bioTxt"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="@font/titillium_regular"
-                        android:includeFontPadding="false"
-                        android:text="@string/bio_placeholder"
-                        app:autoSizeMaxTextSize="12sp"
-                        app:autoSizeMinTextSize="8sp"
-                        app:autoSizeStepGranularity="1sp"
-                        app:autoSizeTextType="uniform"
-                        app:layout_constraintTop_toBottomOf="@+id/bio_heading_txt" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/bioTxt"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="5dp"-->
+<!--                        android:fontFamily="@font/titillium_regular"-->
+<!--                        android:includeFontPadding="false"-->
+<!--                        android:text="@string/bio_placeholder"-->
+<!--                        app:autoSizeMaxTextSize="12sp"-->
+<!--                        app:autoSizeMinTextSize="8sp"-->
+<!--                        app:autoSizeStepGranularity="1sp"-->
+<!--                        app:autoSizeTextType="uniform"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/bio_heading_txt" />-->
 
                     <View
                         android:id="@+id/your_interests_top_gap"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         app:layout_constraintDimensionRatio="W, 0.076:1"
-                        app:layout_constraintTop_toBottomOf="@+id/bioTxt" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/your_interests_txt"

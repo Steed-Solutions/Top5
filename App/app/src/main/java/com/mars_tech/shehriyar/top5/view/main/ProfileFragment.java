@@ -74,12 +74,16 @@ public class ProfileFragment extends Fragment {
         viewModel.allCategoriesLiveData.observe(requireActivity(), new Observer<ArrayList<Category>>() {
             @Override
             public void onChanged(ArrayList<Category> categories) {
-                viewModel.allCategoriesLiveData.removeObservers(requireActivity());
+                if(viewModel.allCategoriesLiveData.hasActiveObservers()) {
+                    viewModel.allCategoriesLiveData.removeObservers(requireActivity());
+                }
                 viewModel.getSelectedCategories();
                 viewModel.selectedCategoriesLiveData.observe(requireActivity(), new Observer<ArrayList<Category>>() {
                     @Override
                     public void onChanged(ArrayList<Category> categories) {
-                        viewModel.selectedCategoriesLiveData.removeObservers(requireActivity());
+                        if (viewModel.selectedCategoriesLiveData.hasActiveObservers()) {
+                            viewModel.selectedCategoriesLiveData.removeObservers(requireActivity());
+                        }
                         binding.loadingLayout.setVisibility(View.GONE);
 
                         interests = categories;

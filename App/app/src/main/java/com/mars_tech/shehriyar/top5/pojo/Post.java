@@ -1,5 +1,7 @@
 package com.mars_tech.shehriyar.top5.pojo;
 
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -24,5 +26,12 @@ public class Post implements Serializable {
         this.comments = comments;
         this.category = category;
         this.tags = tags;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        Post post = (Post) obj;
+
+        return this.id.equals(post.id);
     }
 }

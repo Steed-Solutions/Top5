@@ -36,6 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:src="@drawable/back"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 app:layout_constraintDimensionRatio="0.711"
                 app:layout_constraintStart_toEndOf="@+id/back_btn_start_gap"
                 app:layout_constraintTop_toBottomOf="@+id/back_btn_top_gap"

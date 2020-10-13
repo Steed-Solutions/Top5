@@ -84,10 +84,8 @@ public class SplashFragment extends Fragment {
                     viewModel.userCheckLiveData.observe(requireActivity(), new Observer<User>() {
                         @Override
                         public void onChanged(User user) {
-                            Log.d("UMM WHAT", "NO");
                             if (user.isAuthenticated) {
                                 userSingleton.currentUser = user;
-                                Log.d("USER_NEW", "" + userSingleton.currentUser.isNew);
                                 controller.navigate(SplashFragmentDirections.actionSplashFragmentToMainActivity());
                             } else {
                                 controller.navigate(SplashFragmentDirections.actionSplashFragmentToStartFragment(), new NavOptions.Builder().setPopUpTo(R.id.splashFragment, true).build());

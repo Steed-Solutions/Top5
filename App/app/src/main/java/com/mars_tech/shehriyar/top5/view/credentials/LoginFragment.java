@@ -100,7 +100,9 @@ public class LoginFragment extends Fragment {
                         @Override
                         public void onChanged(AuthResponse authResponse) {
                             hideOverlay();
-                            viewModel.authenticatedUserLiveData.removeObservers(requireActivity());
+                            if(viewModel.authenticatedUserLiveData.hasActiveObservers()) {
+                                viewModel.authenticatedUserLiveData.removeObservers(requireActivity());
+                            }
                             if (authResponse.isError) {
                                 showError(authResponse.statusMessage);
                             } else {

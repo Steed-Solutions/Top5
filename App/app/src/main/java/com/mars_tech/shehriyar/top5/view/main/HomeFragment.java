@@ -140,7 +140,6 @@ public class HomeFragment extends Fragment {
 
     private void initController() {
         controller = NavHostFragment.findNavController(this);
-
     }
 
     private void initBannerAd() {
@@ -177,23 +176,30 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void OnPostCommentsContainerClicked(int index) {
-                HomeFragmentDirections.ActionHomeFragmentToCommentsFragment action = HomeFragmentDirections.actionHomeFragmentToCommentsFragment().setPostArg(preferenceItems.get(index));
+                viewModel.updateFiltersData(preferenceItems.get(index));
+                HomeFragmentDirections.ActionHomeFragmentToContentFragment action = HomeFragmentDirections.actionHomeFragmentToContentFragment().setPostArg(preferenceItems.get(index));
                 controller.navigate(action);
             }
 
             @Override
             public void OnPostSaveBtnClicked(int index) {
-                viewModel.savePost(preferenceItems.get(index).category.id, preferenceItems.get(index).id);
+                viewModel.savePost(preferenceItems.get(index));
                 viewModel.savePostLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
                     @Override
                     public void onChanged(SaveResponse saveResponse) {
                         if (!saveResponse.isError) {
-                            Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show();
+                            Post tempPost = preferenceItems.get(index);
+                            tempPost.isSaved = saveResponse.isSaved;
+                            preferenceItems.get(index).isSaved = saveResponse.isSaved;
+                            preferenceItemsListAdapter.notifyItemChanged(index);
+                            Toast.makeText(requireContext(), saveResponse.isSaved ? "Saved!" : "Unsaved", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(requireContext(), saveResponse.statusMessage, Toast.LENGTH_SHORT).show();
                         }
 
-                        viewModel.savePostLiveData.removeObservers(requireActivity());
+                        if (viewModel.savePostLiveData.hasActiveObservers()) {
+                            viewModel.savePostLiveData.removeObservers(requireActivity());
+                        }
                     }
                 });
             }

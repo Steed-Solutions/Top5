@@ -50,7 +50,7 @@ public class SignupFragment extends Fragment {
 
     private UserSingleton userSingleton = UserSingleton.getInstance();
 
-    private String selectedGender;
+//    private String selectedGender;
 
     private boolean isRTL;
 
@@ -68,7 +68,7 @@ public class SignupFragment extends Fragment {
         controller = NavHostFragment.findNavController(this);
 
         initViewModel();
-        initGenderSpinner();
+//        initGenderSpinner();
         initClickListeners();
         rtlFix();
 
@@ -100,7 +100,7 @@ public class SignupFragment extends Fragment {
             public void onClick(View v) {
                 if (validateForm()) {
                     showOverlay();
-                    viewModel.signUpWithCredentials(new User(binding.usernameInp.getText().toString().trim(), binding.emailInp.getText().toString().trim(), binding.passwordInp.getText().toString().trim(), binding.genderInp.getSelectedItem().toString(), binding.bioInp.getText().toString()));
+                    viewModel.signUpWithCredentials(new User(binding.usernameInp.getText().toString().trim(), binding.emailInp.getText().toString().trim(), binding.passwordInp.getText().toString().trim()));
                     viewModel.authenticatedUserLiveData.observe(requireActivity(), new Observer<AuthResponse>() {
                         @Override
                         public void onChanged(AuthResponse authResponse) {
@@ -111,7 +111,10 @@ public class SignupFragment extends Fragment {
                                 userSingleton.currentUser = authResponse.user;
                                 controller.navigate(SignupFragmentDirections.actionSignupFragmentToMainActivity());
                             }
-                            viewModel.authenticatedUserLiveData.removeObservers(requireActivity());
+
+                            if(viewModel.authenticatedUserLiveData.hasActiveObservers()) {
+                                viewModel.authenticatedUserLiveData.removeObservers(requireActivity());
+                            }
                         }
                     });
                 }
@@ -120,29 +123,29 @@ public class SignupFragment extends Fragment {
         });
     }
 
-    private void initGenderSpinner() {
-        String[] items = new String[]{requireActivity().getResources().getString(R.string.gender_male), requireActivity().getResources().getString(R.string.gender_female), requireActivity().getResources().getString(R.string.gender_other), requireActivity().getResources().getString(R.string.gender_prefer_not_to_say)};
-        selectedGender = items[0];
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, items) {
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//                return super.getView(position, convertView, parent);
-
-                TextView textView = (TextView) super.getView(position, convertView, parent);
-
-                TextViewCompat.setAutoSizeTextTypeUniformWithPresetSizes(textView, new int[]{10, 11, 12}, TypedValue.COMPLEX_UNIT_SP);
-
-                View view = textView.getRootView();
-
-                view.setBackgroundColor(Color.parseColor("#00000000"));
-                view.setPadding(0, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
-
-                return view;
-            }
-        };
-        binding.genderInp.setAdapter(adapter);
-    }
+//    private void initGenderSpinner() {
+//        String[] items = new String[]{requireActivity().getResources().getString(R.string.gender_male), requireActivity().getResources().getString(R.string.gender_female), requireActivity().getResources().getString(R.string.gender_other), requireActivity().getResources().getString(R.string.gender_prefer_not_to_say)};
+//        selectedGender = items[0];
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, items) {
+//            @NonNull
+//            @Override
+//            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+////                return super.getView(position, convertView, parent);
+//
+//                TextView textView = (TextView) super.getView(position, convertView, parent);
+//
+//                TextViewCompat.setAutoSizeTextTypeUniformWithPresetSizes(textView, new int[]{10, 11, 12}, TypedValue.COMPLEX_UNIT_SP);
+//
+//                View view = textView.getRootView();
+//
+//                view.setBackgroundColor(Color.parseColor("#00000000"));
+//                view.setPadding(0, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
+//
+//                return view;
+//            }
+//        };
+//        binding.genderInp.setAdapter(adapter);
+//    }
 
     private boolean getIsRTL() {
         SharedPreferences preferenceSharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
@@ -154,7 +157,7 @@ public class SignupFragment extends Fragment {
             binding.passwordInp.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
             binding.confirmPasswordInp.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
 
-            binding.genderInp.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+//            binding.genderInp.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
         }
     }
 

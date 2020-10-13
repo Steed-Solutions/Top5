@@ -40,7 +40,9 @@
                     app:layout_constraintDimensionRatio="H, 1:1"
                     app:layout_constraintStart_toEndOf="@+id/header_start_gap"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.067" />
+                    app:layout_constraintWidth_percent="0.08"
+                    android:padding="4dp"
+                    android:background="@drawable/transparent_rect_with_ripple"/>
 
                 <TextView
                     android:id="@+id/greetingsUser"
@@ -71,7 +73,9 @@
                     app:layout_constraintDimensionRatio="H, 1:1"
                     app:layout_constraintEnd_toStartOf="@+id/header_end_gap"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.067" />
+                    app:layout_constraintWidth_percent="0.08"
+                    android:padding="4dp"
+                    android:background="@drawable/transparent_rect_with_ripple" />
 
                 <View
                     android:id="@+id/header_end_gap"
@@ -144,6 +148,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="1dp"
                 app:itemBackground="@null"
+                android:background="#fafafa"
                 app:itemIconSize="15dp"
                 app:itemIconTint="@drawable/bottom_nav_bar_item_color_state"
                 app:labelVisibilityMode="unlabeled"

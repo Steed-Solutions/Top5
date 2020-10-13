@@ -28,6 +28,7 @@ import com.mars_tech.shehriyar.top5.listener.PreferenceItemsListItemClickListene
 import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
 import com.mars_tech.shehriyar.top5.pojo.Post;
 import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
+import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
 import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
@@ -147,13 +148,31 @@ public class SavedFragment extends Fragment {
 
             @Override
             public void OnPostCommentsContainerClicked(int index) {
-                SavedFragmentDirections.ActionSavedFragmentToCommentsFragment action = SavedFragmentDirections.actionSavedFragmentToCommentsFragment().setPostArg(preferenceItems.get(index));
+                SavedFragmentDirections.ActionSavedFragmentToContentFragment action = SavedFragmentDirections.actionSavedFragmentToContentFragment().setPostArg(preferenceItems.get(index));
                 controller.navigate(action);
             }
 
             @Override
             public void OnPostSaveBtnClicked(int index) {
+                viewModel.savePost(preferenceItems.get(index));
+                viewModel.savePostLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
+                    @Override
+                    public void onChanged(SaveResponse saveResponse) {
+                        if (!saveResponse.isError) {
+                            Post tempPost = preferenceItems.get(index);
+                            tempPost.isSaved = saveResponse.isSaved;
+                            preferenceItems.get(index).isSaved = saveResponse.isSaved;
+                            preferenceItemsListAdapter.notifyItemChanged(index);
+                            Toast.makeText(requireContext(), saveResponse.isSaved ? "Saved!" : "Unsaved", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(requireContext(), saveResponse.statusMessage, Toast.LENGTH_SHORT).show();
+                        }
 
+                        if (viewModel.savePostLiveData.hasActiveObservers()) {
+                            viewModel.savePostLiveData.removeObservers(requireActivity());
+                        }
+                    }
+                });
             }
         });
         binding.preferenceItemsList.setAdapter(preferenceItemsListAdapter);

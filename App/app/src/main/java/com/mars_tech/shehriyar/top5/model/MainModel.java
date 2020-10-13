@@ -26,12 +26,19 @@ import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
 import com.mars_tech.shehriyar.top5.pojo.Post;
 import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
 import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
+import com.mars_tech.shehriyar.top5.pojo.TagsResponse;
 import com.mars_tech.shehriyar.top5.singleton.TagsSingleton;
 import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
 import com.mars_tech.shehriyar.top5.util.Constants;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -80,7 +87,6 @@ public class MainModel {
                         );
                     }
 
-                    Log.d("CATEGORIES_COUNT", "" + categories.size());
                     allCategoriesMutableLiveData.setValue(categories);
                 }
             }
@@ -97,7 +103,6 @@ public class MainModel {
         searchTerm = searchTerm.toUpperCase();
         ArrayList<Category> queriedCategories = new ArrayList<>();
         if (searchTerm.length() == 0) {
-            Log.d("WOOOOOT", "" + searchTerm.length());
             queriedCategories.addAll(categories);
         } else {
             for (Category category : categories) {
@@ -144,7 +149,7 @@ public class MainModel {
     public MutableLiveData<SaveResponse> getAllUserTagsAndRecentlyViewedPosts() {
         MutableLiveData<SaveResponse> completionResponseLiveData = new MutableLiveData<>();
 
-        if(tagsSingleton.tags.isEmpty()) {
+        if (tagsSingleton.tags.isEmpty()) {
             firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("tags").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -242,45 +247,69 @@ public class MainModel {
                 final PostsResponse postsResponse = new PostsResponse();
                 if (categorySnapshot.exists()) {
                     postsResponse.posts = new ArrayList<>();
+                    ArrayList<String> userCategories = new ArrayList<>();
                     for (final DataSnapshot category : categorySnapshot.getChildren()) {
-                        firebaseDatabase.child("content").child("posts").child(category.getKey()).addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(@NonNull DataSnapshot post, @Nullable String previousChildName) {
-                                boolean hasCommonTags = false, isRecentlyViewed = tagsSingleton.recentlyViewedPosts.contains(post.getKey());
-                                boolean hasChance = ((new Random()).nextInt(3) + 1) % 3 == 0;
-                                ArrayList<String> tags = new ArrayList<>();
+                        userCategories.add(category.getKey());
+                    }
 
-                                for (DataSnapshot tag : post.child("tags").getChildren()) {
-                                    tags.add(tag.getKey());
-                                    if(!hasCommonTags && tagsSingleton.tags.contains(tag.getKey())) {
-                                        hasCommonTags = true;
-                                    }
+                    firebaseDatabase.child("content").child("posts").addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot post, @Nullable String previousChildName) {
+                            boolean hasCommonTags = false, isRecentlyViewed = tagsSingleton.recentlyViewedPosts.contains(post.getKey());
+                            boolean hasChance = ((new Random()).nextInt(3) + 1) % 3 == 0;
+                            ArrayList<String> tags = new ArrayList<>();
+
+                            for (DataSnapshot tag : post.child("tags").getChildren()) {
+                                tags.add(tag.getKey());
+                                if (!hasCommonTags && tagsSingleton.tags.contains(tag.getKey())) {
+                                    hasCommonTags = true;
                                 }
+                            }
 
-                                if((filter == 0 && hasCommonTags) || (filter == 1 && isRecentlyViewed) || (filter == 2 && (hasChance || hasCommonTags)) || filter == 3) {
+                            if ((filter == 0 && hasCommonTags) || (filter == 1 && isRecentlyViewed) || (filter == 2 && (hasChance || hasCommonTags)) || filter == 3) {
+                                if (userCategories.contains(post.child("category").getValue().toString())) {
+                                    String postText = post.child("text").getValue().toString();
+                                    String link = !post.child("type").getValue().toString().equals("txt") ? post.child("link").getValue().toString() : "";
+                                    if (post.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
+                                        link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                    }
+
                                     Post currPost = new Post(
                                             post.getKey(),
                                             post.child("type").getValue().toString(),
                                             post.child("name").getValue().toString(),
-                                            !post.child("type").getValue().toString().equals("txt") ? post.child("link").getValue().toString() : "",
-                                            post.child("text").getValue().toString(),
+                                            link,
+                                            postText,
                                             (long) post.child("likes").getValue(),
                                             (long) post.child("comments").getValue(),
-                                            categoryIDToCategory.get(category.getKey()),
+                                            categoryIDToCategory.get(post.child("category").getValue().toString()),
                                             tags
                                     );
 
-                                    firebaseDatabase.child("likes").child(post.getKey()).child(userSingleton.currentUser.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                    firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("saved").child(currPost.id).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            currPost.isLiked = snapshot.exists();
-                                            allPosts.add(currPost);
-                                            allPostIDs.add(post.getKey());
+                                            currPost.isSaved = snapshot.exists();
 
-                                            postsResponse.posts.clear();
-                                            postsResponse.posts.addAll(allPosts);
+                                            firebaseDatabase.child("likes").child(post.getKey()).child(userSingleton.currentUser.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    currPost.isLiked = snapshot.exists();
+                                                    allPosts.add(currPost);
+                                                    allPostIDs.add(post.getKey());
 
-                                            allPostsMutableLiveData.postValue(postsResponse);
+                                                    postsResponse.posts.clear();
+                                                    postsResponse.posts.addAll(allPosts);
+
+                                                    allPostsMutableLiveData.postValue(postsResponse);
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
                                         }
 
                                         @Override
@@ -288,40 +317,41 @@ public class MainModel {
 
                                         }
                                     });
-                                } else {
-                                    allPostsMutableLiveData.postValue(postsResponse);
                                 }
+
+                            } else {
+                                allPostsMutableLiveData.postValue(postsResponse);
                             }
+                        }
 
-                            @Override
-                            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot post) {
+                            if (allPostIDs.indexOf(post.getKey()) >= 0) {
+                                allPosts.remove(allPostIDs.indexOf(post.getKey()));
+                                allPostIDs.remove(post.getKey());
+
+                                postsResponse.posts.clear();
+                                postsResponse.posts.addAll(allPosts);
+
+                                allPostsMutableLiveData.postValue(postsResponse);
                             }
+                        }
 
-                            @Override
-                            public void onChildRemoved(@NonNull DataSnapshot post) {
-                                if (allPostIDs.indexOf(post.getKey()) >= 0) {
-                                    allPosts.remove(allPostIDs.indexOf(post.getKey()));
-                                    allPostIDs.remove(post.getKey());
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                                    postsResponse.posts.clear();
-                                    postsResponse.posts.addAll(allPosts);
+                        }
 
-                                    allPostsMutableLiveData.postValue(postsResponse);
-                                }
-                            }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                            @Override
-                            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
+                        }
+                    });
                 } else {
                     postsResponse.isError = true;
                     postsResponse.statusMessage = "Please select some interests from the filter menu to view relevant posts.";
@@ -353,9 +383,12 @@ public class MainModel {
                 if (snapshot.exists()) {
                     ArrayList<String> selectedCategories = new ArrayList<>();
                     for (DataSnapshot category : snapshot.child("categories").getChildren()) {
-                        selectedCategories.add(category.getKey());
+                        if (categoryIDToCategory.containsKey(category.getKey())) {
+                            selectedCategories.add(category.getKey());
+                        }
                     }
                     filtersResponse.selectedCategories = selectedCategories;
+                    filtersResponse.filterID = snapshot.child("filterID").exists() ? Integer.parseInt(snapshot.child("filterID").getValue().toString()) : Constants.PREFERRED_FILTER_INDEX_DEFAULT;
                     filtersResponseMutableLiveData.setValue(filtersResponse);
                 } else {
                     filtersResponse.selectedCategories = new ArrayList<>();
@@ -372,6 +405,26 @@ public class MainModel {
         return filtersResponseMutableLiveData;
     }
 
+    public MutableLiveData<SaveResponse> setFilterID(String filterID) {
+        final MutableLiveData<SaveResponse> filterIDSavedLiveData = new MutableLiveData<>();
+
+        firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("preferences").child("filterID").setValue(filterID).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                SaveResponse saveResponse = new SaveResponse();
+                if (task.isSuccessful()) {
+                    saveResponse.isSaved = true;
+                } else {
+                    saveResponse.isError = true;
+                }
+
+                filterIDSavedLiveData.setValue(saveResponse);
+            }
+        });
+
+        return filterIDSavedLiveData;
+    }
+
     public MutableLiveData<ArrayList<Category>> getSelectedCategories() {
         final MutableLiveData<ArrayList<Category>> selectedCategoriesMutableLiveData = new MutableLiveData<>();
 
@@ -386,7 +439,9 @@ public class MainModel {
                 ArrayList<Category> selectedCategories = new ArrayList<>();
                 if (snapshot.exists()) {
                     for (DataSnapshot category : snapshot.getChildren()) {
-                        selectedCategories.add(categoryIDToCategory.get(category.getKey()));
+                        if (categoryIDToCategory.containsKey(category.getKey())) {
+                            selectedCategories.add(categoryIDToCategory.get(category.getKey()));
+                        }
                     }
                 }
 
@@ -405,7 +460,7 @@ public class MainModel {
     public MutableLiveData<LikeResponse> getPostLikedOrUnlikedLiveData(Post post) {
         final MutableLiveData<LikeResponse> postLikedOrUnlikedLiveData = new MutableLiveData<>();
 
-        firebaseDatabase.child("content").child("posts").child(post.category.id).child(post.id).child("likes").runTransaction(new Transaction.Handler() {
+        firebaseDatabase.child("content").child("posts").child(post.id).child("likes").runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
@@ -500,7 +555,7 @@ public class MainModel {
                                                 if (j != 0 && j == namedUsers.size() - 1 && remainingLikes == 0) {
                                                     likeStr[0] += " and ";
                                                 } else {
-                                                    if (!(remainingLikes > 0 && j == namedUsers.size() - 1)) {
+                                                    if (!(remainingLikes > 0 && j == namedUsers.size() - 1) && likeStr[0].length() > 0) {
                                                         likeStr[0] += ", ";
                                                     }
 
@@ -560,6 +615,7 @@ public class MainModel {
                 CommentsResponse commentsResponse = new CommentsResponse();
                 if (snapshot.exists()) {
                     ArrayList<Comment> comments = new ArrayList<>();
+                    final long[] totalCount = {snapshot.getChildrenCount()};
                     for (DataSnapshot comment : snapshot.getChildren()) {
                         Comment currComment = new Comment(post, comment.getKey(), comment.child("userID").getValue().toString(), comment.child("comment").getValue().toString(), (long) comment.child("timestamp").getValue());
 
@@ -567,10 +623,14 @@ public class MainModel {
                             firebaseDatabase.child("users").child("regularUsers").child(comment.child("userID").getValue().toString()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot nameSnapshot) {
-                                    currComment.userName = nameSnapshot.getValue().toString();
-                                    comments.add(currComment);
+                                    if (snapshot.exists()) {
+                                        currComment.userName = nameSnapshot.getValue().toString();
+                                        comments.add(currComment);
+                                    } else {
+                                        totalCount[0]--;
+                                    }
 
-                                    if (comments.size() == snapshot.getChildrenCount()) {
+                                    if (comments.size() == totalCount[0]) {
                                         commentsResponse.comments = comments;
                                         allPostCommentsLiveData.setValue(commentsResponse);
                                     }
@@ -618,7 +678,7 @@ public class MainModel {
         comment.userID = userSingleton.currentUser.uid;
         comment.id = firebaseDatabase.child("comments").child(comment.post.id).push().getKey();
 
-        firebaseDatabase.child("content").child("posts").child(categoryID).child(comment.post.id).child("comments").runTransaction(new Transaction.Handler() {
+        firebaseDatabase.child("content").child("posts").child(comment.post.id).child("comments").runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
@@ -675,7 +735,7 @@ public class MainModel {
     public MutableLiveData<CommentsResponse> deleteCommentFromPost(String categoryID, Comment comment) {
         MutableLiveData<CommentsResponse> deleteCommentLiveData = new MutableLiveData<>();
 
-        firebaseDatabase.child("content").child("posts").child(categoryID).child(comment.post.id).child("comments").runTransaction(new Transaction.Handler() {
+        firebaseDatabase.child("content").child("posts").child(comment.post.id).child("comments").runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
@@ -719,53 +779,86 @@ public class MainModel {
                 PostsResponse postsResponse = new PostsResponse();
                 postsResponse.posts = new ArrayList<>();
                 if (snapshot.exists()) {
-                    int i = 0;
+                    HashMap<String, String> filteredSavedPosts = new HashMap<>();
                     for (DataSnapshot post : snapshot.getChildren()) {
-                        firebaseDatabase.child("content").child("posts").child(post.getValue().toString()).child(post.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot postSnapshot) {
-                                ArrayList<String> tags = new ArrayList<>();
+                        if (categoryIDToCategory.containsKey(post.getValue().toString())) {
+                            filteredSavedPosts.put(post.getKey(), post.getValue().toString());
+                        }
+                    }
 
-                                for (DataSnapshot tag : post.child("tags").getChildren()) {
-                                    tags.add(tag.getKey());
-                                }
+                    final int[] totalCount = {filteredSavedPosts.size()};
+                    if (!filteredSavedPosts.isEmpty()) {
+                        for (String postID : filteredSavedPosts.keySet()) {
+                            firebaseDatabase.child("content").child("posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot postSnapshot) {
+                                    if (postSnapshot.exists()) {
+                                        ArrayList<String> tags = new ArrayList<>();
 
-                                Post currPost = new Post(
-                                        postSnapshot.getKey(),
-                                        postSnapshot.child("type").getValue().toString(),
-                                        postSnapshot.child("name").getValue().toString(),
-                                        !postSnapshot.child("type").getValue().toString().equals("txt") ? postSnapshot.child("link").getValue().toString() : "",
-                                        postSnapshot.child("text").getValue().toString(),
-                                        (long) postSnapshot.child("likes").getValue(),
-                                        (long) postSnapshot.child("comments").getValue(),
-                                        categoryIDToCategory.get(post.getValue().toString()),
-                                        tags
-                                );
+                                        for (DataSnapshot tag : postSnapshot.child("tags").getChildren()) {
+                                            tags.add(tag.getKey());
+                                        }
 
-                                currPost.isSaved = true;
+                                        String postText = postSnapshot.child("text").getValue().toString();
+                                        String link = !postSnapshot.child("type").getValue().toString().equals("txt") ? postSnapshot.child("link").getValue().toString() : "";
+                                        if (postSnapshot.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
+                                            link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                        }
 
-                                firebaseDatabase.child("likes").child(post.getKey()).child(userSingleton.currentUser.uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot likesSnapshot) {
-                                        currPost.isLiked = likesSnapshot.exists();
-                                        postsResponse.posts.add(currPost);
+                                        Post currPost = new Post(
+                                                postSnapshot.getKey(),
+                                                postSnapshot.child("type").getValue().toString(),
+                                                postSnapshot.child("name").getValue().toString(),
+                                                link,
+                                                postText,
+                                                (long) postSnapshot.child("likes").getValue(),
+                                                (long) postSnapshot.child("comments").getValue(),
+                                                categoryIDToCategory.get(filteredSavedPosts.get(postID)),
+                                                tags
+                                        );
 
-                                        if (postsResponse.posts.size() == snapshot.getChildrenCount())
+                                        firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("saved").child(currPost.id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                currPost.isSaved = snapshot.exists();
+
+                                                firebaseDatabase.child("likes").child(postID).child(userSingleton.currentUser.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot likesSnapshot) {
+                                                        currPost.isLiked = likesSnapshot.exists();
+                                                        postsResponse.posts.add(currPost);
+
+                                                        if (postsResponse.posts.size() == totalCount[0])
+                                                            allSavedPostsLiveData.postValue(postsResponse);
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    } else {
+                                        totalCount[0]--;
+                                        if (postsResponse.posts.size() == totalCount[0])
                                             allSavedPostsLiveData.postValue(postsResponse);
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                                }
+                            });
+                        }
+                    } else {
+                        allSavedPostsLiveData.postValue(postsResponse);
                     }
                 } else {
                     postsResponse.posts = new ArrayList<>();
@@ -786,27 +879,45 @@ public class MainModel {
         return allSavedPostsLiveData;
     }
 
-    public MutableLiveData<SaveResponse> savePost(String categoryID, String postID) {
+    public MutableLiveData<SaveResponse> savePost(Post post) {
         MutableLiveData<SaveResponse> savePostLiveData = new MutableLiveData<>();
 
-        firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("saved").child(postID).setValue(categoryID).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                SaveResponse saveResponse = new SaveResponse();
-                if (task.isSuccessful()) {
-                    saveResponse.isSaved = true;
-                } else {
-                    saveResponse.isError = true;
-                    saveResponse.statusMessage = "Failed to save post!";
+        Log.d("POST_SAVED", "" + post.isSaved);
+
+        if (post.isSaved) {
+            firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("saved").child(post.id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    SaveResponse saveResponse = new SaveResponse();
+                    if (task.isSuccessful()) {
+                        saveResponse.isSaved = false;
+                    } else {
+                        saveResponse.isError = true;
+                        saveResponse.statusMessage = "Failed to unsave post!";
+                    }
+                    savePostLiveData.setValue(saveResponse);
                 }
-                savePostLiveData.setValue(saveResponse);
-            }
-        });
+            });
+        } else {
+            firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("saved").child(post.id).setValue(post.category.id).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    SaveResponse saveResponse = new SaveResponse();
+                    if (task.isSuccessful()) {
+                        saveResponse.isSaved = true;
+                    } else {
+                        saveResponse.isError = true;
+                        saveResponse.statusMessage = "Failed to save post!";
+                    }
+                    savePostLiveData.setValue(saveResponse);
+                }
+            });
+        }
 
         return savePostLiveData;
     }
 
-    public void updateFiltersData(Post post){
+    public void updateFiltersData(Post post) {
         interactionUpdates(post);
 
         firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("tags").setValue(tagsSingleton.tags).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -829,7 +940,7 @@ public class MainModel {
             }
         }
 
-        if(!tagsSingleton.recentlyViewedPosts.contains(post.id)) {
+        if (!tagsSingleton.recentlyViewedPosts.contains(post.id)) {
             HashMap<String, String> newRecentPostMap = new HashMap<>();
             newRecentPostMap.put("post", post.id);
             newRecentPostMap.put("category", post.category.id);
@@ -840,5 +951,355 @@ public class MainModel {
             }
             tagsSingleton.recentlyViewedPosts.add(post.id);
         }
+    }
+
+    public LiveData<TagsResponse> getTopTaggedPosts() {
+        MutableLiveData<TagsResponse> topTaggedPosts = new MutableLiveData<>();
+
+        final HashMap<String, Category> categoryIDToCategory = new HashMap<>();
+        for (Category category : categories) {
+            categoryIDToCategory.put(category.id, category);
+        }
+
+        firebaseDatabase.child("tags/count").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                TagsResponse tagsResponse = new TagsResponse();
+                tagsResponse.tags = new ArrayList<>();
+
+                if (snapshot.exists()) {
+                    ArrayList<String> tags = new ArrayList<>();
+                    ArrayList<Integer> tagCounts = new ArrayList<>();
+                    for (DataSnapshot tagCount : snapshot.getChildren()) {
+                        tags.add(tagCount.getKey());
+                        tagCounts.add(Integer.parseInt(tagCount.getValue().toString()));
+                    }
+
+                    ArrayList<Integer> sortingMethodReturns = new ArrayList<Integer>();
+
+                    Collections.sort(tagCounts, new Comparator<Integer>() {
+
+                        @Override
+                        public int compare(Integer lhs, Integer rhs) {
+                            int returning = lhs.compareTo(rhs);
+                            sortingMethodReturns.add(returning);
+                            return returning;
+                        }
+
+                    });
+
+
+                    final int[] j = {0};
+
+                    Collections.sort(tags, new Comparator<String>() {
+
+                        @Override
+                        public int compare(String lhs, String rhs) {
+                            // TODO Auto-generated method stub
+
+                            // comparator method will sort the second list also according to
+                            // the changes made with list a
+                            int returning = sortingMethodReturns.get(j[0]);
+                            j[0]++;
+                            return returning;
+                        }
+
+                    });
+
+                    ArrayList<String> topTenTags = new ArrayList<>();
+                    for (int i = tags.size() - 1, k = 0; i >= 0 && k < 10; i--, k++) {
+                        topTenTags.add(tags.get(i));
+                    }
+
+                    Random rand = new Random();
+
+                    int numberOfElements = 4;
+
+                    ArrayList<String> randomlySelectedTags = new ArrayList<>();
+
+                    for (int i = 0; i < numberOfElements && topTenTags.size() > 0; i++) {
+                        int randomIndex = rand.nextInt(topTenTags.size());
+                        randomlySelectedTags.add(topTenTags.get(randomIndex));
+                        topTenTags.remove(randomIndex);
+                    }
+
+                    for (String tagID : randomlySelectedTags) {
+                        firebaseDatabase.child("tags/postsAgainstTag/" + tagID).orderByKey().limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    String postID = snapshot.getChildren().iterator().next().getKey();
+
+                                    firebaseDatabase.child("content").child("posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot postSnapshot) {
+                                            String postText = postSnapshot.child("text").getValue().toString();
+                                            String link = !postSnapshot.child("type").getValue().toString().equals("txt") ? postSnapshot.child("link").getValue().toString() : "";
+                                            if (postSnapshot.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
+                                                link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                            }
+
+                                            HashMap<String, String> tagMap = new HashMap<>();
+                                            tagMap.put("tag", tagID);
+                                            tagMap.put("image", link);
+                                            tagsResponse.tags.add(tagMap);
+
+                                            if (tagsResponse.tags.size() == randomlySelectedTags.size())
+                                                topTaggedPosts.postValue(tagsResponse);
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+                                } else {
+                                    tagsResponse.statusMessage = "No Tagged Posts";
+                                    topTaggedPosts.setValue(tagsResponse);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                } else {
+                    tagsResponse.statusMessage = "No Tagged Posts";
+                    topTaggedPosts.setValue(tagsResponse);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return topTaggedPosts;
+    }
+
+    public LiveData<PostsResponse> getMostPopularPosts() {
+        MutableLiveData<PostsResponse> mostPopularPosts = new MutableLiveData<>();
+
+        final HashMap<String, Category> categoryIDToCategory = new HashMap<>();
+        for (Category category : categories) {
+            categoryIDToCategory.put(category.id, category);
+        }
+
+        firebaseDatabase.child("content").child("posts").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot postsSnapshot) {
+                ArrayList<String> postIDs = new ArrayList<>();
+                for (DataSnapshot post : postsSnapshot.getChildren()) {
+                    postIDs.add(post.getKey());
+                }
+
+                PostsResponse postsResponse = new PostsResponse();
+                postsResponse.posts = new ArrayList<>();
+
+                long postsLimit = postsSnapshot.getChildrenCount() >= 3 ? 3 : postsSnapshot.getChildrenCount();
+
+                Random rand = new Random();
+                for (int i = 0; i < 3; i++) {
+                    int randIndex = rand.nextInt((postIDs.size() - 1) + 1);
+
+                    String postID = postIDs.get(randIndex);
+
+                    postIDs.remove(randIndex);
+
+                    DataSnapshot postSnapshot = postsSnapshot.child(postID);
+
+                    ArrayList<String> tags = new ArrayList<>();
+
+                    for (DataSnapshot tag : postSnapshot.child("tags").getChildren()) {
+                        tags.add(tag.getKey());
+                    }
+
+                    String postText = postSnapshot.child("text").getValue().toString();
+                    String link = !postSnapshot.child("type").getValue().toString().equals("txt") ? postSnapshot.child("link").getValue().toString() : "";
+                    if (postSnapshot.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
+                        link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                    }
+
+                    Post currPost = new Post(
+                            postSnapshot.getKey(),
+                            postSnapshot.child("type").getValue().toString(),
+                            postSnapshot.child("name").getValue().toString(),
+                            link,
+                            postText,
+                            (long) postSnapshot.child("likes").getValue(),
+                            (long) postSnapshot.child("comments").getValue(),
+                            categoryIDToCategory.get(postSnapshot.child("category").getValue().toString()),
+                            tags
+                    );
+
+                    firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("saved").child(currPost.id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            currPost.isSaved = snapshot.exists();
+
+                            firebaseDatabase.child("likes").child(postSnapshot.getKey()).child(userSingleton.currentUser.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot likesSnapshot) {
+                                    currPost.isLiked = likesSnapshot.exists();
+
+                                    postsResponse.posts.add(currPost);
+
+                                    if (postsResponse.posts.size() == postsLimit) {
+                                        mostPopularPosts.setValue(postsResponse);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return mostPopularPosts;
+    }
+
+    public LiveData<PostsResponse> getQueriedPosts(String searchTerm) {
+        MutableLiveData<PostsResponse> allQueriedPostsLiveData = new MutableLiveData<>();
+
+        final ArrayList<String> categoryIDs = new ArrayList<>();
+        final HashMap<String, Category> categoryIDToCategory = new HashMap<>();
+        for (Category category : categories) {
+            categoryIDToCategory.put(category.id, category);
+            categoryIDs.add(category.id);
+        }
+
+        String[] searchWords = searchTerm.split(" ");
+
+        PostsResponse postsResponse = new PostsResponse();
+        postsResponse.posts = new ArrayList<>();
+
+        for (String word : searchWords) {
+            if (!word.equals("")) {
+                firebaseDatabase.child("content").child("posts").orderByChild("words/" + word.toLowerCase(Locale.ENGLISH)).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.getChildrenCount() == 0) {
+                            allQueriedPostsLiveData.setValue(postsResponse);
+                        }
+
+                        for (DataSnapshot post : snapshot.getChildren()) {
+                            ArrayList<String> tags = new ArrayList<>();
+
+                            for (DataSnapshot tag : post.child("tags").getChildren()) {
+                                tags.add(tag.getKey());
+                            }
+
+                            String postText = post.child("text").getValue().toString();
+                            String link = !post.child("type").getValue().toString().equals("txt") ? post.child("link").getValue().toString() : "";
+                            if (post.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
+                                link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                            }
+
+                            Post currPost = new Post(
+                                    post.getKey(),
+                                    post.child("type").getValue().toString(),
+                                    post.child("name").getValue().toString(),
+                                    link,
+                                    postText,
+                                    (long) post.child("likes").getValue(),
+                                    (long) post.child("comments").getValue(),
+                                    categoryIDToCategory.get(post.child("category").getValue().toString()),
+                                    tags
+                            );
+
+                            firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("saved").child(currPost.id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    currPost.isSaved = snapshot.exists();
+
+                                    firebaseDatabase.child("likes").child(post.getKey()).child(userSingleton.currentUser.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot likesSnapshot) {
+                                            currPost.isLiked = likesSnapshot.exists();
+
+                                            if (!postsResponse.posts.contains(currPost)) {
+                                                postsResponse.posts.add(currPost);
+
+                                                allQueriedPostsLiveData.setValue(postsResponse);
+                                            }
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        }
+
+
+        return allQueriedPostsLiveData;
+    }
+
+    public static void sortList(List<?> objectsToOrder, List<?> orderedObjects) {
+
+        HashMap<Object, Integer> indexMap = new HashMap<>();
+        int index = 0;
+        for (Object object : orderedObjects) {
+            indexMap.put(object, index);
+            index++;
+        }
+
+        Collections.sort(objectsToOrder, new Comparator<Object>() {
+
+            public int compare(Object left, Object right) {
+
+                Integer leftIndex = indexMap.get(left);
+                Integer rightIndex = indexMap.get(right);
+                if (leftIndex == null) {
+                    return -1;
+                }
+                if (rightIndex == null) {
+                    return 1;
+                }
+
+                return Integer.compare(leftIndex, rightIndex);
+            }
+        });
     }
 }

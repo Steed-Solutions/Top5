@@ -94,7 +94,9 @@ public class CommentsFragment extends Fragment {
                     Toast.makeText(requireContext(), commentsResponse.statusMessage, Toast.LENGTH_SHORT).show();
                 }
 
-                viewModel.allPostCommentsLiveData.removeObservers(requireActivity());
+                if(viewModel.allPostCommentsLiveData.hasActiveObservers()) {
+                    viewModel.allPostCommentsLiveData.removeObservers(requireActivity());
+                }
             }
         });
 
@@ -158,7 +160,9 @@ public class CommentsFragment extends Fragment {
                                 Toast.makeText(requireContext(), commentsResponse.statusMessage, Toast.LENGTH_SHORT).show();
                             }
 
-                            viewModel.commentOnPostLiveData.removeObservers(requireActivity());
+                            if(viewModel.commentOnPostLiveData.hasActiveObservers()) {
+                                viewModel.commentOnPostLiveData.removeObservers(requireActivity());
+                            }
                         }
                     });
                 } else {
