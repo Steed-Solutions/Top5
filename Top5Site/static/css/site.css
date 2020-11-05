@@ -181,15 +181,7 @@ nav {
   cursor: pointer;
   width: 2.51vw;
 }
-
-.categories_sec {
-  width: 63vw;
-  display: flex;
-  justify-content: space-between;
-  column-gap: 0;
-}
-
-.category_card {
+carocard {
   width: 13.4vw;
   height: 14.5vw;
   display: flex;

@@ -77,7 +77,7 @@ engAndPersianStaticText = {
     'profile_heading_user_profile_en': 'User Profile',
     'profile_heading_user_profile_fa': 'User Profile',
     'profile_option_edit_information_en': 'Edit Information',
-    'profile_option_edit_information_fa': 'Edit Information',    
+    'profile_option_edit_information_fa': 'Edit Information',
     'profile_sub_heading_interests_en': 'Your interests',
     'profile_sub_heading_interests_fa': 'Your interests',
     'profile_heading_filters_en': 'Filters',
@@ -93,7 +93,7 @@ engAndPersianStaticText = {
 
     'saved_heading_all_en': 'ALL',
     'saved_heading_all_fa': 'ALL',
-    
+
     'tags_posts_by_tag_en': 'Posts By Tag',
     'tags_posts_by_tag_fa': 'Posts By Tag',
 
@@ -101,7 +101,7 @@ engAndPersianStaticText = {
     'like_fa': 'like',
     'likes_en': 'likes',
     'likes_fa': 'likes',
-    
+
     'comment_en': 'comment',
     'comment_fa': 'comment',
     'comments_en': 'comments',
@@ -229,15 +229,15 @@ def home(request, page_number=0):
     categoriesItems = db.child("content/categories").get().val()
     for key, val in categoriesItems.items():
         val["id"] = key
-        categories[key] = val    
+        categories[key] = val
 
     if request.method == "POST":
         if request.POST['type'] == "load":
             try:
                 isLoggedIn = "user" in request.session
-        
+
                 allPosts = list()
-                categoryIDs = categories.keys()           
+                categoryIDs = categories.keys()
 
                 if isLoggedIn:
                     userPrefFilter = db.child(
@@ -448,7 +448,7 @@ def home(request, page_number=0):
 
                         #         comments.append(val)
 
-                        post["allComments"] = comments
+                        # post["allComments"] = comments
 
                         allPosts.append(post)
 
@@ -548,14 +548,15 @@ def home(request, page_number=0):
 
     return render(request, "site/pages/home.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "pageNumber": page_number, "categories": categories, "recentPosts": recentPosts, "serverTime": int(math.floor(time.time() * 1000))})
 
+
 def categories(request, category_id='none', page_number=0):
     categories = {}
 
     categoriesItems = db.child("content/categories").get().val()
     for key, val in categoriesItems.items():
         val["id"] = key
-        categories[key] = val    
-    
+        categories[key] = val
+
     if category_id != "none":
         if(category_id not in categories):
             return redirect("invalid")
@@ -567,10 +568,11 @@ def categories(request, category_id='none', page_number=0):
 
                     allPosts = list()
 
-                    posts = {} 
+                    posts = {}
                     categoricalPosts = db.child("content/posts").order_by_child(
-                                    "category").equal_to(category_id).get().val()           
-                    categoricalPosts = {} if categoricalPosts == None else {k: v for k, v in categoricalPosts.items()}
+                        "category").equal_to(category_id).get().val()
+                    categoricalPosts = {} if categoricalPosts == None else {
+                        k: v for k, v in categoricalPosts.items()}
 
                     postIDs = sorted(categoricalPosts.keys(), reverse=True)
 
@@ -594,7 +596,7 @@ def categories(request, category_id='none', page_number=0):
                             startAt = 0
 
                         for i in range(startAt, startAt + loadLimit):
-                            if i < len(postIDs):                            
+                            if i < len(postIDs):
                                 posts[postIDs[i]] = categoricalPosts[postIDs[i]]
 
                         for postID in posts:
@@ -610,7 +612,8 @@ def categories(request, category_id='none', page_number=0):
                             likes = db.child("likes/" + postID).get().val()
                             if likes != None:
                                 likes = list(dict(likes).keys())
-                                likesCount = len(likes) + (-1 if isLiked else 0)
+                                likesCount = len(likes) + \
+                                    (-1 if isLiked else 0)
                                 limit = 2 if isLiked else 3
 
                                 namedUsers = []
@@ -626,7 +629,8 @@ def categories(request, category_id='none', page_number=0):
                                                 db.child("users/regularUsers/" + likes[i] + "/name").get().val())
 
                                 if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
-                                    remainingLikes = likesCount - len(namedUsers)
+                                    remainingLikes = likesCount - \
+                                        len(namedUsers)
 
                                     for i in range(0, len(namedUsers)):
                                         if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
@@ -688,7 +692,7 @@ def categories(request, category_id='none', page_number=0):
 
                     currLikeCount += 1 if request.POST["isLike"] == "true" else -1
                     db.child("content/posts/" +
-                            request.POST["postID"] + "/likes").set(currLikeCount)
+                             request.POST["postID"] + "/likes").set(currLikeCount)
 
                     if request.POST["isLike"] == "true":
                         db.child(
@@ -703,17 +707,19 @@ def categories(request, category_id='none', page_number=0):
             elif request.POST['type'] == "save":
                 try:
                     if request.POST["isSave"] == "true":
-                        db.child("users/regularUsers/" + request.session['uid'] + "/saved/" + request.POST["postID"]).set(category_id)
+                        db.child(
+                            "users/regularUsers/" + request.session['uid'] + "/saved/" + request.POST["postID"]).set(category_id)
                     else:
                         db.child("users/regularUsers/" +
-                                request.session['uid'] + "/saved/" + request.POST["postID"]).remove()
+                                 request.session['uid'] + "/saved/" + request.POST["postID"]).remove()
 
                     return JsonResponse({"result": "success"})
                 except Exception as e:
                     print(e)
-                    return JsonResponse({"result": "failure"})        
+                    return JsonResponse({"result": "failure"})
 
     return render(request, "site/pages/categories.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "isCategoryPostsPage": category_id != "none", "categoryID": category_id, "pageNumber": page_number, "categories": categories, "serverTime": int(math.floor(time.time() * 1000))})
+
 
 def post(request, post_title_id):
     post_title_id = unquote(post_title_id)
@@ -1175,9 +1181,11 @@ def browse(request):
     allTagsCount = db.child("tags/count").get().val()
     allTagsCount = [] if allTagsCount == None else dict(allTagsCount)
 
-    allTagsCount = sorted(allTagsCount.items(), key=lambda x: x[1], reverse=True)
+    allTagsCount = sorted(allTagsCount.items(),
+                          key=lambda x: x[1], reverse=True)
 
-    allTagsCount = allTagsCount[0: 10 if len(allTagsCount) >= 10 else len(allTagsCount)]
+    allTagsCount = allTagsCount[0: 10 if len(
+        allTagsCount) >= 10 else len(allTagsCount)]
     allTagsCount = [tag[0] for tag in allTagsCount]
 
     selectedTags = list()
@@ -1188,35 +1196,38 @@ def browse(request):
 
     selectedTagPosts = {}
     for tag in selectedTags:
-        postID = db.child("tags/postsAgainstTag/" + tag).order_by_key().limit_to_first(1).get().val()
+        postID = db.child("tags/postsAgainstTag/" +
+                          tag).order_by_key().limit_to_first(1).get().val()
         if postID == None:
             continue
         else:
-            postID = list(postID.keys())[0]            
+            postID = list(postID.keys())[0]
 
         post = db.child("content/posts/" + postID).get().val()
 
         if post['type'] == "article" and post['text'].find("<img") > -1:
             post['link'] = post['text'][post['text'].find(
                 "<img src=") + 10: post['text'].find("alt") - 2]
-        
-        selectedTagPosts[tag] = post['link']
 
+        selectedTagPosts[tag] = post['link']
 
     popularPosts = []
     allLikes = db.child("likes").get().val()
     if allLikes != None:
         allLikes = dict(allLikes)
         allLikesCount = {}
-        
-        sampledLikes = random.sample(list(allLikes.keys()), 100 if len(allLikes) >= 100 else len(allLikes))
+
+        sampledLikes = random.sample(list(allLikes.keys()), 100 if len(
+            allLikes) >= 100 else len(allLikes))
 
         for likeID in sampledLikes:
             allLikesCount[likeID] = len(list(allLikes[likeID].keys()))
-        
-        allLikesCount = sorted(allLikesCount.items(), key=lambda x: x[1], reverse=True)
 
-        popularPostIDs = dict(allLikesCount[0: 3 if len(allLikesCount) >= 3 else len(allLikesCount)])
+        allLikesCount = sorted(allLikesCount.items(),
+                               key=lambda x: x[1], reverse=True)
+
+        popularPostIDs = dict(allLikesCount[0: 3 if len(
+            allLikesCount) >= 3 else len(allLikesCount)])
 
         for postID in popularPostIDs:
             post = db.child("content/posts/" + postID).get().val()
@@ -1225,7 +1236,7 @@ def browse(request):
                 if post['type'] == "article" and post['text'].find("<img") > -1:
                     post['link'] = post['text'][post['text'].find(
                         "<img src=") + 10: post['text'].find("alt") - 2]
-            popularPosts.append(post)    
+            popularPosts.append(post)
 
     return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "serverTime": int(math.floor(time.time() * 1000)), "tags": selectedTagPosts, "popularPosts": popularPosts})
 
@@ -1298,6 +1309,7 @@ def saved(request, page_number=0):
 
     return render(request, "site/pages/savedPosts.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "posts": allPosts, "pageNum": correctedPageNumber, "pageNumForView": 1 + correctedPageNumber, "hasNext": hasNext})
 
+
 def tags(request, tag, page_number=0):
     global loggedInUserCategoricalPosts
     loggedInUserCategoricalPosts = []
@@ -1353,6 +1365,7 @@ def tags(request, tag, page_number=0):
             hasNext = False
 
     return render(request, "site/pages/tags.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "posts": allPosts, "pageNum": correctedPageNumber, "pageNumForView": 1 + correctedPageNumber, "hasNext": hasNext})
+
 
 def comingSoon(request):
     return render(request, "coming_soon.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText})
