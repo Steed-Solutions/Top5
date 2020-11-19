@@ -48,90 +48,114 @@ loggedInUserCategoricalPosts = []
 
 engAndPersianStaticText = {
     'side_menu_options_home_en': 'Home',
-    'side_menu_options_home_fa': 'Home',
+    'side_menu_options_home_fa': 'خانه',
     'side_menu_options_categories_en': 'Categories',
-    'side_menu_options_categories_fa': 'Categories',
+    'side_menu_options_categories_fa': 'دسته‌بندی‌ها',
     'side_menu_options_my_profile_en': 'My Profile',
-    'side_menu_options_my_profile_fa': 'My Profile',
+    'side_menu_options_my_profile_fa': 'مشخصات من',
     'side_menu_options_browse_en': 'Browse',
-    'side_menu_options_browse_fa': 'Browse',
+    'side_menu_options_browse_fa': 'جستجو در اینترنت',
     'side_menu_options_saved_posts_en': 'Saved Posts',
-    'side_menu_options_saved_posts_fa': 'Saved Posts',
+    'side_menu_options_saved_posts_fa': 'پست‌های ذخیره شده',
     'side_menu_options_log_out_en': 'Log Out',
-    'side_menu_options_log_out_fa': 'Log Out',
+    'side_menu_options_log_out_fa': 'خروج از سیستم',
 
     'search_placeholder_en': 'Enter Keywords',
-    'search_placeholder_fa': 'Enter Keywords',
+    'search_placeholder_fa': 'کلیدواژه‌ها را اینجا وارد کنید',
+
+    'your_fav_recom_site_en': 'YOUR FAVORITE RECOMMENDATON WEBSITE',
+    'your_fav_recom_site_fa': 'وب سایت پیشنهادات مورد علاقه شما',
+
+    'search_stuff_you_like_en': 'Search stuff you like...',
+    'search_stuff_you_like_fa': '...چیزهایی را که دوست دارید، جستجو کنید',
+
+    'search_en': 'Search',
+    'search_fa': 'جستجو',
+
+    'we_have_content_for_the_following_en': 'We have content for the following categories',
+    'we_have_content_for_the_following_fa': 'ما برای دسته‌بندی‌های زیر، محتوا داریم',
+
+    'related_content_to_following_categories_en': 'Top5 has content related to the following categories',
+    'related_content_to_following_categories_fa': 'Top5 محتوایی مرتبط با دسته‌بندی‌های زیر دارد',
 
     'comment_input_placeholder_en': 'Enter your comment...',
-    'comment_input_placeholder_fa': 'Enter your comment...',
+    'comment_input_placeholder_fa': '...نظر خود را وارد کنید',
     'comment_input_anon_placeholder_en': 'Login to comment...',
-    'comment_input_anon_placeholder_fa': 'Login to comment...',
+    'comment_input_anon_placeholder_fa': '...برای اظهار نظر وارد شوید',
 
     'comment_post_en': 'Post',
-    'comment_post_fa': 'Post',
+    'comment_post_fa': 'پست',
+
+    'video_en': 'Video',
+    'video_fa': 'ویدئو',
+
+    'saved_from_en': 'Saved from',
+    'saved_from_fa': 'ذخیره شده از',
 
     'browse_heading_popular_en': 'POPULAR',
-    'browse_heading_popular_fa': 'POPULAR',
+    'browse_heading_popular_fa': 'محبوب',
 
     'profile_heading_user_profile_en': 'User Profile',
-    'profile_heading_user_profile_fa': 'User Profile',
+    'profile_heading_user_profile_fa': 'مشخصات کاربر',
     'profile_option_edit_information_en': 'Edit Information',
-    'profile_option_edit_information_fa': 'Edit Information',
+    'profile_option_edit_information_fa': 'ویرایش اطلاعات',
     'profile_sub_heading_interests_en': 'Your interests',
-    'profile_sub_heading_interests_fa': 'Your interests',
+    'profile_sub_heading_interests_fa': 'علایق شما',
     'profile_heading_filters_en': 'Filters',
-    'profile_heading_filters_fa': 'Filters',
+    'profile_heading_filters_fa': 'فیلترها',
     'profile_filter_options_made_for_you_en': 'MADE FOR YOU',
-    'profile_filter_options_made_for_you_fa': 'MADE FOR YOU',
+    'profile_filter_options_made_for_you_fa': 'تهیه شده برای شما',
     'profile_filter_options_may_also_like_en': 'YOU MAY ALSO LIKE',
-    'profile_filter_options_may_also_like_fa': 'YOU MAY ALSO LIKE',
+    'profile_filter_options_may_also_like_fa': 'ممکن است این مطالب را هم دوست داشته باشید',
     'profile_filter_options_recent_en': 'RECENTLY VIEWED',
-    'profile_filter_options_recent_fa': 'RECENTLY VIEWED',
+    'profile_filter_options_recent_fa': 'به تازگی مشاهده شده',
     'profile_filter_options_new_en': 'NEW',
-    'profile_filter_options_new_fa': 'NEW',
+    'profile_filter_options_new_fa': 'جدید',
 
     'saved_heading_all_en': 'ALL',
-    'saved_heading_all_fa': 'ALL',
+    'saved_heading_all_fa': 'همه',
 
     'tags_posts_by_tag_en': 'Posts By Tag',
-    'tags_posts_by_tag_fa': 'Posts By Tag',
+    'tags_posts_by_tag_fa': 'ارسال توسط برچسب',
 
     'like_en': 'like',
-    'like_fa': 'like',
+    'like_fa': 'پسندیدن',
     'likes_en': 'likes',
-    'likes_fa': 'likes',
+    'likes_fa': 'دوست دارد',
 
     'comment_en': 'comment',
-    'comment_fa': 'comment',
+    'comment_fa': 'اظهار نظر',
     'comments_en': 'comments',
-    'comments_fa': 'comments',
+    'comments_fa': 'نظرات',
 
     'view_more_en': 'View More',
-    'view_more_fa': 'View More',
+    'view_more_fa': 'بیشتر ببینید',
     'view_prev_en': 'View Prev',
-    'view_prev_fa': 'View Prev',
+    'view_prev_fa': 'مشاهده قبلی',
 
     'no_posts_available_en': 'No Posts Available',
-    'no_posts_available_fa': 'No Posts Available',
+    'no_posts_available_fa': 'هیچ پستی موجود نیست',
 
     'no_saved_posts_en': 'No Saved Posts',
-    'no_saved_posts_fa': 'No Saved Posts',
+    'no_saved_posts_fa': 'بدون ارسال ذخیره شده',
 
     'loading_en': 'Loading...',
-    'loading_fa': 'Loading...',
+    'loading_fa': '…در حال بارگذاری',
 
     'page_en': 'Page',
-    'page_fa': 'Page',
+    'page_fa': 'صفحه',
 
     'comment_deletion_confirmation_heading_en': 'Are you sure?',
-    'comment_deletion_confirmation_heading_fa': 'Are you sure?',
+    'comment_deletion_confirmation_heading_fa': 'مطمئنی؟',
     'comment_deletion_confirmation_message_en': 'Are you sure you want to delete this comment?',
-    'comment_deletion_confirmation_message_fa': 'Are you sure you want to delete this comment?',
+    'comment_deletion_confirmation_message_fa': 'آیا مطمئن هستید که می خواهید این نظر را حذف کنید؟',
     'comment_deletion_confirmation_option_yes_en': 'YES',
-    'comment_deletion_confirmation_option_yes_fa': 'YES',
+    'comment_deletion_confirmation_option_yes_fa': 'آره',
     'comment_deletion_confirmation_option_no_en': 'NO',
-    'comment_deletion_confirmation_option_no_fa': 'NO',
+    'comment_deletion_confirmation_option_no_fa': 'نه',
+
+    'footer_copyright_en': '© Copyright 2020 Top 5, All rights reserved',
+    'footer_copyright_fa': 'حق کپی 2020 Top5، تمامی حقوق محفوظ است ©',
 }
 
 # Create your views here.
@@ -968,7 +992,7 @@ def profile(request):
     return render(request, "site/pages/userProfile.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, 'userDetails': userDetails, "categories": categories, "interests": interests, "filterID": userPrefFilter})
 
 
-def browse(request):
+def browse(request, searchTerm=""):
     global loggedInUserCategoricalPosts
     loggedInUserCategoricalPosts = []
 
@@ -1204,12 +1228,12 @@ def browse(request):
             postID = list(postID.keys())[0]
 
         post = db.child("content/posts/" + postID).get().val()
+        if post != None:
+            if post['type'] == "article" and post['text'].find("<img") > -1:
+                post['link'] = post['text'][post['text'].find(
+                    "<img src=") + 10: post['text'].find("alt") - 2]
 
-        if post['type'] == "article" and post['text'].find("<img") > -1:
-            post['link'] = post['text'][post['text'].find(
-                "<img src=") + 10: post['text'].find("alt") - 2]
-
-        selectedTagPosts[tag] = post['link']
+            selectedTagPosts[tag] = post['link']
 
     popularPosts = []
     allLikes = db.child("likes").get().val()
@@ -1236,9 +1260,9 @@ def browse(request):
                 if post['type'] == "article" and post['text'].find("<img") > -1:
                     post['link'] = post['text'][post['text'].find(
                         "<img src=") + 10: post['text'].find("alt") - 2]
-            popularPosts.append(post)
+                popularPosts.append(post)    
 
-    return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "serverTime": int(math.floor(time.time() * 1000)), "tags": selectedTagPosts, "popularPosts": popularPosts})
+    return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "serverTime": int(math.floor(time.time() * 1000)), "tags": selectedTagPosts, "popularPosts": popularPosts, "searchTerm": searchTerm})
 
 
 def saved(request, page_number=0):

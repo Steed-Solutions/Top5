@@ -6,7 +6,7 @@
 <div class="categories_page" >
         {% if not isCategoryPostsPage %}
                 <div class="Categories_sec">                
-                        <p class="sec_header">Top5 has content related to the following categories</p>                
+                        <p class="sec_header">{% if lang == 'en' %}{{ staticTextMap.related_content_to_following_categories_en }}{% else %}{{ staticTextMap.related_content_to_following_categories_fa }}{% endif %}</p>                
                         <div class="categories_boxes">
                                 {% for id, category in categories.items %}
                                         <div class="cat_box" name="{{ id }}" style="background-color:{{ category.color }}" onclick="onCategoryClick(this)">

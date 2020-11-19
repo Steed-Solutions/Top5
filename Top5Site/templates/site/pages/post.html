@@ -3,7 +3,8 @@
 <title>Post - {{ post.name }}</title>
 
 <style>
-  img, video {
+  img,
+  video {
     max-width: 100%;
   }
 </style>
@@ -17,7 +18,16 @@
   <div id="selectedPostTitle">{{ post.name }}</div>
   <div id="selectedPostContent">
     {% if "img" in post.type %}
-    <img id="postImageOrVideo" src="{{ post.link }}" />
+    <a href="{{ post.link }}" class="progressive replace">
+      <img
+        id="postImageOrVideo"
+        src="{% if 'minLink' in post %}{{ post.minLink }}{% else %}{{ post.link }}{% endif %}"
+        class="preview"
+        alt="image"
+        style="width: 100%"
+        loading="lazy"
+      />
+    </a>
     {% elif "vid" in post.type %}
     <video id="postImageOrVideo" src="{{ post.link }}" controls></video>
     {% endif %} {% if "txt" in post.type|lower or post.type == "article" %}
@@ -33,11 +43,14 @@
           style="{% if post.isLiked %}color: #D7443E{% endif %}"
         >
         </span>
-        <span {% if lang != 'en' %}style="direction: rtl;"{% endif %}>{{ post.likes }} {% if post.likes == 1 %}{% if lang == 'en' %}{{ staticTextMap.like_en }}{% else %}{{ staticTextMap.like_fa }}{% endif %}{% else %}{% if lang == 'en' %}{{ staticTextMap.likes_en }}{% else %}{{ staticTextMap.likes_fa }}{% endif %}{% endif %}</span>
+        <span {% if lang != "en" %}style="direction: rtl;"{% endif %}>{{ post.likes }} {% if post.likes == 1 %}
+          {% if lang == 'en' %}{{ staticTextMap.like_en }}{% else %}{{ staticTextMap.like_fa }}{% endif%}{% else %}
+          {% if lang == 'en' %}{{ staticTextMap.likes_en }}{% else%}{{ staticTextMap.likes_fa }}{% endif %}{% endif %}</span
+        >
       </div>
       <div class="post_action_item" id="comments_count_{{ post.id }}">
         <span class="far fa-comment"> </span>
-        <span {% if lang != 'en' %}style="direction: rtl;"{% endif %}>{{ post.comments }} {% if post.comments == 1 %}{% if lang == 'en' %}{{ staticTextMap.comment_en }}{% else %}{{ staticTextMap.comment_fa }}{% endif %}{% else %}{% if lang == 'en' %}{{ staticTextMap.comments_en }}{% else %}{{ staticTextMap.comments_fa }}{% endif %}{% endif %}
+        <span {% if lang != "en" %}style="direction: rtl;"{% endif %}>{{ post.comments }} {% if post.comments == 1 %}{% if lang == 'en'%}{{ staticTextMap.comment_en }}{% else %}{{ staticTextMap.comment_fa}}{% endif %}{% else %}{% if lang == 'en' %}{{ staticTextMap.comments_en }}{% else %}{{ staticTextMap.comments_fa}}{% endif %}{% endif %}
         </span>
       </div>
 
@@ -53,28 +66,81 @@
       </div>
     </div>
     <div class="comment_sec">
-      <div class="likes" style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});">
+      <div
+        class="likes"
+        style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %})"
+      >
         <div class="user_pic">
           <img src="{% static 'img/user_avatar.png' %}" alt="user" />
           <img src="{% static 'img/user_avatar.png' %}" alt="user" />
           <img src="{% static 'img/user_avatar.png' %}" alt="user" />
         </div>
-        <span style="transform: inherit;">{{ post.likeStr }}</span>
+        <span style="transform: inherit">{{ post.likeStr }}</span>
       </div>
       <div id="comments_{{ post.id }}" class="comments">
         {% for comment in post.allComments %}
-        <div id="{{ comment.id }}" class="comment" style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});">
-          <img src="{% static 'img/user_avatar.png' %}" alt="user" style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});"/>
+        <div
+          id="{{ comment.id }}"
+          class="comment"
+          style="
+            transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});
+          "
+        >
+          <img
+            src="{% static 'img/user_avatar.png' %}"
+            alt="user"
+            style="
+              transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});
+            "
+          />
           <div class="comment_content">
-            <span style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});">{{ comment.username }}</span
-            ><span style="grid-column: 2/4; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});">{{ comment.comment }}</span
-            ><span class="comment_time comment_action" style="cursor: unset; opacity: 0; pointer-events: none; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});">24h</span>
+            <span
+              style="
+                transform: scaleX(
+                  {% if lang == 'en' %}1{% else %}-1{% endif %}
+                );
+              "
+              >{{ comment.username }}</span
+            ><span
+              style="
+                grid-column: 2/4;
+                transform: scaleX(
+                  {% if lang == 'en' %}1{% else %}-1{% endif %}
+                );
+              "
+              >{{ comment.comment }}</span
+            ><span
+              class="comment_time comment_action"
+              style="
+                cursor: unset;
+                opacity: 0;
+                pointer-events: none;
+                transform: scaleX(
+                  {% if lang == 'en' %}1{% else %}-1{% endif %}
+                );
+              "
+              >24h</span
+            >
             {% if isLoggedIn %}
-            <span class="comment_action" style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});">Reply</span>
+            <span
+              class="comment_action"
+              style="
+                transform: scaleX(
+                  {% if lang == 'en' %}1{% else %}-1{% endif %}
+                );
+              "
+              >Reply</span
+            >
             {% if userID == comment.userID %}
             <span
               class="comment_action"
-              style="color: #ff5656; margin-left: 10px; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});"
+              style="
+                color: #ff5656;
+                margin-left: 10px;
+                transform: scaleX(
+                  {% if lang == 'en' %}1{% else %}-1{% endif %}
+                );
+              "
               onclick="onDeleteComment(this)"
               >Delete</span
             >
@@ -84,9 +150,15 @@
         {% endfor %}
       </div>
     </div>
-    <div class="comment_input" style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});">
-      <img src="{% static 'img/user_avatar.png' %}" alt="user" 
-        style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});" />
+    <div
+      class="comment_input"
+      style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %})"
+    >
+      <img
+        src="{% static 'img/user_avatar.png' %}"
+        alt="user"
+        style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %})"
+      />
       <input
         id="comment_inp_{{ post.id }}"
         type="text"
@@ -100,7 +172,13 @@
         placeholder="{% if isLoggedIn %}{% if lang == 'en '%}{{ staticTextMap.comment_input_placeholder_en }}{% else %}{{ staticTextMap.comment_input_placeholder_fa }}{% endif %}{% else %}{% if lang == 'en '%}{{ staticTextMap.comment_input_anon_placeholder_en }}{% else %}{{ staticTextMap.comment_input_anon_placeholder_fa }}{% endif %}{% endif %}"
       />
       {% if isLoggedIn %}
-      <button id="postBtn" class="postBtn_{{ post.id }}" style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});">{% if lang == 'en' %}{{ staticTextMap.comment_post_en }}{% else %}{{ staticTextMap.comment_post_fa }}{% endif %}</button>
+      <button
+        id="postBtn"
+        class="postBtn_{{ post.id }}"
+        style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %})"
+      >
+        {% if lang == 'en' %}{{ staticTextMap.comment_post_en }}{% else %}{{ staticTextMap.comment_post_fa }}{% endif %}
+      </button>
       {% endif %}
     </div>
   </div>
@@ -121,7 +199,7 @@
       $("#selectedPostContent > pre").html(postMap['text']);
 
       for(let i = 0; i < postMap["allComments"].length; i++){
-        $("#" + postMap["allComments"][i]["id"] + " .comment_time").text({{ serverTime }} - timeSince(postMap["allComments"][i]["timestamp"]));        
+        $("#" + postMap["allComments"][i]["id"] + " .comment_time").text({{ serverTime }} - timeSince(postMap["allComments"][i]["timestamp"]));
         $("#" + postMap["allComments"][i]["id"] + " .comment_time").css("opacity", 1);
       }
 

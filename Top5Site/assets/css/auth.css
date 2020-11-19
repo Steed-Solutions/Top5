@@ -177,7 +177,7 @@ html {
 }
 
 .signin_opt {
-  margin: 50px 0;
+  margin-top: 50px;
   color: #a4a1a1;
   display: flex;
   justify-content: center;
@@ -204,6 +204,7 @@ html {
   align-items: flex-end;
   justify-content: center;
   padding-bottom: 4vh;
+  padding-top: 50px;
 }
 
 .ask_text > div {

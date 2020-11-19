@@ -13,12 +13,12 @@
                 </div>
                 <div class="item_details">
                     <p style="color: {{ post.category.color }}">{{ post.name }}</p>
-                    <span>{% if "vid" in post.type %}Video{% else %}Post{% endif %}</span>
+                    <span>{% if "vid" in post.type %}{% if lang == 'en' %}{{ staticTextMap.video_en }}{% else %}{{ staticTextMap.video_fa }}{% endif %}{% else %}{% if lang == 'en' %}{{ staticTextMap.comment_post_en }}{% else %}{{ staticTextMap.comment_post_fa }}{% endif %}{% endif %}</span>
                     <div>
                         <div name="category_{{ post.category.id }}">
                             <img src="{{ post.category.imgURL }}" alt="icon" onload="setCategoryIconBackground('{{ post.category.id }}', '{{ post.category.color }}')" />
                         </div>
-                        <p>Saved from <span>{{ post.category.name }} {% if not "vid" in post.type %}'s post{% endif %} </span></p>
+                        <p>{% if lang == 'en' %}{{ staticTextMap.saved_from_en }} {% endif %}<span>{{ post.category.name }} {% if not "vid" in post.type %}'s post{% endif %} {% if lang == 'fa' %}{{ staticTextMap.saved_from_fa }}{% endif %}</span></p>
                     </div>
                 </div>
             </div>    

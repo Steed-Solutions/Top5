@@ -15,29 +15,31 @@
     <div class="hero">
       <div class="hero_bg">
         <div class="hero_bg_overlay"></div>
-        <img src="{% static 'img/hero_bg.png' %}" />
+        <a href="{% static 'img/hero_bg.png' %}" class="progressive replace">
+          <img src="{% static 'img/hero_bg_min.png' %}" class="preview" alt="image" />
+        </a>
       </div>
       <div class="hero_content">
         <div class="hero_center">
           <div>
             <h1>IRAN TOP5</h1>
-            <h3>YOUR FAVORITE RECOMMENDATON WEBSITE</h3>
+            <h3>{% if lang == 'en' %}{{ staticTextMap.your_fav_recom_site_en }}{% else %}{{ staticTextMap.your_fav_recom_site_fa }}{% endif %}</h3>
             <div class="hero_search">
-              <input type="text" placeholder="Search stuff you like....." />
-              <div>
+              <input id="searchInput" type="text" placeholder="{% if lang == 'en' %}{{ staticTextMap.search_stuff_you_like_en }}{% else %}{{ staticTextMap.search_stuff_you_like_fa }}{% endif %}" />
+              <div id="searchBtn" style="user-select: none; cursor: pointer;}">
                 <img src="{% static 'img/search_icon_gray.png' %}" />
-                <p>Search</p>
+                <p>{% if lang == 'en' %}{{ staticTextMap.search_en }}{% else %}{{ staticTextMap.search_fa }}{% endif %}</p>
               </div>
             </div>      
           </div>
         </div>
         <div class="hero_footer">
           <div>
-            <h3>We have content for the following categories</h3>
+            <h3>{% if lang == 'en' %}{{ staticTextMap.we_have_content_for_the_following_en }}{% else %}{{ staticTextMap.we_have_content_for_the_following_fa }}{% endif %}</h3>
             <div class="hero_categories">
               {% for categoryID, category in categories.items %}
                 <span onclick='window.location.href="{% url 'categories' %}"'>
-                  <div><img src="{{ category.imgURL }}" /></div>
+                  <div><img loading='lazy' src="{{ category.imgURL }}" /></div>
                 </span>
               {% endfor %}
             </div>          
@@ -69,7 +71,7 @@
 
     <div class="ad">AD BANNER</div>
 
-    <div class="image_banner">
+    {% comment %} <div class="image_banner">
       <div>
         <div style="padding: 0 10px;">
           <div>
@@ -81,7 +83,7 @@
         </div>
       </div>
       <div></div>
-    </div>
+    </div> {% endcomment %}
 
     {% comment %} Carousel Start {% endcomment %}
 
@@ -94,7 +96,9 @@
           onclick="onCarouselSlideClicked(this, '{{ post.name }}_~_{{ post.id }}')"
         >
           {% if post.link != "" %}
-          <img src="{{ post.link }}" style="width: 100%" />
+          <a href="{{ post.link }}" class="progressive replace">
+            <img src="{% if 'minLink' in post %}{{ post.minLink }}{% else %}{{ post.link }}{% endif %}" class="preview" alt="image" style="width: 100%" />
+          </a>
           {% endif %}
           <div>
             <div class="text">{{ post.name }}</div>
@@ -172,8 +176,12 @@
   let allLoadedPosts = [];
   let pageNumber = {{ pageNumber }};
 
-  $(".hero_search").click(() => {
+  {% comment %} $(".hero_search").click(() => {
     window.location.href = "{% url 'browse' %}";
+  }); {% endcomment %}
+
+  $("#searchBtn").click(() => {
+    window.location.href = "{% url 'browse' 123456 %}".replace(/123456/, $("#searchInput").val());
   });
 
   let slideIndex = 1;
@@ -478,11 +486,11 @@
     let postContent = document.createElement("div");
     postContent.setAttribute("id", "postContent_" + postMap["id"]);
     postContent.classList.add("post_content");
-    if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {
+    if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {      
       postContent.innerHTML =
-        "<img src='" +
-        postMap["link"] +
-        "' class='post_content_image' alt='post_img' onerror='$(this).hide()' />";
+        "<a href='" + postMap["link"] + "' class='progressive replace' style='cursor: default;width: inherit;height: inherit;position: unset;''><img src='" +
+        ("minLink" in postMap ? postMap["minLink"] : postMap["link"]) +
+        "' class='post_content_image preview' loading='lazy' alt='post_img' onerror='$(this).hide()' /></a>";
     } else if (postMap["type"].indexOf("vid") >= 0) {
       postContent.innerHTML =
         "<video src='" +
@@ -490,7 +498,7 @@
         "#t=0.5' class='post_content_video' preload='metadata' />";
     } else if (postMap["type"] == "article") {
       postContent.innerHTML =
-        "<img src='{% static 'img/article.png' %}' class='post_article_placeholder_image' alt='post_img' onerror='$(this).hide()' />";
+        "<img src='{% static 'img/article.png' %}' class='post_article_placeholder_image' loading='lazy' alt='post_img' onerror='$(this).hide()' />";
     }
 
     if (postMap["type"].toLowerCase().indexOf("txt") >= 0) {
@@ -518,7 +526,7 @@
       "'></span><span {% if lang != 'en' %}style='direction: rtl;'{% endif %}>" +
       postMap["likes"] +
       " " +
-      (postMap["likes"] != 1 ? "{% if lang != 'en' %}{{ staticTextMap.likes_en }}{% else %}{{ staticTextMap.likes_fa }}{% endif %}" : "{% if lang != 'en' %}{{ staticTextMap.like_en }}{% else %}{{ staticTextMap.like_fa }}{% endif %}") +
+      (postMap["likes"] != 1 ? "{% if lang == 'en' %}{{ staticTextMap.likes_en }}{% else %}{{ staticTextMap.likes_fa }}{% endif %}" : "{% if lang == 'en' %}{{ staticTextMap.like_en }}{% else %}{{ staticTextMap.like_fa }}{% endif %}") +
       "</span>";
 
     postAction.appendChild(likeBtn);
@@ -529,7 +537,7 @@
       "' class='post_action_item'><span class='far fa-comment'></span><span {% if lang != 'en' %}style='direction: rtl;'{% endif %}>" +
       postMap["comments"] +
       " " +
-      (postMap["comments"] != 1 ? "{% if lang != 'en' %}{{ staticTextMap.comments_en }}{% else %}{{ staticTextMap.comments_fa }}{% endif %}" : "{% if lang != 'en' %}{{ staticTextMap.comment_en }}{% else %}{{ staticTextMap.comment_fa }}{% endif %}") +      
+      (postMap["comments"] != 1 ? "{% if lang == 'en' %}{{ staticTextMap.comments_en }}{% else %}{{ staticTextMap.comments_fa }}{% endif %}" : "{% if lang == 'en' %}{{ staticTextMap.comment_en }}{% else %}{{ staticTextMap.comment_fa }}{% endif %}") +      
       "</span></div>";
 
     let saveBtn = document.createElement("div");

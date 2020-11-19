@@ -23,5 +23,5 @@
     </div>
     <div></div>
   </div>
-  <div><p>© Copyright 2020 Top 5, All rights reserved</p></div>
+  <div><p>{% if lang == 'en' %}{{ staticTextMap.footer_copyright_en }}{% else %}{{ staticTextMap.footer_copyright_fa }}{% endif %}</p></div>
 </footer>

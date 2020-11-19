@@ -88,7 +88,7 @@ nav {
   .nav_links {
     display: none;
   }
-  
+
   .toggle_btn {
     display: flex;
   }
@@ -181,7 +181,15 @@ nav {
   cursor: pointer;
   width: 2.51vw;
 }
-carocard {
+
+.categories_sec {
+  width: 63vw;
+  display: flex;
+  justify-content: space-between;
+  column-gap: 0;
+}
+
+.category_card {
   width: 13.4vw;
   height: 14.5vw;
   display: flex;
@@ -281,7 +289,7 @@ carocard {
 
 .hero {
   height: calc(100vh - 70px);
-  width: 100%;  
+  width: 100%;
   position: relative;
 }
 
@@ -306,9 +314,11 @@ carocard {
   height: inherit;
   width: inherit;
   position: absolute;
+  z-index: 1;
 }
 
-.hero_bg > img {
+.hero_bg > a,
+.hero_bg > a > img {
   height: inherit;
   width: inherit;
   object-fit: cover;
@@ -363,8 +373,8 @@ carocard {
   justify-content: center;
   align-items: center;
   width: 35%;
-  background: #7EADDE;
-  border-radius: 0 4px 4px 0
+  background: #7eadde;
+  border-radius: 0 4px 4px 0;
 }
 
 .hero_search div p {
@@ -450,7 +460,7 @@ carocard {
   justify-content: center;
   width: 100%;
   padding: 70px 0;
-  background-color: #7EADDE;
+  background-color: #7eadde;
 }
 
 .image_banner > div:last-child {
@@ -535,8 +545,8 @@ carocard {
 }
 
 .post_action_item:hover {
-   background-color: #eeeeee;
-   cursor: pointer;
+  background-color: #eeeeee;
+  cursor: pointer;
 }
 
 .post_action_item > span:nth-of-type(1) {
@@ -630,8 +640,6 @@ carocard {
 .comment_action:hover {
   background-color: #eeeeee;
 }
-
-
 
 .comment_input {
   padding: 8px 1.7vw 8px 10px;
@@ -1113,7 +1121,7 @@ input:disabled {
 .categories_boxes {
   padding-top: 20px;
   display: grid;
-  grid-template-columns: repeat( auto-fit, minmax(220px, 1fr) );
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   column-gap: 5vw;
   justify-items: center;
 }

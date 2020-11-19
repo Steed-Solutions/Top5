@@ -1,10 +1,14 @@
 {% extends 'site/base.html' %} {% load static %} {% block content %}
 
 <div class="search_page">
-  <div class="search_field" {% if lang != 'en' %}style="transform: scaleX(-1);"{% endif %}>
+  <div class="search_field" {% if lang != "en" %}style="transform: scaleX(-1);"{% endif %}>
     <img src="{% static 'img/search_icon.png' %}" alt="search" />
-    <input id="seachInput" type="text" style="transform: inherit; direction: {% if lang == 'en' %}ltr{% else %}rtl{% endif %};"
-      placeholder="{% if lang == 'en' %}{{ staticTextMap.search_placeholder_en }}{% else %}{{ staticTextMap.search_placeholder_fa }}{% endif %}" />
+    <input
+      id="seachInput"
+      type="text"
+      style="transform: inherit; direction: {% if lang == 'en' %}ltr{% else %}rtl{% endif %};"
+      placeholder="{% if lang == 'en' %}{{ staticTextMap.search_placeholder_en }}{% else %}{{ staticTextMap.search_placeholder_fa }}{% endif %}"
+    />
   </div>
 
   <div id="normalLayout">
@@ -12,27 +16,33 @@
       <img id="nextBtn" src="{% static 'img/next_btn.png' %}" alt="next_btn" />
     </div>
     <div class="categories_sec">
-      {% for tagID, imgLink in tags.items %}
-      <div
-        class="category_card"
-        style="background: url({{ imgLink }}) center center no-repeat; background-size: cover;"
-        onclick="window.location.href = '{% url 'tags' 123456 %}'.replace(/123456/, '{{ tagID }}')"
-      >
-        <span>{{ tagID }}</span>
-      </div>
-      {% endfor %}
+      {% if tags|length == 0 %}
+        <p style="margin: auto;">No Categories Available</p>
+      {% else %}
+        {% for tagID, imgLink in tags.items %}
+        <div
+          class="category_card"
+          style="background: url({{ imgLink }}) center center no-repeat; background-size: cover;"
+          onclick="window.location.href = '{% url 'tags' 123456 %}'.replace(/123456/, '{{ tagID }}')"
+        >
+          <span>{{ tagID }}</span>
+        </div>
+        {% endfor %}
+      {% endif %}
     </div>
     <div class="popular_sec">
-      <h2>{% if lang == 'en' %}{{ staticTextMap.browse_heading_popular_en }}{% else %}{{ staticTextMap.browse_heading_popular_fa }}{% endif %}</h2>
+      <h2>
+        {% if lang == 'en' %}{{ staticTextMap.browse_heading_popular_en }}{% else %}{{ staticTextMap.browse_heading_popular_fa }}{% endif %}
+      </h2>
       <div class="popular_content">
         {% for post in popularPosts %}
-          <div
-            class="popular_card"
-            style="background: url({{ post.link }}) top center no-repeat; background-size: cover;"
-            onclick="window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI({{ post.name }}_~_{{ post.id }}))"
-          >
-            <span>{{ post.name }}</span>
-          </div>
+        <div
+          class="popular_card"
+          style="background: url({{ post.link }}) top center no-repeat; background-size: cover;"
+          onclick="window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI({{ post.name }}_~_{{ post.id }}))"
+        >
+          <span style="color: white;">{{ post.name }}</span>
+        </div>
         {% endfor %}
       </div>
     </div>
@@ -41,7 +51,8 @@
   <div id="searchLayout" style="display: none; margin-top: 65px">
     <div id="posts"></div>
     <p id="noPosts" style="text-align: center; display: none">
-      {% if lang == 'en' %}{{ staticTextMap.no_posts_available_en }}{% else %}{{ staticTextMap.no_posts_available_fa }}{% endif %}
+      {% if lang == 'en' %}{{ staticTextMap.no_posts_available_en }}{% else %}{{
+      staticTextMap.no_posts_available_fa }}{% endif %}
     </p>
 
     <div id="loader">
@@ -59,19 +70,31 @@
         <div></div>
         <div></div>
       </div>
-      <div>{% if lang == 'en' %}{{ staticTextMap.loading_en }}{% else %}{{ staticTextMap.loading_fa }}{% endif %}</div>
+      <div>
+        {% if lang == 'en' %}{{ staticTextMap.loading_en }}{% else %}{{
+        staticTextMap.loading_fa }}{% endif %}
+      </div>
     </div>
 
     <div class="controls">
       <div class="control_buttons">
         <div id="viewPrevBtn" class="view_more_btn">
-          <button>{% if lang == 'en' %}{{ staticTextMap.view_prev_en }}{% else %}{{ staticTextMap.view_prev_fa }}{% endif %}</button>
+          <button>
+            {% if lang == 'en' %}{{ staticTextMap.view_prev_en }}{% else %}{{
+            staticTextMap.view_prev_fa }}{% endif %}
+          </button>
         </div>
         <div id="viewMoreBtn" class="view_more_btn">
-          <button>{% if lang == 'en' %}{{ staticTextMap.view_more_en }}{% else %}{{ staticTextMap.view_more_fa }}{% endif %}</button>
+          <button>
+            {% if lang == 'en' %}{{ staticTextMap.view_more_en }}{% else %}{{
+            staticTextMap.view_more_fa }}{% endif %}
+          </button>
         </div>
       </div>
-      <p id="page">{% if lang == 'en' %}{{ staticTextMap.page_en }}{% else %}{{ staticTextMap.page_fa }}{% endif %} <span id="pageNum">1</span></p>
+      <p id="page">
+        {% if lang == 'en' %}{{ staticTextMap.page_en }}{% else %}{{
+        staticTextMap.page_fa }}{% endif %} <span id="pageNum">1</span>
+      </p>
     </div>
   </div>
 </div>
@@ -82,6 +105,8 @@
     lastLoadedPostID = "";
 
   let pageFromCall = 0;
+
+  let pageNumber = -1;
 
   let currentAjaxReq;
 
@@ -175,7 +200,7 @@
         console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
       },
     });
-  }
+  }  
 
   function likePost(postID, isLike) {
     $.ajax({
@@ -321,22 +346,51 @@
   function createPostElement(postMap) {
     let post = document.createElement("div");
     post.classList.add("saved_item");
-    post.setAttribute("onclick", "window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI(\'" + postMap['name'] + "_~_" + postMap['id'] + "\'))");
-    post.setAttribute("style", (!("link" in postMap) || (postMap["link"] == "")) ? "width: 85.4vw; column-gap: 0;" : "width: 85.4vw;");
+    post.setAttribute(
+      "onclick",
+      "window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI('" +
+        postMap["name"] +
+        "_~_" +
+        postMap["id"] +
+        "'))"
+    );
+    post.setAttribute(
+      "style",
+      !("link" in postMap) || postMap["link"] == ""
+        ? "width: 85.4vw; column-gap: 0;"
+        : "width: 85.4vw;"
+    );
 
     let itemImg = document.createElement("div");
     itemImg.classList.add("item_img");
 
-    if(("link" in postMap) && (postMap["link"] != "")) {
+    if ("link" in postMap && postMap["link"] != "") {
       itemImg.innerHTML = "<img src=" + postMap["link"] + " alt='item'>";
     }
     post.appendChild(itemImg);
 
     let itemDetails = document.createElement("div");
     itemDetails.classList.add("item_details");
-    itemDetails.innerHTML = "<p style='color: " + postMap['category']['color'] + "'>" + postMap['name'] + "</p><span>" + (postMap['type'].indexOf("vid") > -1 ? "Video" : "Post") + "</span><div><div name='category_" + postMap['category']['id'] + "'><img src='" + postMap['category']['imgURL'] + "' alt='icon' onload='setCategoryIconBackground(\"" + postMap['category']['id'] + "\", \"" + postMap['category']['color'] + "\")' /></div><p><span>" + postMap['category']['name'] + "</span></p></div>";
+    itemDetails.innerHTML =
+      "<p style='color: " +
+      postMap["category"]["color"] +
+      "'>" +
+      postMap["name"] +
+      "</p><span>" +
+      (postMap["type"].indexOf("vid") > -1 ? "Video" : "Post") +
+      "</span><div><div name='category_" +
+      postMap["category"]["id"] +
+      "'><img src='" +
+      postMap["category"]["imgURL"] +
+      "' alt='icon' onload='setCategoryIconBackground(\"" +
+      postMap["category"]["id"] +
+      '", "' +
+      postMap["category"]["color"] +
+      "\")' /></div><p><span>" +
+      postMap["category"]["name"] +
+      "</span></p></div>";
     post.appendChild(itemDetails);
-    
+
     posts.appendChild(post);
   }
 
@@ -358,7 +412,7 @@
     );
   });
 
-  $("#seachInput").on("keyup", (e) => {
+  $("#seachInput").on("input", (e) => {
     searchTerm = $(e.target).val();
     if (searchTerm.length == 0) {
       $("#searchLayout").hide();
@@ -389,6 +443,13 @@
   $("#viewMoreBtn").click(() => {
     if ($("#loader").css("display") == "none") {
       loadSearchResults($("#seachInput").val(), "next");
+    }
+  });
+
+  $(document).ready(function(){
+    if ("{{ searchTerm }}" != "") {
+      $("#seachInput").val("{{ searchTerm }}");
+      document.getElementById("seachInput").dispatchEvent(new Event("input"))
     }
   });
 </script>
