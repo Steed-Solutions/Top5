@@ -210,8 +210,10 @@ def categoryDash(request, category_id):
     if request.method == "POST":
         if request.POST["reqType"] == "add":
             try:
-                newTags = json.loads(request.POST["newTags"]) if "newTags" in request.POST else []
-                oldTags = json.loads(request.POST["oldTags"]) if "oldTags" in request.POST else []
+                newTags = json.loads(
+                    request.POST["newTags"]) if "newTags" in request.POST else []
+                oldTags = json.loads(
+                    request.POST["oldTags"]) if "oldTags" in request.POST else []
 
                 tagsForDeletion = list()
                 tagsForAddition = list()
@@ -227,18 +229,21 @@ def categoryDash(request, category_id):
                 for tag in tagsForDeletion:
                     tagCurrentCount = db.child("tags/count/" + tag).get().val()
                     tagCurrentCount = 1 if tagCurrentCount == None else tagCurrentCount
-                    db.child("tags/count/" + tag).set(None if tagCurrentCount - 1 == 0 else tagCurrentCount - 1)
+                    db.child("tags/count/" + tag).set(None if tagCurrentCount -
+                                                      1 == 0 else tagCurrentCount - 1)
 
-                    db.child("tags/postsAgainstTag/" + tag + "/" + request.POST["key"]).remove()
+                    db.child("tags/postsAgainstTag/" + tag +
+                             "/" + request.POST["key"]).remove()
 
                 for tag in tagsForAddition:
                     tagCurrentCount = db.child("tags/count/" + tag).get().val()
                     tagCurrentCount = 0 if tagCurrentCount == None else tagCurrentCount
                     db.child("tags/count/" + tag).set(tagCurrentCount + 1)
 
-                    db.child("tags/postsAgainstTag/" + tag + "/" + request.POST["key"]).set('postID')
+                    db.child("tags/postsAgainstTag/" + tag + "/" +
+                             request.POST["key"]).set('postID')
 
-                newTagsMap = {tag:'tagVal' for tag in newTags}
+                newTagsMap = {tag: 'tagVal' for tag in newTags}
 
                 data = {
                     "comments": 0,
@@ -247,6 +252,7 @@ def categoryDash(request, category_id):
                     "name": request.POST["name"],
                     "category": category_id,
                     "link": request.POST["link"],
+                    "minLink": request.POST["minLink"],
                     "text": str(request.POST["text"]),
                     "timestamp": request.POST["timestamp"],
                     "tags": newTagsMap,
@@ -266,7 +272,8 @@ def categoryDash(request, category_id):
                 db.child('content/posts/' +
                          request.POST["key"]).update(data)
 
-                print(list(json.loads(request.POST["newTags"])) if "newTags" in request.POST else [])
+                print(
+                    list(json.loads(request.POST["newTags"])) if "newTags" in request.POST else [])
 
                 return JsonResponse({"result": "success", "postKey": request.POST["key"], "post": {"type": request.POST["type"],
                                                                                                    "name": request.POST["name"],
@@ -299,7 +306,8 @@ def categoryDash(request, category_id):
             if('tags' not in categoryPosts[categoryID]):
                 categoryPosts[categoryID]['tags'] = []
             else:
-                categoryPosts[categoryID]['tags'] = list(categoryPosts[categoryID]['tags'].keys())
+                categoryPosts[categoryID]['tags'] = list(
+                    categoryPosts[categoryID]['tags'].keys())
 
         categoryPostsMap = OrderedDict(sorted(
             categoryPosts.items(), key=lambda post: post[1]['timestamp']))

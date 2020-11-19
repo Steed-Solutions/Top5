@@ -291,7 +291,9 @@ html {
 #cancelEmbedBtn,
 #cancelAddCategoryBtn,
 #cancelOptionSwitchBtn,
-#cancelCommentDeletionBtn {
+#cancelCommentDeletionBtn,
+#cancelPostDeletionBtn,
+#cancelForgotPasswordBtn {
   color: white;
   background-color: #ff2c2c;
   padding: 14px 20px;
@@ -307,7 +309,9 @@ html {
 #cancelEmbedBtn:hover,
 #cancelAddCategoryBtn:hover,
 #cancelOptionSwitchBtn:hover,
-#cancelCommentDeletionBtn:hover {
+#cancelCommentDeletionBtn:hover,
+#cancelPostDeletionBtn:hover,
+#cancelForgotPasswordBtn:hover {
   background-color: #ff5858;
 }
 
