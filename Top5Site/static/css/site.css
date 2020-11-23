@@ -226,6 +226,7 @@ nav {
 .category_card > span {
   padding-top: 3px;
   padding-left: 5px;
+  color: white;
 }
 
 .popular_sec {
@@ -726,6 +727,14 @@ nav {
 
 #page {
   display: none;
+}
+
+.progressive {
+  cursor: pointer !important;
+}
+
+.progressive img {
+  cursor: pointer !important;
 }
 
 /* home page css */

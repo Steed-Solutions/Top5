@@ -5,16 +5,20 @@
 
 <div class="categories_page" >
         {% if not isCategoryPostsPage %}
-                <div class="Categories_sec">                
-                        <p class="sec_header">{% if lang == 'en' %}{{ staticTextMap.related_content_to_following_categories_en }}{% else %}{{ staticTextMap.related_content_to_following_categories_fa }}{% endif %}</p>                
-                        <div class="categories_boxes">
-                                {% for id, category in categories.items %}
-                                        <div class="cat_box" name="{{ id }}" style="background-color:{{ category.color }}" onclick="onCategoryClick(this)">
-                                                <img src="{{ category.imgURL }}" alt="icon" class="box_icon" />
-                                                <p>{{ category.name }}</p>
-                                        </div>
-                                {% endfor %}
-                        </div>
+                <div class="Categories_sec">   
+                        {% if categories|length > 0 %}
+                                <p class="sec_header">{% if lang == 'en' %}{{ staticTextMap.related_content_to_following_categories_en }}{% else %}{{ staticTextMap.related_content_to_following_categories_fa }}{% endif %}</p>                
+                                <div class="categories_boxes">
+                                        {% for id, category in categories.items %}
+                                                <div class="cat_box" name="{{ id }}" style="background-color:{{ category.color }}" onclick="onCategoryClick(this)">
+                                                        <img src="{{ category.imgURL }}" alt="icon" class="box_icon" />
+                                                        <p>{{ category.name }}</p>
+                                                </div>
+                                        {% endfor %}
+                                </div>
+                        {% else %}
+                                <p class="sec_header">{% if lang == 'en' %}{{ staticTextMap.no_categories_available_en }}{% else %}{{ staticTextMap.no_categories_available_fa }}{% endif %}</p>                                                
+                        {% endif %}
                 </div>
         {% else %}
                 <div id="posts"></div>
@@ -120,7 +124,7 @@
                                 } else {
                                 $("#viewMoreBtn").hide();
 
-                                if (pageNumber == 1 && allLoadedPosts.length == 0) {
+                                if (pageNumber == 0 && allLoadedPosts.length == 0) {
                                 $("#noPosts").show();
                                 } else {
                                 $("#posts").show();
@@ -240,9 +244,9 @@
                 postContent.classList.add("post_content");
                 if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {
                 postContent.innerHTML =
-                        "<img src='" +
-                        postMap["link"] +
-                        "' class='post_content_image' alt='post_img' onerror='$(this).hide()' />";
+                        "<a href='" + postMap["link"] + "' class='progressive replace' style='cursor: inherit;width: inherit;height: inherit;position: unset;''><img src='" +
+                        ("minLink" in postMap ? postMap["minLink"] : postMap["link"]) +
+                        "' class='post_content_image preview' loading='lazy' alt='post_img' style='cursor: inherit;' onerror='$(this).hide()' /></a>";
                 } else if (postMap["type"].indexOf("vid") >= 0) {
                 postContent.innerHTML =
                         "<video src='" +

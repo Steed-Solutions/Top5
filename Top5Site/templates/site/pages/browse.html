@@ -17,7 +17,7 @@
     </div>
     <div class="categories_sec">
       {% if tags|length == 0 %}
-        <p style="margin: auto;">No Categories Available</p>
+        <p style="margin: auto;">{% if lang == 'en' %}{{ staticTextMap.no_categories_available_en }}{% else %}{{ staticTextMap.no_categories_available_fa }}{% endif %}</p>
       {% else %}
         {% for tagID, imgLink in tags.items %}
         <div
@@ -35,15 +35,21 @@
         {% if lang == 'en' %}{{ staticTextMap.browse_heading_popular_en }}{% else %}{{ staticTextMap.browse_heading_popular_fa }}{% endif %}
       </h2>
       <div class="popular_content">
-        {% for post in popularPosts %}
-        <div
-          class="popular_card"
-          style="background: url({{ post.link }}) top center no-repeat; background-size: cover;"
-          onclick="window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI({{ post.name }}_~_{{ post.id }}))"
-        >
-          <span style="color: white;">{{ post.name }}</span>
-        </div>
-        {% endfor %}
+        {% if popularPosts|length > 0 %}
+          {% for post in popularPosts %}
+          <div
+            class="popular_card"
+            style="background: url({{ post.link }}) top center no-repeat; background-size: cover;"
+            onclick="window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI({{ post.name }}_~_{{ post.id }}))"
+          >
+            <span style="color: white;">{{ post.name }}</span>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p style="margin: auto;">
+            {% if lang == 'en' %}{{ staticTextMap.no_posts_available_en }}{% else %}{{staticTextMap.no_posts_available_fa }}{% endif %}
+          </p>
+        {% endif %}
       </div>
     </div>
   </div>
