@@ -175,6 +175,8 @@ def myDash(request):
                 return JsonResponse({"result": "failure"})
         elif request.POST["type"] == "deleteCategory":
             try:
+                print(request.POST["category_id"])
+
                 db.child("content/categories/" +
                          request.POST["category_id"]).remove()
 
@@ -206,7 +208,7 @@ def myDash(request):
     return render(request, "myDash.html", {"user": user, "categories": categories})
 
 
-def categoryDash(request, category_id):
+def categoryDash(request, category_id=""):
     if request.method == "POST":
         if request.POST["reqType"] == "add":
             try:
@@ -272,13 +274,12 @@ def categoryDash(request, category_id):
                 db.child('content/posts/' +
                          request.POST["key"]).update(data)
 
-                print(
-                    list(json.loads(request.POST["newTags"])) if "newTags" in request.POST else [])
-
                 return JsonResponse({"result": "success", "postKey": request.POST["key"], "post": {"type": request.POST["type"],
                                                                                                    "name": request.POST["name"],
+                                                                                                   "category": category_id,
                                                                                                    "link": request.POST["link"],
-                                                                                                   "text": request.POST["text"],
+                                                                                                   "minLink": request.POST["minLink"],
+                                                                                                   "text": str(request.POST["text"]),
                                                                                                    "timestamp": request.POST["timestamp"],
                                                                                                    "tags": list(json.loads(request.POST["newTags"])) if "newTags" in request.POST else []}})
             except Exception as e:
@@ -286,9 +287,10 @@ def categoryDash(request, category_id):
                 return JsonResponse({"result": "failure"})
         elif request.POST["reqType"] == "delete":
             try:
+                print(category_id)
                 db.child('content/posts/' + request.POST["key"]).remove()
 
-                return JsonResponse({"result": "success", "postKey": request.POST["key"]})
+                return JsonResponse({"result": "success", "categoryID": category_id, "postKey": request.POST["key"]})
             except:
                 return JsonResponse({"result": "failure"})
 

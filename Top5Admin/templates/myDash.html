@@ -116,6 +116,7 @@
           $("#deletePassworInputLayout").show();
         });
 
+        $("#deleteCategoryPasswordForm").unbind();
         $("#deleteCategoryPasswordForm").submit((e) => {
           e.preventDefault();
 
@@ -212,10 +213,23 @@
           });
         }
 
+        const allowedKeyChars =
+          "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+        $("#categoryName").unbind();
+        $("#categoryName").on("input", function () {
+          let name = $(this).val();
+
+          if (name.length > 0) {
+            if (allowedKeyChars.indexOf(name.charAt(name.length - 1)) == -1) {
+              $("#categoryName").val(name.substr(0, name.length - 1));
+            }
+          }
+        });
+
         $("#addNewCategoryForm").submit((e) => {
           e.preventDefault();
 
-          if (selectedIcon != null) {
+          if (validateCategoryName() && selectedIcon != null) {
             $("#overlayLoader").css("display", "flex");
 
             $.ajax({
@@ -223,12 +237,13 @@
               url: "{% url 'myDash' %}",
               data: {
                 type: "addCategory",
-                name: $("#categoryName").val(),
+                name: $("#categoryName").val().trim(),
                 color: $("#categoryColor").val(),
                 icon: selectedIcon,
                 csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
               },
               success: (response) => {
+                $("#iconSelected").hide();
                 $("#overlayLoader").hide();
                 if (response.result == "success") {
                   categories[response.category.id] = response.category;
@@ -238,7 +253,6 @@
                   selectedIcon = null;
 
                   $("#addNewCategoryModal").hide();
-                  console.log($("#addCategoryBtn"));
                   $(
                     "<div class='cat_box' name='" +
                       response.category.id +
@@ -282,10 +296,13 @@
           }
         });
 
-        function addCategory() {}
-
         function deleteCategory() {
           $(".status_message").hide();
+          $("#overlayLoader").hide();
+
+          selectedCategoryForDeletion = selectedCategoryForDeletion.trim();
+
+          console.log(selectedCategoryForDeletion);
 
           $.ajax({
             type: "POST",
@@ -301,7 +318,8 @@
                 $("[name='" + selectedCategoryForDeletion + "']").remove();
 
                 delete categories[selectedCategoryForDeletion];
-
+                $("#iconSelected").hide();
+                $("#deleteConfirmationPassword").val("");
                 $(".status_message").hide();
                 $("#deleteDefaultLayout").show();
                 $("#deletePassworInputLayout").hide();
@@ -314,6 +332,25 @@
               }
             },
           });
+        }
+
+        function validateCategoryName() {
+          const name = $("#categoryName").val();
+
+          if (name.length > 0) {
+            for (let i = 0; i < name.length; i++) {
+              if (allowedKeyChars.indexOf(name.charAt(i)) == -1) {
+                alert(
+                  "Invalid category name. It can only contain: [-, _, 0 to 9, A to Z, a to z]"
+                );
+                return false;
+              }
+            }
+          } else {
+            return false;
+          }
+
+          return true;
         }
       });
     </script>

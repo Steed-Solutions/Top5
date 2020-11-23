@@ -13,10 +13,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-    <link href="{% static 'css/jquerysctipttop.css' %}" rel="stylesheet" type="text/css">
-		<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+    <link
+      href="{% static 'css/jquerysctipttop.css' %}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
 
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
@@ -102,7 +108,6 @@
             "{% static 'img/category_icon_clicked.png' %}"
           );
 
-          $(".cat_delete_btn").show();
           $(".personal_info").hide();
 
           $(".categories_boxes").append(
@@ -112,6 +117,7 @@
           $("#addCategoryBtn").click(() => {
             $("#addNewCategoryModal").show();
           });
+          $(".cat_delete_btn").show();
         }
       }
 
@@ -276,7 +282,7 @@
           <span
             id="addNewCategoryModalClose"
             class="close"
-            onclick="$('#addNewCategoryModal').hide();"
+            onclick="$('#categoryName').val('');$('#categoryColor').val('#0f395e');$('#categoryIcon').val('');selectedIcon=null;$('#iconSelected').hide();$('#deleteConfirmationPassword').val('');$('#addNewCategoryModal').hide();"
             ><img src="{% static 'img/delete_circle.png' %}"
           /></span>
         </div>
@@ -345,7 +351,7 @@
                 <button
                   id="cancelAddCategoryBtn"
                   type="button"
-                  onclick="$('#addNewCategoryModal').hide();"
+                  onclick="$('#categoryName').val('');$('#categoryColor').val('#0f395e');$('#categoryIcon').val('');selectedIcon=null;$('#iconSelected').hide();$('#deleteConfirmationPassword').val('');$('#addNewCategoryModal').hide();"
                 >
                   Cancel</button
                 ><button
@@ -370,7 +376,7 @@
           <span
             id="deleteConfirmationModalClose"
             class="close"
-            onclick="$('.status_message').hide();$('#deleteDefaultLayout').show();$('#deletePassworInputLayout').hide();$('#deleteConfirmationModal').hide();"
+            onclick="$('#categoryName').val('');$('#categoryColor').val('#0f395e');$('#categoryIcon').val('');$('#deleteConfirmationPassword').val('');$('#deleteDefaultLayout').show();$('#deletePassworInputLayout').hide();$('#deleteConfirmationModal').hide();"
             ><img src="{% static 'img/delete_circle.png' %}"
           /></span>
         </div>
@@ -420,7 +426,7 @@
               <div class="button_grid">
                 <button
                   id="cancelEditBtn"
-                  onclick="$('.status_message').hide();$('#deleteDefaultLayout').show();$('#deletePassworInputLayout').hide();$('#deleteConfirmationModal').hide();"
+                  onclick="$('#categoryName').val('');$('#categoryColor').val('#0f395e');$('#categoryIcon').val('');$('#deleteConfirmationPassword').val('');$('#deleteDefaultLayout').show();$('#deletePassworInputLayout').hide();$('#deleteConfirmationModal').hide();"
                 >
                   Cancel</button
                 ><button
