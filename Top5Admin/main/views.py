@@ -264,7 +264,7 @@ def categoryDash(request, category_id=""):
                     " " + request.POST["textNoTags"]
                 textWords = searchDomain.strip().split(" ")
 
-                if for tag in newTags:
+                for tag in newTags:
                     textWords.append(tag.lower())
 
                 data["words"] = {}
