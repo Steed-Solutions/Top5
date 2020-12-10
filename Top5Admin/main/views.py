@@ -263,6 +263,10 @@ def categoryDash(request, category_id=""):
                 searchDomain = request.POST["name"] + \
                     " " + request.POST["textNoTags"]
                 textWords = searchDomain.strip().split(" ")
+
+                if for tag in newTags:
+                    textWords.append(tag.lower())
+
                 data["words"] = {}
                 wordsMap = {}
                 for word in textWords:
