@@ -12,7 +12,7 @@
 <div id="selectedPost">
   <img
     id="closePostBtn"
-    src="{% static 'img/next_btn.png' %}"
+    src="{% static 'site/img/next_btn.png' %}"
     onclick="window.history.back();"
   />
   <div id="selectedPostTitle">{{ post.name }}</div>
@@ -71,9 +71,9 @@
         style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %})"
       >
         <div class="user_pic">
-          <img src="{% static 'img/user_avatar.png' %}" alt="user" />
-          <img src="{% static 'img/user_avatar.png' %}" alt="user" />
-          <img src="{% static 'img/user_avatar.png' %}" alt="user" />
+          <img src="{% static 'site/img/user_avatar.png' %}" alt="user" />
+          <img src="{% static 'site/img/user_avatar.png' %}" alt="user" />
+          <img src="{% static 'site/img/user_avatar.png' %}" alt="user" />
         </div>
         <span style="transform: inherit">{{ post.likeStr }}</span>
       </div>
@@ -87,7 +87,7 @@
           "
         >
           <img
-            src="{% static 'img/user_avatar.png' %}"
+            src="{% static 'site/img/user_avatar.png' %}"
             alt="user"
             style="
               transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});
@@ -155,7 +155,7 @@
       style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %})"
     >
       <img
-        src="{% static 'img/user_avatar.png' %}"
+        src="{% static 'site/img/user_avatar.png' %}"
         alt="user"
         style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %})"
       />
@@ -246,7 +246,7 @@
         comment.setAttribute("data-post-id", postID);
         comment.setAttribute("style", "transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});");
           comment.innerHTML =
-            "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><div class='comment_content'><span style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>You</span><span style='grid-column: 2/4; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
+            "<img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><div class='comment_content'><span style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>You</span><span style='grid-column: 2/4; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
             message +
             "</span><span class='comment_action' style='cursor: unset; pointer-events: none; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>24h</span>" + ("{{ isLoggedIn }}" == "True" ? "<span class='comment_action' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>Reply</span><span class='comment_action' style='color:#ff5656; margin-left:10px; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' onclick='onDeleteComment(this)'>Delete</span>" : "") + "</div>";
 

@@ -254,7 +254,7 @@
                         "#t=0.5' class='post_content_video' preload='metadata' />";
                 } else if (postMap["type"] == "article") {
                 postContent.innerHTML =
-                        "<img src='{% static 'img/article.png' %}' class='post_article_placeholder_image' alt='post_img' onerror='$(this).hide()' />";
+                        "<img src='{% static 'site/img/article.png' %}' class='post_article_placeholder_image' alt='post_img' onerror='$(this).hide()' />";
                 }
 
                 if (postMap["type"].toLowerCase().indexOf("txt") >= 0) {
@@ -315,7 +315,7 @@
                 likes.classList.add("likes");
                 likes.setAttribute("style", "transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %}");
                 likes.innerHTML =
-                "<div class='user_pic'><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /></div><span style='transform: inherit;'>" +
+                "<div class='user_pic'><img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' /></div><span style='transform: inherit;'>" +
                 postMap["likeStr"] +
                 "</span>";
                 commentSection.appendChild(likes);
@@ -330,7 +330,7 @@
                 comment.setAttribute("data-post-id", postMap["id"]);
                 comment.setAttribute("style", "transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});");
                 comment.innerHTML =
-                        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><div class='comment_content'><span style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
+                        "<img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><div class='comment_content'><span style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
                         commentMap["username"] +
                         "</span><span style='grid-column: 2/4; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
                         commentMap["comment"] +
@@ -344,7 +344,7 @@
                 commentInput.classList.add("comment_input");
                 commentInput.setAttribute("style", "transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});");
                 commentInput.innerHTML =
-                "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><input id='comment_inp_" +
+                "<img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><input id='comment_inp_" +
                 postMap["id"] +
                 "' type='text' style='transform: inherit; direction:{% if lang == 'en' %}ltr{% else %}rtl{% endif %}' " +
                 ("{{ isLoggedIn }}" != "True" ? "disabled" : "") +

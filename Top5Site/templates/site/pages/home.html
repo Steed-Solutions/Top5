@@ -15,8 +15,8 @@
     <div class="hero">
       <div class="hero_bg">
         <div class="hero_bg_overlay"></div>
-        <a href="{% static 'img/hero_bg.png' %}" class="progressive replace">
-          <img src="{% static 'img/hero_bg_min.png' %}" class="preview" alt="image" />
+        <a href="{% static 'site/img/hero_bg.png' %}" class="progressive replace">
+          <img src="{% static 'site/img/hero_bg_min.png' %}" class="preview" alt="image" />
         </a>
       </div>
       <div class="hero_content">
@@ -27,7 +27,7 @@
             <div class="hero_search">
               <input id="searchInput" type="text" placeholder="{% if lang == 'en' %}{{ staticTextMap.search_stuff_you_like_en }}{% else %}{{ staticTextMap.search_stuff_you_like_fa }}{% endif %}" />
               <div id="searchBtn" style="user-select: none; cursor: pointer;}">
-                <img src="{% static 'img/search_icon_gray.png' %}" />
+                <img src="{% static 'site/img/search_icon_gray.png' %}" />
                 <p>{% if lang == 'en' %}{{ staticTextMap.search_en }}{% else %}{{ staticTextMap.search_fa }}{% endif %}</p>
               </div>
             </div>      
@@ -59,7 +59,7 @@
         transform: scale({% if lang == 'en' %}1{% else %}-1{% endif %});
       "
     >
-      <img src="{% static 'img/search_icon_gray.png' %}" alt="search" />
+      <img src="{% static 'site/img/search_icon_gray.png' %}" alt="search" />
       <input
         id="searchInp"
         type="text"
@@ -366,7 +366,7 @@
     comment.setAttribute("data-post-id", postID);
     comment.setAttribute("style", "transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});");
       comment.innerHTML =
-        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><div class='comment_content'><span style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>You</span><span style='grid-column: 2/4; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
+        "<img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><div class='comment_content'><span style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>You</span><span style='grid-column: 2/4; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
         message +
         "</span><span class='comment_action' style='cursor: unset; pointer-events: none; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>24h</span>" + ("{{ isLoggedIn }}" == "True" ? "<span class='comment_action' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>Reply</span><span class='comment_action' style='color:#ff5656; margin-left:10px; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' onclick='onDeleteComment(this)'>Delete</span>" : "") + "</div>";
 
@@ -509,7 +509,7 @@
         "#t=0.5' class='post_content_video' preload='metadata' />";
     } else if (postMap["type"] == "article") {
       postContent.innerHTML =
-        "<img src='{% static 'img/article.png' %}' class='post_article_placeholder_image' loading='lazy' alt='post_img' onerror='$(this).hide()' />";
+        "<img src='{% static 'site/img/article.png' %}' class='post_article_placeholder_image' loading='lazy' alt='post_img' onerror='$(this).hide()' />";
     }
 
     if (postMap["type"].toLowerCase().indexOf("txt") >= 0) {
@@ -570,7 +570,7 @@
     likes.classList.add("likes");
     likes.setAttribute("style", "transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %}");
     likes.innerHTML =
-      "<div class='user_pic'><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'img/user_avatar.png' %}\" alt='user' /></div><span style='transform: inherit;'>" +
+      "<div class='user_pic'><img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' /><img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' /></div><span style='transform: inherit;'>" +
       postMap["likeStr"] +
       "</span>";
     commentSection.appendChild(likes);
@@ -585,7 +585,7 @@
       comment.setAttribute("data-post-id", postMap["id"]);
       comment.setAttribute("style", "transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});");
       comment.innerHTML =
-        "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><div class='comment_content'><span style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
+        "<img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><div class='comment_content'><span style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
         commentMap["username"] +
         "</span><span style='grid-column: 2/4; transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});'>" +
         commentMap["comment"] +
@@ -599,7 +599,7 @@
     commentInput.classList.add("comment_input");
     commentInput.setAttribute("style", "transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});");
     commentInput.innerHTML =
-      "<img src=\"{% static 'img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><input id='comment_inp_" +
+      "<img src=\"{% static 'site/img/user_avatar.png' %}\" alt='user' style='transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});' /><input id='comment_inp_" +
       postMap["id"] +
       "' type='text' style='transform: inherit; direction:{% if lang == 'en' %}ltr{% else %}rtl{% endif %}' " +
       ("{{ isLoggedIn }}" != "True" ? "disabled" : "") +

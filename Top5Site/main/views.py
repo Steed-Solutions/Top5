@@ -17,7 +17,7 @@ import json
 from urllib.parse import unquote
 
 cred = adminCredentials.Certificate(finders.find(
-    'key/top-50-9951b-firebase-adminsdk-6n5a9-5a5dfe7f4d.json'))
+    'site/key/top-50-9951b-firebase-adminsdk-6n5a9-5a5dfe7f4d.json'))
 firebase_admin.initialize_app(cred)
 
 config = {
