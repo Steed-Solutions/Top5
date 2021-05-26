@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.listener;
+package com.steed.top5.listener;
 
 public interface SearchItemsListItemClickListener {
 

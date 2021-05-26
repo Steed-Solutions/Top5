@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.adapter;
+package com.steed.top5.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,10 +10,10 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.PopularListSingleItemViewBinding;
-import com.mars_tech.shehriyar.top5.listener.PopularListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Post;
+import com.steed.top5.R;
+import com.steed.top5.databinding.PopularListSingleItemViewBinding;
+import com.steed.top5.listener.PopularListItemClickListener;
+import com.steed.top5.pojo.Post;
 
 import java.util.ArrayList;
 

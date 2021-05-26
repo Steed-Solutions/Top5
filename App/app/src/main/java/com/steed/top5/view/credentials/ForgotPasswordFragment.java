@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.credentials;
+package com.steed.top5.view.credentials;
 
 import android.os.Bundle;
 
@@ -15,12 +15,11 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.Toast;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.FragmentForgotPasswordBinding;
-import com.mars_tech.shehriyar.top5.databinding.FragmentProfileBinding;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.CredentialsViewModel;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+import com.steed.top5.R;
+import com.steed.top5.databinding.FragmentForgotPasswordBinding;
+import com.steed.top5.databinding.FragmentProfileBinding;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.CredentialsViewModel;
 
 import java.util.regex.Pattern;
 

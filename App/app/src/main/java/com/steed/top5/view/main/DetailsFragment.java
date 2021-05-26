@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.FragmentDetailsBinding;
+import com.steed.top5.R;
+import com.steed.top5.databinding.FragmentDetailsBinding;
 
 
 /**

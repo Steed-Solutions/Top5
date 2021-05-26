@@ -1,6 +1,4 @@
-package com.mars_tech.shehriyar.top5.pojo;
-
-import com.google.firebase.database.Exclude;
+package com.steed.top5.pojo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

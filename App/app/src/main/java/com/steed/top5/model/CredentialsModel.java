@@ -1,11 +1,8 @@
-package com.mars_tech.shehriyar.top5.model;
-
-import android.util.Log;
+package com.steed.top5.model;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -17,8 +14,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mars_tech.shehriyar.top5.pojo.AuthResponse;
-import com.mars_tech.shehriyar.top5.pojo.User;
+import com.steed.top5.pojo.AuthResponse;
+import com.steed.top5.pojo.User;
 
 public class CredentialsModel {
 

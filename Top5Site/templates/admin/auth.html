@@ -195,7 +195,7 @@
         e.preventDefault();
         $.ajax({
           type: "POST",
-          url: "{% url 'credentials' %}",
+          url: "{% url 'admin_auth' %}",
           data: $("#forgotPasswordForm").serializeArray(),
           success: (response) => {
             if (response.result != "success") {
@@ -241,7 +241,7 @@
         ) {
           $.ajax({
             type: "POST",
-            url: "{% url 'credentials' %}",
+            url: "{% url 'admin_auth' %}",
             data: $("#credentialsForm").serializeArray(),
             success: (response) => {
               if (response.result == "success") {

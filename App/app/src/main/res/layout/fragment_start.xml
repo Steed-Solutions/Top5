@@ -132,64 +132,64 @@
             app:layout_constraintTop_toBottomOf="@+id/signup_btn_top_space"
             app:layout_constraintWidth_percent="0.542" />
 
-        <View
-            android:id="@+id/new_quick_login_top_space"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.066"
-            app:layout_constraintTop_toBottomOf="@+id/signUpBtn" />
+<!--        <View-->
+<!--            android:id="@+id/new_quick_login_top_space"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            app:layout_constraintHeight_percent="0.066"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/signUpBtn" />-->
 
-        <TextView
-            android:id="@+id/newQuickLoginTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/titillium_regular"
-            android:includeFontPadding="false"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
-            app:autoSizeMaxTextSize="13sp"
-            app:autoSizeMinTextSize="8sp"
-            app:autoSizeStepGranularity="0.5sp"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/new_quick_login_top_space" />
+<!--        <TextView-->
+<!--            android:id="@+id/newQuickLoginTxt"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:fontFamily="@font/titillium_regular"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textColor="@color/colorPrimary"-->
+<!--            app:autoSizeMaxTextSize="13sp"-->
+<!--            app:autoSizeMinTextSize="8sp"-->
+<!--            app:autoSizeStepGranularity="0.5sp"-->
+<!--            app:autoSizeTextType="uniform"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/new_quick_login_top_space" />-->
 
-        <View
-            android:id="@+id/face_id_img_top_space"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.036"
-            app:layout_constraintTop_toBottomOf="@+id/newQuickLoginTxt" />
+<!--        <View-->
+<!--            android:id="@+id/face_id_img_top_space"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            app:layout_constraintHeight_percent="0.036"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/newQuickLoginTxt" />-->
 
-        <LinearLayout
-            android:id="@+id/face_id_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/face_id"
-            android:orientation="vertical"
-            app:layout_constraintDimensionRatio="W, 1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/face_id_img_top_space"
-            app:layout_constraintWidth_percent="0.157" />
+<!--        <LinearLayout-->
+<!--            android:id="@+id/face_id_btn"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/face_id"-->
+<!--            android:orientation="vertical"-->
+<!--            app:layout_constraintDimensionRatio="W, 1:1"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/face_id_img_top_space"-->
+<!--            app:layout_constraintWidth_percent="0.157" />-->
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/titillium_regular"
-            android:includeFontPadding="false"
-            android:text="@string/use_face_id"
-            android:textAlignment="center"
-            android:textColor="#C6C3BD"
-            app:autoSizeMaxTextSize="11sp"
-            app:autoSizeMinTextSize="8sp"
-            app:autoSizeStepGranularity="0.5sp"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/face_id_btn" />
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:fontFamily="@font/titillium_regular"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:text="@string/use_face_id"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textColor="#C6C3BD"-->
+<!--            app:autoSizeMaxTextSize="11sp"-->
+<!--            app:autoSizeMinTextSize="8sp"-->
+<!--            app:autoSizeStepGranularity="0.5sp"-->
+<!--            app:autoSizeTextType="uniform"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/face_id_btn" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

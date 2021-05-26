@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.credentials;
+package com.steed.top5.view.credentials;
 
 
 import android.content.DialogInterface;
@@ -15,8 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.FragmentStartBinding;
+import com.steed.top5.R;
+import com.steed.top5.databinding.FragmentStartBinding;
 
 
 /**

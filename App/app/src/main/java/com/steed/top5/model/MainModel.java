@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.model;
+package com.steed.top5.model;
 
 import android.util.Log;
 
@@ -18,22 +18,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-import com.mars_tech.shehriyar.top5.pojo.Category;
-import com.mars_tech.shehriyar.top5.pojo.Comment;
-import com.mars_tech.shehriyar.top5.pojo.CommentsResponse;
-import com.mars_tech.shehriyar.top5.pojo.FiltersResponse;
-import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
-import com.mars_tech.shehriyar.top5.pojo.Post;
-import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
-import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
-import com.mars_tech.shehriyar.top5.pojo.TagsResponse;
-import com.mars_tech.shehriyar.top5.singleton.TagsSingleton;
-import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
-import com.mars_tech.shehriyar.top5.util.Constants;
+import com.steed.top5.pojo.Category;
+import com.steed.top5.pojo.Comment;
+import com.steed.top5.pojo.CommentsResponse;
+import com.steed.top5.pojo.FiltersResponse;
+import com.steed.top5.pojo.LikeResponse;
+import com.steed.top5.pojo.Post;
+import com.steed.top5.pojo.PostsResponse;
+import com.steed.top5.pojo.SaveResponse;
+import com.steed.top5.pojo.TagsResponse;
+import com.steed.top5.singleton.TagsSingleton;
+import com.steed.top5.singleton.UserSingleton;
+import com.steed.top5.util.Constants;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;

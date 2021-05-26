@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.graphics.Rect;
@@ -18,16 +18,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.adapter.PopularListAdapter;
-import com.mars_tech.shehriyar.top5.adapter.SearchItemsListAdapter;
-import com.mars_tech.shehriyar.top5.databinding.FragmentTagPostsBinding;
-import com.mars_tech.shehriyar.top5.listener.SearchItemsListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Category;
-import com.mars_tech.shehriyar.top5.pojo.Post;
-import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
-import com.mars_tech.shehriyar.top5.pojo.TagsResponse;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+import com.steed.top5.R;
+import com.steed.top5.adapter.SearchItemsListAdapter;
+import com.steed.top5.databinding.FragmentTagPostsBinding;
+import com.steed.top5.listener.SearchItemsListItemClickListener;
+import com.steed.top5.pojo.Category;
+import com.steed.top5.pojo.Post;
+import com.steed.top5.pojo.PostsResponse;
+import com.steed.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 

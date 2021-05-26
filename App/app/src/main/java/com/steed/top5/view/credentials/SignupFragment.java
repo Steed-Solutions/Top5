@@ -1,16 +1,12 @@
-package com.mars_tech.shehriyar.top5.view.credentials;
+package com.steed.top5.view.credentials;
 
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.widget.TextViewCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -19,22 +15,18 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.FragmentSignupBinding;
-import com.mars_tech.shehriyar.top5.pojo.AuthResponse;
-import com.mars_tech.shehriyar.top5.pojo.User;
-import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.CredentialsViewModel;
+import com.steed.top5.R;
+import com.steed.top5.databinding.FragmentSignupBinding;
+import com.steed.top5.pojo.AuthResponse;
+import com.steed.top5.pojo.User;
+import com.steed.top5.singleton.UserSingleton;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.CredentialsViewModel;
 
 import java.util.regex.Pattern;
 

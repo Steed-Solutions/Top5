@@ -1,10 +1,9 @@
-package com.mars_tech.shehriyar.top5.adapter;
+package com.steed.top5.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,10 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.CategoriesListSingleItemViewBinding;
-import com.mars_tech.shehriyar.top5.listener.UserPreferencesListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Category;
+import com.steed.top5.R;
+import com.steed.top5.databinding.CategoriesListSingleItemViewBinding;
+import com.steed.top5.listener.UserPreferencesListItemClickListener;
+import com.steed.top5.pojo.Category;
 
 import java.util.ArrayList;
 

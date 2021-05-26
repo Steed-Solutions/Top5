@@ -50,31 +50,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="0.058" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/itemTypeImageContainer"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@drawable/category_circle"
-                app:layout_constraintDimensionRatio="W, 1:1"
-                app:layout_constraintStart_toEndOf="@+id/item_type_image_container_start_gap"
-                app:layout_constraintTop_toBottomOf="@+id/item_type_image_container_top_gap"
-                app:layout_constraintWidth_percent="0.162">
-
-                <ImageView
-                    android:id="@+id/itemTypeImage"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@null"
-                    android:src="@drawable/food"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="W, 1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.567" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <TextView
                 android:id="@+id/itemName"
                 android:layout_width="0dp"
@@ -91,7 +66,7 @@
                 app:autoSizeStepGranularity="0.5sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/itemTypeImageContainer"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/item_name_top_gap" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

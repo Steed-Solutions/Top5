@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.credentials;
+package com.steed.top5.view.credentials;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 
 import com.google.android.gms.ads.MobileAds;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.CredentialsViewModel;
+import com.steed.top5.R;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.CredentialsViewModel;
 
 public class CredentialsActivity extends AppCompatActivity {
 

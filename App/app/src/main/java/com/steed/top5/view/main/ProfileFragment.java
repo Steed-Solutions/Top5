@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.content.Context;
@@ -19,23 +19,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.adapter.InterestsListAdapter;
-import com.mars_tech.shehriyar.top5.adapter.ProfileInterestsListAdapter;
-import com.mars_tech.shehriyar.top5.databinding.FragmentFiltersBinding;
-import com.mars_tech.shehriyar.top5.databinding.FragmentProfileBinding;
-import com.mars_tech.shehriyar.top5.pojo.Category;
-import com.mars_tech.shehriyar.top5.pojo.User;
-import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+import com.steed.top5.R;
+import com.steed.top5.adapter.ProfileInterestsListAdapter;
+import com.steed.top5.databinding.FragmentFiltersBinding;
+import com.steed.top5.databinding.FragmentProfileBinding;
+import com.steed.top5.pojo.Category;
+import com.steed.top5.singleton.UserSingleton;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 
 

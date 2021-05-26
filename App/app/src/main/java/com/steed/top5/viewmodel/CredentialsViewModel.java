@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.viewmodel;
+package com.steed.top5.viewmodel;
 
 import android.app.Application;
 
@@ -6,9 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.mars_tech.shehriyar.top5.model.CredentialsModel;
-import com.mars_tech.shehriyar.top5.pojo.AuthResponse;
-import com.mars_tech.shehriyar.top5.pojo.User;
+import com.steed.top5.model.CredentialsModel;
+import com.steed.top5.pojo.AuthResponse;
+import com.steed.top5.pojo.User;
 
 public class CredentialsViewModel extends AndroidViewModel {
 

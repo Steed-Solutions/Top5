@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.annotation.SuppressLint;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -19,7 +18,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,22 +36,19 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.VideoListener;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.adapter.CommentsListAdapter;
-import com.mars_tech.shehriyar.top5.databinding.FragmentContentBinding;
-import com.mars_tech.shehriyar.top5.listener.CommentsListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Comment;
-import com.mars_tech.shehriyar.top5.pojo.CommentsResponse;
-import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
-import com.mars_tech.shehriyar.top5.pojo.Post;
-import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+import com.steed.top5.R;
+import com.steed.top5.adapter.CommentsListAdapter;
+import com.steed.top5.databinding.FragmentContentBinding;
+import com.steed.top5.listener.CommentsListItemClickListener;
+import com.steed.top5.pojo.Comment;
+import com.steed.top5.pojo.CommentsResponse;
+import com.steed.top5.pojo.LikeResponse;
+import com.steed.top5.pojo.Post;
+import com.steed.top5.pojo.SaveResponse;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.content.DialogInterface;
@@ -20,16 +20,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.adapter.PreferenceItemsListAdapter;
-import com.mars_tech.shehriyar.top5.databinding.FragmentSavedBinding;
-import com.mars_tech.shehriyar.top5.listener.PreferenceItemsListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
-import com.mars_tech.shehriyar.top5.pojo.Post;
-import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
-import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+import com.steed.top5.R;
+import com.steed.top5.adapter.PreferenceItemsListAdapter;
+import com.steed.top5.databinding.FragmentSavedBinding;
+import com.steed.top5.listener.PreferenceItemsListItemClickListener;
+import com.steed.top5.pojo.LikeResponse;
+import com.steed.top5.pojo.Post;
+import com.steed.top5.pojo.PostsResponse;
+import com.steed.top5.pojo.SaveResponse;
+import com.steed.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 

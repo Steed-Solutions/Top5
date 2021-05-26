@@ -33,7 +33,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     ads:adSize="BANNER"
-                    ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+                    ads:adUnitId="ca-app-pub-4286063614656441/1375023200"
                     app:layout_constraintDimensionRatio="W, 0.156:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

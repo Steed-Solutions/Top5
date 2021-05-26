@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,29 +8,20 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.ActivityMainBinding;
-import com.mars_tech.shehriyar.top5.pojo.User;
-import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
-
-import java.util.Locale;
+import com.google.android.gms.ads.MobileAds;
+import com.steed.top5.R;
+import com.steed.top5.databinding.ActivityMainBinding;
+import com.steed.top5.singleton.UserSingleton;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
 

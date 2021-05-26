@@ -1,9 +1,8 @@
-package com.mars_tech.shehriyar.top5.adapter;
+package com.steed.top5.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.InterestsListSingleItemViewBinding;
-import com.mars_tech.shehriyar.top5.listener.InterestsListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Category;
+import com.steed.top5.R;
+import com.steed.top5.databinding.InterestsListSingleItemViewBinding;
+import com.steed.top5.listener.InterestsListItemClickListener;
+import com.steed.top5.pojo.Category;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class InterestsListAdapter extends RecyclerView.Adapter<InterestsListAdapter.InterestsListViewHolder> {
 

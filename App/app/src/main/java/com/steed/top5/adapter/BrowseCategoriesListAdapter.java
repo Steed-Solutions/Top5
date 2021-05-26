@@ -1,22 +1,18 @@
-package com.mars_tech.shehriyar.top5.adapter;
+package com.steed.top5.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.BrowseCategoriesListSingleItemViewBinding;
-import com.mars_tech.shehriyar.top5.listener.BrowseCategoriesListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Post;
+import com.steed.top5.R;
+import com.steed.top5.databinding.BrowseCategoriesListSingleItemViewBinding;
+import com.steed.top5.listener.BrowseCategoriesListItemClickListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;

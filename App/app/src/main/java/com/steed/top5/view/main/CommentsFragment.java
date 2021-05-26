@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.content.Context;
@@ -19,19 +19,17 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.adapter.CommentsListAdapter;
-import com.mars_tech.shehriyar.top5.databinding.FragmentCommentsBinding;
-import com.mars_tech.shehriyar.top5.databinding.FragmentContentBinding;
-import com.mars_tech.shehriyar.top5.listener.CommentsListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Comment;
-import com.mars_tech.shehriyar.top5.pojo.CommentsResponse;
-import com.mars_tech.shehriyar.top5.pojo.Post;
-import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+import com.steed.top5.R;
+import com.steed.top5.adapter.CommentsListAdapter;
+import com.steed.top5.databinding.FragmentCommentsBinding;
+import com.steed.top5.databinding.FragmentContentBinding;
+import com.steed.top5.listener.CommentsListItemClickListener;
+import com.steed.top5.pojo.Comment;
+import com.steed.top5.pojo.CommentsResponse;
+import com.steed.top5.pojo.Post;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.MainViewModel;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 

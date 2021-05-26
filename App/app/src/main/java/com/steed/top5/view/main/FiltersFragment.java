@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -17,32 +16,24 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.adapter.InterestsListAdapter;
-import com.mars_tech.shehriyar.top5.databinding.FragmentFiltersBinding;
-import com.mars_tech.shehriyar.top5.listener.InterestsListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Category;
-import com.mars_tech.shehriyar.top5.pojo.FiltersResponse;
-import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
-
-import org.w3c.dom.Text;
+import com.steed.top5.R;
+import com.steed.top5.adapter.InterestsListAdapter;
+import com.steed.top5.databinding.FragmentFiltersBinding;
+import com.steed.top5.listener.InterestsListItemClickListener;
+import com.steed.top5.pojo.Category;
+import com.steed.top5.pojo.FiltersResponse;
+import com.steed.top5.pojo.SaveResponse;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Set;
 
 
 /**
@@ -83,14 +74,14 @@ public class FiltersFragment extends Fragment {
         viewModel.allCategoriesLiveData.observe(requireActivity(), new Observer<ArrayList<Category>>() {
             @Override
             public void onChanged(ArrayList<Category> categories) {
-                if(viewModel.allCategoriesLiveData.hasActiveObservers()) {
+                if (viewModel.allCategoriesLiveData.hasActiveObservers()) {
                     viewModel.allCategoriesLiveData.removeObservers(requireActivity());
                 }
                 viewModel.getFiltersAndSelectedCategories();
                 viewModel.filtersResponseLiveData.observe(requireActivity(), new Observer<FiltersResponse>() {
                     @Override
                     public void onChanged(FiltersResponse filtersResponse) {
-                        if(viewModel.filtersResponseLiveData.hasActiveObservers()) {
+                        if (viewModel.filtersResponseLiveData.hasActiveObservers()) {
                             viewModel.filtersResponseLiveData.removeObservers(requireActivity());
                         }
                         allInterests = filtersResponse.allCategories;
@@ -228,11 +219,11 @@ public class FiltersFragment extends Fragment {
                     viewModel.filtersAndCategoriesSaveResponseLiveData.observe(requireActivity(), new Observer<SaveResponse>() {
                         @Override
                         public void onChanged(SaveResponse saveResponse) {
-                            if(viewModel.filtersAndCategoriesSaveResponseLiveData.hasActiveObservers()) {
+                            if (viewModel.filtersAndCategoriesSaveResponseLiveData.hasActiveObservers()) {
                                 viewModel.filtersAndCategoriesSaveResponseLiveData.removeObservers(requireActivity());
                             }
                             areInterestsSaved = true;
-                            if(isFilterSaved) {
+                            if (isFilterSaved) {
                                 hideOverlay();
                                 controller.navigateUp();
                             }

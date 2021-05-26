@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.credentials;
+package com.steed.top5.view.credentials;
 
 
 import android.content.Context;
@@ -14,26 +14,19 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.database.core.Platform;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.pojo.User;
-import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.CredentialsViewModel;
+import com.steed.top5.R;
+import com.steed.top5.pojo.User;
+import com.steed.top5.singleton.UserSingleton;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.CredentialsViewModel;
 
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,7 +69,6 @@ public class SplashFragment extends Fragment {
     private class TimerScheduleDelay extends TimerTask {
         @Override
         public void run() {
-
             handler.post(new Runnable() {
                 @Override
                 public void run() {

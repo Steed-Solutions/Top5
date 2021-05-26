@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.viewmodel;
+package com.steed.top5.viewmodel;
 
 import android.app.Application;
 
@@ -6,16 +6,16 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.mars_tech.shehriyar.top5.model.MainModel;
-import com.mars_tech.shehriyar.top5.pojo.Category;
-import com.mars_tech.shehriyar.top5.pojo.Comment;
-import com.mars_tech.shehriyar.top5.pojo.CommentsResponse;
-import com.mars_tech.shehriyar.top5.pojo.FiltersResponse;
-import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
-import com.mars_tech.shehriyar.top5.pojo.Post;
-import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
-import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
-import com.mars_tech.shehriyar.top5.pojo.TagsResponse;
+import com.steed.top5.model.MainModel;
+import com.steed.top5.pojo.Category;
+import com.steed.top5.pojo.Comment;
+import com.steed.top5.pojo.CommentsResponse;
+import com.steed.top5.pojo.FiltersResponse;
+import com.steed.top5.pojo.LikeResponse;
+import com.steed.top5.pojo.Post;
+import com.steed.top5.pojo.PostsResponse;
+import com.steed.top5.pojo.SaveResponse;
+import com.steed.top5.pojo.TagsResponse;
 
 import java.util.ArrayList;
 

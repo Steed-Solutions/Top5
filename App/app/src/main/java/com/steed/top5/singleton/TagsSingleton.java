@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.singleton;
+package com.steed.top5.singleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;

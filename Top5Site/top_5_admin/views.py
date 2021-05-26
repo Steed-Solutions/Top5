@@ -46,8 +46,8 @@ storage = firebase.storage()
 # Create your views here.
 
 
-def credentials(request):
-    if("user" in request.session):
+def admin_auth(request):
+    if("admin" in request.session):
         return redirect('admin/dashboard')
 
     if request.method == "POST":
@@ -68,8 +68,8 @@ def credentials(request):
 
                     user_id = user['idToken']
 
-                    request.session['user'] = user_id
-                    request.session['uid'] = uid
+                    request.session["admin"] = user_id
+                    request.session["admin_uid"] = uid
 
                     return JsonResponse({"result": "success"})
                 except Exception:
@@ -82,8 +82,8 @@ def credentials(request):
                     user_id = user['idToken']
                     uid = user['localId']
 
-                    request.session['user'] = user_id
-                    request.session['uid'] = uid
+                    request.session["admin"] = user_id
+                    request.session["admin_uid"] = uid
 
                     db.child("users/admin/" + uid).set({
                         "name": request.POST['username'],
@@ -102,22 +102,22 @@ def credentials(request):
             except:
                 return JsonResponse({"result": "failure"})
 
-    return render(request, "admin/credentials.html")
+    return render(request, "admin/auth.html")
 
 
 def dashboard(request):
-    if("user" not in request.session):
-        return redirect("admin/credentials")
+    if("admin" not in request.session):
+        return redirect("admin/auth")
 
-    uid = request.session['uid']
+    uid = request.session["admin_uid"]
 
     user = db.child("users/admin/" + uid).get().val()
 
-    return render(request, "admin/dashboard.html", {"user": user})
+    return render(request, "admin/dashboard.html", {"admin": user})
 
 
 def myDash(request):
-    uid = request.session['uid']
+    uid = request.session["admin_uid"]
 
     user = dict(db.child("users/admin/" + uid).get().val())
 
@@ -155,9 +155,9 @@ def myDash(request):
                 id = request.POST["name"].lower()
 
                 storage.child(
-                    "content/categories/" + id + ".jpg").put(base64.b64decode(str(request.POST["icon"])), request.session["user"])
+                    "content/categories/" + id + ".jpg").put(base64.b64decode(str(request.POST["icon"])), request.session["admin"])
                 imgURL = storage.child(
-                    "content/categories/" + id + ".jpg").get_url(request.session["user"])
+                    "content/categories/" + id + ".jpg").get_url(request.session["admin"])
 
                 categoryMap = {
                     "name": request.POST["name"].upper(),
@@ -205,7 +205,9 @@ def myDash(request):
     categories = db.child("content/categories").get().val()
     categories = dict(categories) if categories != None else {}
 
-    return render(request, "admin/myDash.html", {"user": user, "categories": categories})
+    print(categories)
+
+    return render(request, "admin/myDash.html", {"admin": user, "categories": categories})
 
 
 def categoryDash(request, category_id=""):
@@ -328,8 +330,8 @@ def postPreview(request):
     return render(request, "admin/postPreview.html")
 
 
-def logout(request):
-    request.session.pop('user', None)
-    request.session.pop('uid', None)
+def admin_logout(request):
+    request.session.pop("admin", None)
+    request.session.pop("admin_uid", None)
 
-    return redirect("admin/credentials")
+    return redirect("admin/auth")

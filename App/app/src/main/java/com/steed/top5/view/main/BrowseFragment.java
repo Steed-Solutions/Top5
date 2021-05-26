@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.content.Context;
@@ -19,32 +19,27 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.adapter.BrowseCategoriesListAdapter;
-import com.mars_tech.shehriyar.top5.adapter.PopularListAdapter;
-import com.mars_tech.shehriyar.top5.adapter.SearchItemsListAdapter;
-import com.mars_tech.shehriyar.top5.databinding.FragmentBrowseBinding;
-import com.mars_tech.shehriyar.top5.listener.BrowseCategoriesListItemClickListener;
-import com.mars_tech.shehriyar.top5.listener.PopularListItemClickListener;
-import com.mars_tech.shehriyar.top5.listener.SearchItemsListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Category;
-import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
-import com.mars_tech.shehriyar.top5.pojo.Post;
-import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
-import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
-import com.mars_tech.shehriyar.top5.pojo.TagsResponse;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+import com.steed.top5.R;
+import com.steed.top5.adapter.BrowseCategoriesListAdapter;
+import com.steed.top5.adapter.PopularListAdapter;
+import com.steed.top5.adapter.SearchItemsListAdapter;
+import com.steed.top5.databinding.FragmentBrowseBinding;
+import com.steed.top5.listener.BrowseCategoriesListItemClickListener;
+import com.steed.top5.listener.PopularListItemClickListener;
+import com.steed.top5.listener.SearchItemsListItemClickListener;
+import com.steed.top5.pojo.Category;
+import com.steed.top5.pojo.Post;
+import com.steed.top5.pojo.PostsResponse;
+import com.steed.top5.pojo.TagsResponse;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

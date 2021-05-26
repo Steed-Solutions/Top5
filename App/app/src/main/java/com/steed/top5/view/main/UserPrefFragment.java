@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.content.DialogInterface;
@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +26,16 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.adapter.UserPreferencesListAdapter;
-import com.mars_tech.shehriyar.top5.databinding.FragmentUserPrefBinding;
-import com.mars_tech.shehriyar.top5.listener.UserPreferencesListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Category;
-import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
-import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+import com.steed.top5.R;
+import com.steed.top5.adapter.UserPreferencesListAdapter;
+import com.steed.top5.databinding.FragmentUserPrefBinding;
+import com.steed.top5.listener.UserPreferencesListItemClickListener;
+import com.steed.top5.pojo.Category;
+import com.steed.top5.pojo.SaveResponse;
+import com.steed.top5.singleton.UserSingleton;
+import com.steed.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.

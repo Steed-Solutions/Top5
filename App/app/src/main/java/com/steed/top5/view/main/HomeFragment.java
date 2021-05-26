@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.view.main;
+package com.steed.top5.view.main;
 
 
 import android.content.Context;
@@ -17,23 +17,27 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.adapter.PreferenceItemsListAdapter;
-import com.mars_tech.shehriyar.top5.databinding.FragmentHomeBinding;
-import com.mars_tech.shehriyar.top5.listener.PreferenceItemsListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Category;
-import com.mars_tech.shehriyar.top5.pojo.LikeResponse;
-import com.mars_tech.shehriyar.top5.pojo.Post;
-import com.mars_tech.shehriyar.top5.pojo.PostsResponse;
-import com.mars_tech.shehriyar.top5.pojo.SaveResponse;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.MainViewModel;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.steed.top5.R;
+import com.steed.top5.adapter.PreferenceItemsListAdapter;
+import com.steed.top5.databinding.FragmentHomeBinding;
+import com.steed.top5.listener.PreferenceItemsListItemClickListener;
+import com.steed.top5.pojo.Category;
+import com.steed.top5.pojo.LikeResponse;
+import com.steed.top5.pojo.Post;
+import com.steed.top5.pojo.PostsResponse;
+import com.steed.top5.pojo.SaveResponse;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 
@@ -143,6 +147,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void initBannerAd() {
+        MobileAds.initialize(requireActivity(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
         AdRequest adRequest = new AdRequest.Builder().build();
         binding.adBanner.loadAd(adRequest);
     }

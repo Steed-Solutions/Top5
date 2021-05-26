@@ -150,7 +150,7 @@
                     android:id="@+id/searchTermLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintTop_toBottomOf="@+id/search_bar_bottom_space">
 
                     <androidx.recyclerview.widget.RecyclerView

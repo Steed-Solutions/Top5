@@ -1,10 +1,9 @@
-package com.mars_tech.shehriyar.top5.view.credentials;
+package com.steed.top5.view.credentials;
 
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,27 +15,22 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.text.Editable;
-import android.text.InputType;
-import android.text.Layout;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.FragmentLoginBinding;
-import com.mars_tech.shehriyar.top5.pojo.AuthResponse;
-import com.mars_tech.shehriyar.top5.pojo.User;
-import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
-import com.mars_tech.shehriyar.top5.util.Constants;
-import com.mars_tech.shehriyar.top5.viewmodel.CredentialsViewModel;
+import com.steed.top5.R;
+import com.steed.top5.databinding.FragmentLoginBinding;
+import com.steed.top5.pojo.AuthResponse;
+import com.steed.top5.pojo.User;
+import com.steed.top5.singleton.UserSingleton;
+import com.steed.top5.util.Constants;
+import com.steed.top5.viewmodel.CredentialsViewModel;
 
 import java.util.regex.Pattern;
 
-import static com.mars_tech.shehriyar.top5.view.credentials.LoginFragmentDirections.*;
+import static com.steed.top5.view.credentials.LoginFragmentDirections.*;
 
 
 /**

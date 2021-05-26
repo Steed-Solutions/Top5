@@ -1,6 +1,5 @@
-package com.mars_tech.shehriyar.top5.adapter;
+package com.steed.top5.adapter;
 
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mars_tech.shehriyar.top5.R;
-import com.mars_tech.shehriyar.top5.databinding.CommentsListSingleItemLayoutBinding;
-import com.mars_tech.shehriyar.top5.listener.CommentsListItemClickListener;
-import com.mars_tech.shehriyar.top5.pojo.Comment;
-import com.mars_tech.shehriyar.top5.singleton.UserSingleton;
+import com.steed.top5.R;
+import com.steed.top5.databinding.CommentsListSingleItemLayoutBinding;
+import com.steed.top5.listener.CommentsListItemClickListener;
+import com.steed.top5.pojo.Comment;
+import com.steed.top5.singleton.UserSingleton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 

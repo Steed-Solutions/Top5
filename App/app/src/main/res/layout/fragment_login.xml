@@ -247,6 +247,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/titillium_regular"
             android:includeFontPadding="false"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="@string/forgot_pass"
             android:textAlignment="center"
             android:textColor="#C6C3BD"
@@ -259,63 +261,11 @@
             app:layout_constraintTop_toBottomOf="@+id/forgot_password_top_space" />
 
         <View
-            android:id="@+id/sign_in_using_options_top_space"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.095"
-            app:layout_constraintTop_toBottomOf="@+id/forgotPasswordBtn" />
-
-        <LinearLayout
-            android:id="@+id/sign_in_using_options_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sign_in_using_options_top_space">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:fontFamily="@font/titillium_regular"
-                android:includeFontPadding="false"
-                android:text="@string/sign_in_using"
-                android:textColor="#C6C3BD"
-                app:autoSizeMaxTextSize="12sp"
-                app:autoSizeMinTextSize="10sp"
-                app:autoSizeStepGranularity="0.8sp"
-                app:autoSizeTextType="uniform"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/gp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/fb" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/twitter" />
-
-        </LinearLayout>
-
-        <View
             android:id="@+id/new_acc_top_space"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.096"
-            app:layout_constraintTop_toBottomOf="@+id/sign_in_using_options_container" />
+            app:layout_constraintTop_toBottomOf="@+id/forgotPasswordBtn" />
 
         <TextView
             android:id="@+id/newAccBtn"
@@ -323,6 +273,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/titillium_regular"
             android:includeFontPadding="false"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="@string/new_acc"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"

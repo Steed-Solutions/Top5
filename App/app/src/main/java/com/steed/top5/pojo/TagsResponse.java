@@ -1,4 +1,4 @@
-package com.mars_tech.shehriyar.top5.pojo;
+package com.steed.top5.pojo;
 
 import java.util.ArrayList;
 import java.util.HashMap;

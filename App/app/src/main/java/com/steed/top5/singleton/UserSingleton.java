@@ -1,6 +1,6 @@
-package com.mars_tech.shehriyar.top5.singleton;
+package com.steed.top5.singleton;
 
-import com.mars_tech.shehriyar.top5.pojo.User;
+import com.steed.top5.pojo.User;
 
 public class UserSingleton {
 
