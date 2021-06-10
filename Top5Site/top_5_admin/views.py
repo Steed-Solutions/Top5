@@ -108,7 +108,7 @@ def admin_auth(request):
 
 def dashboard(request):
     if("admin" not in request.session):
-        return redirect("admin/auth")
+        return redirect("/admin/")
 
     uid = request.session["admin_uid"]
 
@@ -176,8 +176,6 @@ def myDash(request):
                 return JsonResponse({"result": "failure"})
         elif request.POST["type"] == "deleteCategory":
             try:
-                print(request.POST["category_id"])
-
                 db.child("content/categories/" +
                          request.POST["category_id"]).remove()
 
@@ -205,8 +203,6 @@ def myDash(request):
 
     categories = db.child("content/categories").get().val()
     categories = dict(categories) if categories != None else {}
-
-    print(categories)
 
     return render(request, "admin/myDash.html", {"admin": user, "categories": categories})
 
@@ -294,7 +290,6 @@ def categoryDash(request, category_id=""):
                 return JsonResponse({"result": "failure"})
         elif request.POST["reqType"] == "delete":
             try:
-                print(category_id)
                 db.child('content/posts/' + request.POST["key"]).remove()
 
                 return JsonResponse({"result": "success", "categoryID": category_id, "postKey": request.POST["key"]})
