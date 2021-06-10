@@ -50,6 +50,11 @@ $(document).ready(() => {
           )
         ) {
           $('span[style="font-size: 1.26em;"]').css("font-size", "1em");
+        } else if (commandWithArgs == "changedirection") {
+          // let wrappedselection = '<span style="direction:\"rtl\"">' + selectedRange.toString() + '</span>';
+          // document.execCommand('insertHTML', false, wrappedselection);
+          let textAreaDirection = $("#postTxtArea").attr("dir");   
+          $("#postTxtArea").attr("dir", textAreaDirection == "rtl" ? "ltr" : "rtl");
         }
         updateToolbar();
       },

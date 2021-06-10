@@ -6,20 +6,28 @@
     <meta charset="UTF-8" />
     <title>{{ categoryID }} Dashboard</title>
 
-    <link rel="stylesheet" href="{% static 'site_admin/css/categoryDash.css' %}" />
-    <link rel="stylesheet" href="{% static 'site_admin/css/bootstrap_combined.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'site_admin/css/categoryDash.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'site_admin/css/bootstrap_combined.css' %}"
+    />
     <link rel="stylesheet" href="{% static 'site_admin/css/prettify.css' %}" />
     <link
-      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css"
       rel="stylesheet"
     />
 
     <script src="{% static 'site_admin/js/jquery.hotkeys.js' %}"></script>
-    <script src="{% static 'site_admin/js/bootstrap.min.js' %}"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    {% comment %}
     <link
-      href="{% static 'site_admin/css/font-awesome.css' %}"
+      href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css"
       rel="stylesheet"
     />
+    {% endcomment %}
     <script src="{% static 'site_admin/js/prettify.js' %}"></script>
   </head>
   <body>
@@ -40,7 +48,7 @@
                 class="btn dropdown-toggle"
                 data-toggle="dropdown"
                 title="Font Size"
-                ><i class="icon-text-height"></i>&nbsp;<b class="caret"></b
+                ><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b
               ></a>
               <ul class="dropdown-menu">
                 <li>
@@ -62,36 +70,38 @@
             </div>
             <div class="btn-group">
               <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"
-                ><i class="icon-bold"></i
+                ><i class="fa fa-bold"></i
               ></a>
               <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"
-                ><i class="icon-italic"></i
+                ><i class="fa fa-italic"></i
               ></a>
               <a class="btn" data-edit="strikethrough" title="Strikethrough"
-                ><i class="icon-strikethrough"></i
+                ><i class="fa fa-strikethrough"></i
               ></a>
               <a
                 class="btn"
                 data-edit="underline"
                 title="Underline (Ctrl/Cmd+U)"
-                ><i class="icon-underline"></i
+                ><i class="fa fa-underline"></i
+              ></a>
+            </div>
+            <div class="btn-group">
+              <a
+                class="btn"
+                data-edit="changedirection"
+                title="Change Text Direction"
+                ><i class="fas fa-arrows-alt-h"></i
               ></a>
             </div>
             <div class="btn-group">
               <a class="btn" data-edit="insertunorderedlist" title="Bullet list"
-                ><i class="icon-list-ul"></i
+                ><i class="fa fa-list-ul"></i
               ></a>
               <a class="btn" data-edit="insertorderedlist" title="Number list"
-                ><i class="icon-list-ol"></i
-              ></a>
-              <a
-                class="btn"
-                data-edit="outdent"
-                title="Reduce indent (Shift+Tab)"
-                ><i class="icon-indent-left"></i
+                ><i class="fa fa-list-ol"></i
               ></a>
               <a class="btn" data-edit="indent" title="Indent (Tab)"
-                ><i class="icon-indent-right"></i
+                ><i class="fa fa-indent"></i
               ></a>
             </div>
             <div class="btn-group">
@@ -99,35 +109,46 @@
                 class="btn"
                 data-edit="justifyleft"
                 title="Align Left (Ctrl/Cmd+L)"
-                ><i class="icon-align-left"></i
+                ><i class="fa fa-align-left"></i
               ></a>
               <a
                 class="btn"
                 data-edit="justifycenter"
                 title="Center (Ctrl/Cmd+E)"
-                ><i class="icon-align-center"></i
+                ><i class="fa fa-align-center"></i
               ></a>
               <a
                 class="btn"
                 data-edit="justifyright"
                 title="Align Right (Ctrl/Cmd+R)"
-                ><i class="icon-align-right"></i
+                ><i class="fa fa-align-right"></i
               ></a>
               <a
                 class="btn"
                 data-edit="justifyfull"
                 title="Justify (Ctrl/Cmd+J)"
-                ><i class="icon-align-justify"></i
+                ><i class="fa fa-align-justify"></i
               ></a>
             </div>
             <div class="btn-group">
               <div id="linkBtn" class="btn" title="Hyperlink">
-                <i class="icon-link"></i>
+                <i class="fa fa-link"></i>
               </div>
             </div>
             <div class="btn-group">
+              <div id="uploadImageButton" class="btn" title="Upload Image">
+                <i class="fas fa-upload"></i>
+              </div>
+              <input
+                id="articleImgUploadInput"
+                type="file"
+                accept="image/*"
+                style="display: none"
+              />
+            </div>
+            <div class="btn-group">
               <div id="embedImageBtn" class="btn" title="Image">
-                <i class="fas fa-image"></i>
+                <i class="far fa-image"></i>
               </div>
               <div id="embedVideoBtn" class="btn" title="Video">
                 <i class="fas fa-video"></i>
@@ -143,7 +164,10 @@
           <div id="uploadOptionsBtns" class="post_sec_icons">
             <div>
               <div id="articleBtn" class="post_sec_icon">
-                <img src="{% static 'site_admin/img/article.png' %}" alt="article_icon" />
+                <img
+                  src="{% static 'site_admin/img/article.png' %}"
+                  alt="article_icon"
+                />
                 <span style="color: #2f363a">Article</span>
               </div>
             </div>
@@ -155,7 +179,10 @@
               style="display: none"
             />
             <div id="uploadImgBtn" class="post_sec_icon">
-              <img src="{% static 'site_admin/img/photo_icon.png' %}" alt="photo_icon" />
+              <img
+                src="{% static 'site_admin/img/photo_icon.png' %}"
+                alt="photo_icon"
+              />
               <span>Photo</span>
             </div>
 
@@ -166,7 +193,10 @@
               style="display: none"
             />
             <div id="uploadVidBtn" class="post_sec_icon">
-              <img src="{% static 'site_admin/img/video_icon.png' %}" alt="vid_icon" />
+              <img
+                src="{% static 'site_admin/img/video_icon.png' %}"
+                alt="vid_icon"
+              />
               <span>Video</span>
             </div>
           </div>
@@ -355,6 +385,10 @@
           $("#embedLinkModal").show();
         });
 
+        $("#uploadImageButton").click(() => {
+          $("#articleImgUploadInput").click();
+        });
+
         $("#embedImageBtn").click(() => {
           $("#embedFormHeader").text("Embed Image");
           $("#embedLinkModal").show();
@@ -423,6 +457,20 @@
 
             selectedImgOrVid = this.files[0];
             isSelectedImg = false;
+          }
+        });
+
+        let articleImagesForUpload = {};
+
+        $("#articleImgUploadInput").change(function() {
+          if (this.files && this.files[0]) {
+            let imgKey = 'img_' + Object.keys(articleImagesForUpload).length;
+            reader.onload = function(e) {
+              $("#postTxtArea").append("<br><img src=\"" + e.target.result + "\" alt=\"" + $("#linkLabel").val().trim() + "\" data-img-id=\"" + imgKey + "\"><br><br>");
+            }
+
+            articleImagesForUpload[imgKey] = this.files[0];
+            reader.readAsDataURL(this.files[0]); // convert to base64 string
           }
         });
 
@@ -511,7 +559,7 @@
 
           sessionStorage.setItem("postName", $("#name").val());
           sessionStorage.setItem("postType", postType);
-          sessionStorage.setItem("postContent", $("#postTxtArea").html());
+          sessionStorage.setItem("postContent", "<div dir=" + ($("#postTxtArea").attr("dir") == "rtl" ? "rtl" : "ltr") + ">" + $("#postTxtArea").html() + "</div>");
           sessionStorage.setItem("postContentMedia", isSelectedImg ? $("#uploadedImgPreview").attr("src") : $("#uploadedVidPreview").attr("src"));
 
           window.open("{% url 'postPreview' %}", '_blank');
@@ -570,7 +618,7 @@
                       name : $("#name").val(),
                       link : downloadURL,
                       minLink: minifiedDownloadURL,
-                      text : $("#postTxtArea").html(),
+                      text : "<div dir=" + ($("#postTxtArea").attr("dir") == "rtl" ? "rtl" : "ltr") + ">" + $("#postTxtArea").html() + "</div>",
                       textNoTags: $("#postTxtArea").text(),
                       timestamp : (new Date()).getTime(),
                       newTags: JSON.stringify(postTags),
@@ -659,7 +707,41 @@
                   });
                 }
               } else {
-                savePost("", "");
+                if (postType == "article") {
+                  let articleImagesForUploadKeys = Object.keys(articleImagesForUpload);
+                  if (articleImagesForUploadKeys.length > 0) {
+                    for(let i = 0; i < articleImagesForUploadKeys.length; i++) {
+                      if (!($("#postTxtArea").html().includes(articleImagesForUploadKeys[i]))) {
+                        delete articleImagesForUpload[articleImagesForUploadKeys[i]];
+                      }
+                    }
+                  }
+
+                  articleImagesForUploadKeys = Object.keys(articleImagesForUpload);
+
+                  let uploadsRemaining = articleImagesForUploadKeys.length;
+
+                  if (uploadsRemaining > 0) {
+                    for(let i = 0; i < articleImagesForUploadKeys.length; i++) {
+                      let uploadTask = storageRef.child('content/posts/' + postKey + "_" + articleImagesForUploadKeys[i] + '.jpg').put(articleImagesForUpload[articleImagesForUploadKeys[i]]);
+                      uploadTask.on('state_changed', function(snapshot){}, function(error) {}, function() {
+                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                          $("img[data-img-id='" + articleImagesForUploadKeys[i] + "']").attr("src", downloadURL);
+
+                          uploadsRemaining--;
+
+                          if (uploadsRemaining == 0) {
+                            savePost("", "");
+                          }
+                        });
+                      });
+                    }
+                  } else {
+                    savePost("", "");
+                  }
+                } else {
+                  savePost("", "");
+                }
               }
             }
         });

@@ -48,7 +48,7 @@ storage = firebase.storage()
 
 def admin_auth(request):
     if("admin" in request.session):
-        return redirect('admin/dashboard')
+        return redirect('dashboard')
 
     if request.method == "POST":
         if 'username' in request.POST:
@@ -72,7 +72,8 @@ def admin_auth(request):
                     request.session["admin_uid"] = uid
 
                     return JsonResponse({"result": "success"})
-                except Exception:
+                except Exception as e:
+                    print(e)
                     return JsonResponse({"result": "failure"})
             else:
                 try:
@@ -334,4 +335,4 @@ def admin_logout(request):
     request.session.pop("admin", None)
     request.session.pop("admin_uid", None)
 
-    return redirect("admin/auth")
+    return redirect("/admin/")

@@ -431,8 +431,12 @@ def home(request, page_number=0):
                             post["category"] = categories[post["category"]]
 
                             if post['type'] == "article" and post['text'].find("<img") > -1:
-                                post['link'] = post['text'][post['text'].find(
-                                    "<img src=") + 10: post['text'].find("alt") - 2]
+                                if "firebasestorage" in post['text']:
+                                    post['link'] = post['text'][post['text'].find(
+                                    "<img src=") + 10: post['text'].find(" alt") - 2]
+                                else:
+                                    post['link'] = post['text'][post['text'].find(
+                                        "<img src=") + 10: post['text'].find("alt") - 2]
 
                             post["isLiked"] = 0
 
@@ -1043,11 +1047,14 @@ def browse(request, searchTerm=""):
                                 ).lower().strip().split()
                     postIDs = {}
                     for word in words:
-                        wordPostIDs = db.child("words").child(word).get().val()
+                        wordPostIDs = db.child("words").order_by_key().start_at(word).end_at(word + "\uf8ff").get().val()
                         if wordPostIDs != None:
-                            for postID in wordPostIDs.items():
-                                postIDs[postID[0]] = "postID"
+                            wordPostIDs = dict(wordPostIDs)
+                            for wordID in wordPostIDs:
+                                for postID in wordPostIDs[wordID].items():
+                                    postIDs[postID[0]] = "postID"
 
+                    print(postIDs)  
                     postIDs = sorted(postIDs)
 
                     maxPossiblePages = (len(postIDs) % loadLimit) + 1

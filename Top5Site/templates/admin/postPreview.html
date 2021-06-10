@@ -6,7 +6,10 @@
     <meta charset="UTF-8" />
     <title>Post Preview</title>
 
-    <link rel="stylesheet" href="{% static 'site_admin/css/postPreview.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'site_admin/css/postPreview.css' %}"
+    />
   </head>
   <body>
     <div id="post">
@@ -15,9 +18,8 @@
     </div>
 
     <script>
-      document.getElementById(
-        "selectedPostTitle"
-      ).innerHTML = sessionStorage.getItem("postName");
+      document.getElementById("selectedPostTitle").innerHTML =
+        sessionStorage.getItem("postName");
       const postType = sessionStorage.getItem("postType");
 
       console.log(postType);

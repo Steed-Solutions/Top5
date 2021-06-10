@@ -6,7 +6,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="{% static 'site_admin/font/stylesheet.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'site_admin/font/stylesheet.css' %}"
+    />
     <link rel="stylesheet" href="{% static 'site_admin/css/dashboard.css' %}" />
     <link rel="stylesheet" href="{% static 'site_admin/css/loader.css' %}" />
 
@@ -18,10 +21,10 @@
       rel="stylesheet"
       type="text/css"
     />
-    <script src="{% static 'site_admin/js/jquery-ui.min.js' %}"></script>
+    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <link
       rel="stylesheet"
-      href="{% static 'site_admin/css/jquery-ui.css' %}"
+      href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
     />
 
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
@@ -54,8 +57,14 @@
           "src",
           "{% static 'site_admin/img/dashboard_icon.png' %}"
         );
-        $(".category_icon").attr("src", "{% static 'site_admin/img/category_icon.png' %}");
-        $(".post_icon").attr("src", "{% static 'site_admin/img/post_icon_clicked.png' %}");
+        $(".category_icon").attr(
+          "src",
+          "{% static 'site_admin/img/category_icon.png' %}"
+        );
+        $(".post_icon").attr(
+          "src",
+          "{% static 'site_admin/img/post_icon_clicked.png' %}"
+        );
         $("#dashboardContent").load(
           "{% url 'categoryDash' category_id='CATEGORY_ID' %}".replace(
             /CATEGORY_ID/,
@@ -102,7 +111,10 @@
             "src",
             "{% static 'site_admin/img/dashboard_icon.png' %}"
           );
-          $(".post_icon").attr("src", "{% static 'site_admin/img/post_icon.png' %}");
+          $(".post_icon").attr(
+            "src",
+            "{% static 'site_admin/img/post_icon.png' %}"
+          );
           $(".category_icon").attr(
             "src",
             "{% static 'site_admin/img/category_icon_clicked.png' %}"
@@ -141,7 +153,10 @@
               "src",
               "{% static 'site_admin/img/category_icon.png' %}"
             );
-            $(".post_icon").attr("src", "{% static 'site_admin/img/post_icon.png' %}");
+            $(".post_icon").attr(
+              "src",
+              "{% static 'site_admin/img/post_icon.png' %}"
+            );
           }
 
           $("#dashboardContent").load("{% url 'myDash' %}", () => {
@@ -169,7 +184,10 @@
               "src",
               "{% static 'site_admin/img/category_icon.png' %}"
             );
-            $(".post_icon").attr("src", "{% static 'site_admin/img/post_icon.png' %}");
+            $(".post_icon").attr(
+              "src",
+              "{% static 'site_admin/img/post_icon.png' %}"
+            );
             $(".personal_info").show();
           } else {
             callbackFunc();
@@ -512,7 +530,11 @@
       <aside id="side_menu_container">
         <div id="side_menu">
           <div>
-            <img id="menu_brand" src="{% static 'site_admin/img/logo.png' %}" alt="Logo" />
+            <img
+              id="menu_brand"
+              src="{% static 'site_admin/img/logo.png' %}"
+              alt="Logo"
+            />
           </div>
           <div class="menu_container">
             <div>
