@@ -241,7 +241,7 @@ nav {
   font-size: calc(20px + (30 - 20) * ((100vw - 300px) / (1600 - 300)));
   color: #204b22;
   margin-bottom: 30px;
-  letter-spacing: 1px;
+  /* letter-spacing: 1px; */
 }
 
 .popular_content {
@@ -749,7 +749,7 @@ nav {
 .user_profile_page > h2 {
   font-size: calc(12px + (25 - 12) * ((100vw - 300px) / (1600 - 300)));
   font-weight: 600;
-  letter-spacing: 5px;
+  /* letter-spacing: 5px; */
   margin-bottom: 1.04vw;
   margin-top: 2.4vw;
 }
@@ -810,7 +810,7 @@ nav {
 
 .profile_name {
   font-size: calc(12px + (30 - 12) * ((100vw - 300px) / (1600 - 300)));
-  letter-spacing: 5px;
+  /* letter-spacing: 5px; */
   font-weight: bold;
   margin-top: 20px;
 }
@@ -990,7 +990,7 @@ nav {
 .user_profile_save > h2 {
   font-size: calc(20px + (25 - 20) * ((100vw - 300px) / (1600 - 300)));
   font-weight: 600;
-  letter-spacing: 2px;
+  /* letter-spacing: 2px; */
   margin-bottom: 3vw;
 }
 
@@ -1055,9 +1055,10 @@ nav {
 }
 
 .item_details > p:nth-of-type(1) {
-  letter-spacing: 5px;
+  /* letter-spacing: 5px; */
   font-weight: bold;
   margin-top: 0.5vw;
+  font-size: 1.15em;
 }
 
 .item_details > span {

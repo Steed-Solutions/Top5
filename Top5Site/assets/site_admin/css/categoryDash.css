@@ -57,6 +57,10 @@ html {
   font-size: 14px;
 }
 
+#postTxtArea img {
+  max-width: 100%;
+}
+
 .post_sec_icons {
   padding: 20px 0;
   display: grid;
@@ -263,14 +267,14 @@ html {
   cursor: pointer;
   text-decoration: none;
   text-align: center;
-  color:white;
+  color: white;
   line-height: 30px;
   padding: 0;
   border: 0;
 }
 .tagsinput .tag .tag-remove:after,
 .tagsinput .tag .tag-remove:before {
-  background:white;
+  background: white;
   position: absolute;
   display: block;
   width: 10px;
@@ -304,7 +308,7 @@ html {
   margin: 0 5px 5px 0;
 }
 .tagsinput div input.error {
-  color:white;
+  color: white;
 }
 .tagsinput div input::-ms-clear {
   display: none;

@@ -341,7 +341,7 @@ def home(request, page_number=0):
 
                             if post['type'] == "article" and post['text'].find("<img") > -1:
                                 post['link'] = post['text'][post['text'].find(
-                                    "<img src=") + 10: post['text'].find("alt") - 2]
+                                "<img src=") + 10: post['text'].find(" alt" if "firebasestorage" in post['text'] else "alt") - 2]
 
                             isLiked = db.child(
                                 "likes/" + post['id'] + "/" + request.session['uid']).get().val() != None
@@ -431,12 +431,8 @@ def home(request, page_number=0):
                             post["category"] = categories[post["category"]]
 
                             if post['type'] == "article" and post['text'].find("<img") > -1:
-                                if "firebasestorage" in post['text']:
-                                    post['link'] = post['text'][post['text'].find(
-                                    "<img src=") + 10: post['text'].find(" alt") - 2]
-                                else:
-                                    post['link'] = post['text'][post['text'].find(
-                                        "<img src=") + 10: post['text'].find("alt") - 2]
+                                post['link'] = post['text'][post['text'].find(
+                                "<img src=") + 10: post['text'].find(" alt" if "firebasestorage" in post['text'] else "alt") - 2]
 
                             post["isLiked"] = 0
 
@@ -582,7 +578,7 @@ def home(request, page_number=0):
 
             if post['type'] == "article" and post['text'].find("<img") > -1:
                 post['link'] = post['text'][post['text'].find(
-                    "<img src=") + 10: post['text'].find("alt") - 2]
+                "<img src=") + 10: post['text'].find(" alt" if "firebasestorage" in post['text'] else "alt") - 2]
 
             recentPosts.append(post)
 
@@ -656,7 +652,7 @@ def categories(request, category_id='none', page_number=0):
 
                             if post['type'] == "article" and post['text'].find("<img") > -1:
                                 post['link'] = post['text'][post['text'].find(
-                                    "<img src=") + 10: post['text'].find("alt") - 2]
+                                "<img src=") + 10: post['text'].find(" alt" if "firebasestorage" in post['text'] else "alt") - 2]
 
                             isLiked = False if not "user" in request.session else db.child(
                                 "likes/" + postID + "/" + request.session['uid']).get().val() != None
@@ -1273,7 +1269,7 @@ def browse(request, searchTerm=""):
         if post != None:
             if post['type'] == "article" and post['text'].find("<img") > -1:
                 post['link'] = post['text'][post['text'].find(
-                    "<img src=") + 10: post['text'].find("alt") - 2]
+                "<img src=") + 10: post['text'].find(" alt" if "firebasestorage" in post['text'] else "alt") - 2]
 
             selectedTagPosts[tag] = post['link']
 
@@ -1301,7 +1297,7 @@ def browse(request, searchTerm=""):
             if post != None:
                 if post['type'] == "article" and post['text'].find("<img") > -1:
                     post['link'] = post['text'][post['text'].find(
-                        "<img src=") + 10: post['text'].find("alt") - 2]
+                    "<img src=") + 10: post['text'].find(" alt" if "firebasestorage" in post['text'] else "alt") - 2]   
                 popularPosts.append(post)
 
     return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "serverTime": int(math.floor(time.time() * 1000)), "tags": selectedTagPosts, "popularPosts": popularPosts, "searchTerm": searchTerm})
