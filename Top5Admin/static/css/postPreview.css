@@ -20,3 +20,7 @@
 #selectedPostActionAndComments {
   margin-top: 3.5vw;
 }
+
+#selectedPostContent img {
+  max-width: 100%;
+}

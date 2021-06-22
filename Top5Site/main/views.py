@@ -247,7 +247,7 @@ def credentials(request):
     return render(request, "credentials/credentials.html", {"categories": categories})
 
 
-def home(request, page_number=0):
+def home(request):
     global loggedInUserCategoricalPosts
 
     loadLimit = 10
@@ -262,6 +262,7 @@ def home(request, page_number=0):
 
     if request.method == "POST":
         if request.POST['type'] == "load":
+            page_number = int(request.POST['page_number'])
             try:
                 if(len(categories) > 0):
                     isLoggedIn = "user" in request.session
@@ -585,7 +586,7 @@ def home(request, page_number=0):
         recentPosts = sorted(
             recentPosts, key=lambda post: post['id'], reverse=True)
 
-    return render(request, "site/pages/home.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "pageNumber": page_number, "categories": categories, "recentPosts": recentPosts, "recentPostsCount": len(recentPosts), "serverTime": int(math.floor(time.time() * 1000))})
+    return render(request, "site/pages/home_infinite.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "categories": categories, "recentPosts": recentPosts, "recentPostsCount": len(recentPosts), "serverTime": int(math.floor(time.time() * 1000))})
 
 
 def categories(request, category_id='none', page_number=0):

@@ -1195,7 +1195,7 @@ public class MainModel {
 
         for (String word : searchWords) {
             if (!word.equals("")) {
-                firebaseDatabase.child("content").child("posts").orderByChild("words/" + word.toLowerCase(Locale.ENGLISH)).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+                firebaseDatabase.child("content").child("posts").orderByChild("words/" + word.toLowerCase(Locale.ENGLISH) + "\uf8ff").equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.getChildrenCount() == 0) {
