@@ -434,13 +434,17 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 75px;
+  /* border-radius: 75px; */
   width: 87.4vw;
-  height: 6.5vw;
-  background-color: #204b22;
-  color: white;
-  font-size: calc(12px + (20 - 12) * ((100vw - 300px) / (1600 - 300)));
+  /* height: 6.5vw; */
+  /* background-color: #204b22; */
+  /* color: white;
+  font-size: calc(12px + (20 - 12) * ((100vw - 300px) / (1600 - 300))); */
   margin: 3vw 0;
+}
+
+.ad img {
+  width: 100%;
 }
 
 .image_banner {
