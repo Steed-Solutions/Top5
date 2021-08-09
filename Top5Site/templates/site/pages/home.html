@@ -275,7 +275,7 @@
 
     $.ajax({
       type: "POST",
-      url: "{% url 'home' 123456 %}".replace(/123456/, pageNumber),
+      url: "{% url 'home' %}",
       data: data,
       success: (response) => {
         if(response.result == "success") {
@@ -510,7 +510,7 @@
     if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {      
       postContent.innerHTML =
         "<a href='" + postMap["link"] + "' class='progressive replace' style='cursor: inherit;width: inherit;height: inherit;position: unset;''><img src='" +
-        ("minLink" in postMap ? postMap["minLink"] : postMap["link"]) +
+        ("minLink" in postMap && postMap['minLink'] != "" ? postMap["minLink"] : postMap["link"]) +
         "' class='post_content_image preview' loading='lazy' alt='post_img' style='cursor: inherit;' onerror='$(this).hide()' /></a>";
     } else if (postMap["type"].indexOf("vid") >= 0) {
       postContent.innerHTML =
@@ -694,13 +694,13 @@
 
   $("#viewPrevBtn").click(() => {
     if ($("#loader").css("display") == "none") {
-      window.location.href = "{% url 'home' 123456 %}".replace(/123456/, pageNumber - 1);
+      window.location.href = "{% url 'home' %}";
     }
   });
 
   $("#viewMoreBtn").click(() => {
     if ($("#loader").css("display") == "none") {
-      window.location.href = "{% url 'home' 123456 %}".replace(/123456/, pageNumber + 1);
+      window.location.href = "{% url 'home' %}";
     }
   });
 </script>

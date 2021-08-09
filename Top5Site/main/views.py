@@ -180,6 +180,8 @@ def credentials(request):
 
                     uid = user['localId']
 
+                    print(uid)
+
                     userCheck = db.child(
                         "users/regularUsers/" + uid).get().val()
 
@@ -195,7 +197,8 @@ def credentials(request):
                     request.session['lang'] = 'en'
 
                     return JsonResponse({"result": "success"})
-                except Exception:
+                except Exception as e:
+                    print(e)
                     return JsonResponse({"result": "failure"})
             else:
                 try:

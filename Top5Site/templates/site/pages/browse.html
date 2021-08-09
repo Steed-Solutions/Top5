@@ -4,7 +4,7 @@
   <div class="search_field" {% if lang != "en" %}style="transform: scaleX(-1);"{% endif %}>
     <img src="{% static 'site/img/search_icon.png' %}" alt="search" />
     <input
-      id="seachInput"
+      id="searchInput"
       type="text"
       style="transform: inherit; direction: {% if lang == 'en' %}ltr{% else %}rtl{% endif %};"
       placeholder="{% if lang == 'en' %}{{ staticTextMap.search_placeholder_en }}{% else %}{{ staticTextMap.search_placeholder_fa }}{% endif %}"
@@ -418,7 +418,7 @@
     );
   });
 
-  $("#seachInput").on("input", (e) => {
+  $("#searchInput").on("input", (e) => {
     searchTerm = $(e.target).val();
     if (searchTerm.length == 0) {
       $("#searchLayout").hide();
@@ -438,24 +438,20 @@
 
   $("#viewPrevBtn").click(() => {
     if ($("#loader").css("display") == "none") {
-      window.location.href = "{% url 'home' 123456 %}".replace(
-        /123456/,
-        pageNumber - 1
-      );
-      loadSearchResults($("#seachInput").val(), "previous");
+      loadSearchResults($("#searchInput").val(), "previous");
     }
   });
 
   $("#viewMoreBtn").click(() => {
     if ($("#loader").css("display") == "none") {
-      loadSearchResults($("#seachInput").val(), "next");
+      loadSearchResults($("#searchInput").val(), "next");
     }
   });
 
   $(document).ready(function(){
     if ("{{ searchTerm }}" != "") {
-      $("#seachInput").val("{{ searchTerm }}");
-      document.getElementById("seachInput").dispatchEvent(new Event("input"))
+      $("#searchInput").val("{{ searchTerm }}");
+      document.getElementById("searchInput").dispatchEvent(new Event("input"))
     }
   });
 </script>
