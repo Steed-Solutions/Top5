@@ -1,0 +1,14 @@
+**/*.pyc
+*.aab
+*.apk
+build/
+**/.idea/
+**/__pycache__/
+FlamingoApi/flamingo/media/**
+.DS_Store
+.gradle
+.classpath
+.project
+.settings
+**/node_modules/
+**/lib/

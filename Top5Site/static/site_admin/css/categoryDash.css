@@ -180,7 +180,7 @@ html {
 #saveBtn,
 #previewBtn,
 #clearBtn {
-  display: none;
+  display:flex;
   width: 20%;
   height: 40px;
   background-color: #a27dce;
@@ -190,6 +190,11 @@ html {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+#previewBtn,
+#clearBtn {
+  display: none;
 }
 
 #previewBtn {

@@ -16,9 +16,10 @@ import pyrebase
 import json
 from urllib.parse import unquote
 
-cred = adminCredentials.Certificate(finders.find(
-    'site/key/top-50-9951b-firebase-adminsdk-6n5a9-5a5dfe7f4d.json'))
-firebase_admin.initialize_app(cred)
+
+if not firebase_admin._apps:
+    cred = adminCredentials.Certificate(finders.find('site/key/top-50-9951b-firebase-adminsdk-6n5a9-5a5dfe7f4d.json'))
+    firebase_admin.initialize_app(cred)
 
 config = {
     "apiKey": "AIzaSyBRRqudJsKGAtpUwkecr1kQu2wFOyRMGZY",
@@ -990,6 +991,7 @@ def profile(request):
     userDetails = {
         'name': 'N/A',
         'email': 'N/A',
+        'profilePhoto' :None
         # 'gender': 'N/A',
         # 'description': "N/A"
     }

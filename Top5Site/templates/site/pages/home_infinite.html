@@ -39,7 +39,7 @@
               <h3>{% if lang == 'en' %}{{ staticTextMap.we_have_content_for_the_following_en }}{% else %}{{ staticTextMap.we_have_content_for_the_following_fa }}{% endif %}</h3>
               <div class="hero_categories">
                 {% for categoryID, category in categories.items %}
-                  <span onclick='window.location.href="{% url 'categories' %}"'>
+                  <span name="{{ categoryID }}" onclick='onCategoryClick(this)'>
                     <div><img loading='lazy' src="{{ category.imgURL }}" /></div>
                   </span>
                 {% endfor %}
@@ -194,13 +194,27 @@
     window.location.href = "{% url 'browse' %}";
   }); {% endcomment %}
 
-  $("#searchBtn").click(() => {
-    if($("#searchInput").val().length > 0) {
-      window.location.href = "{% url 'browse' 123456 %}".replace(/123456/, $("#searchInput").val());
+  const searchCallback = () => {
+    const query = $("#searchInput").val();
+    if (query.length > 0) {
+      window.location.href = "{% url 'browse' 123456 %}".replace(/123456/, query);
     } else {
       window.location.href = "{% url 'browse' %}";
     }
+  };
+
+  $("#searchBtn").click(searchCallback);
+  $("#searchInput").keypress(function (e) {
+    if (e.key === 'Enter') {
+      searchCallback();
+    }
   });
+
+
+
+  function onCategoryClick(e) {
+    window.location.href = "{% url 'categories' 123456 0 %}".replace(/123456/, $(e).attr("name"));
+  }
 
   let slideIndex = 1;
 

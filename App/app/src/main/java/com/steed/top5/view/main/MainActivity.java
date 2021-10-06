@@ -23,7 +23,7 @@ import com.steed.top5.singleton.UserSingleton;
 import com.steed.top5.util.Constants;
 import com.steed.top5.viewmodel.MainViewModel;
 
-public class MainActivity extends AppCompatActivity {
+public class  MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private NavController controller;
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     viewModel.signOutLiveData.observe(MainActivity.this, new Observer<Boolean>() {
                         @Override
                         public void onChanged(Boolean aBoolean) {
-                            controller.navigate(ProfileFragmentDirections.actionProfileFragmentToCredentialsActivity());
+                          //  controller.navigate(ProfileFragmentDirections.actionProfileFragmentToCredentialsActivity());
                         }
                     });
                 }

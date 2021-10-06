@@ -329,7 +329,7 @@
         });
 
         $("#postTxtArea").html("");
-        $("#saveBtn, #previewBtn, #clearBtn").hide();
+        $("#previewBtn, #clearBtn").hide();
         $("#articleBtn").parent().toggleClass("active");
         if($("#articleBtn").parent().hasClass("active")) {
           $("#articleBtn").css("padding", "9px");
@@ -363,7 +363,7 @@
             $(".btn-toolbar").hide();
             $("#optionsSwitchConfirmationModal").hide();
           } else {
-            $("#saveBtn, #previewBtn, #clearBtn").hide();
+            $("#previewBtn, #clearBtn").hide();
             $("#articleBtn").parent().toggleClass("active");
             if($("#articleBtn").parent().hasClass("active")) {
               $("#articleBtn").css("padding", "9px");
@@ -428,7 +428,7 @@
               $("#uploadOptionsBtns").hide();
               $("#uploadPreview").show();
               $("#imgPreview").show();
-              $("#saveBtn, #previewBtn, #clearBtn").css("display", "flex");
+              $("#previewBtn, #clearBtn").css("display", "flex");
               $("#uploadedImgPreview").attr("src", e.target.result);
             }
             reader.readAsDataURL(this.files[0]); // convert to base64 string
@@ -445,7 +445,7 @@
               $("#uploadOptionsBtns").hide();
               $("#uploadPreview").show();
               $("#vidPreview").show();
-              $("#saveBtn, #previewBtn, #clearBtn").css("display", "flex");
+              $("#previewBtn, #clearBtn").css("display", "flex");
               $("#uploadedVidPreview").attr("src", e.target.result)
 
               document.getElementById("uploadedVidPreview").onloadedmetadata = function() {
@@ -484,7 +484,7 @@
           selectedImgOrVid = null;
 
           if($("#postTxtArea").html().length == 0) {
-            $("#saveBtn, #previewBtn, #clearBtn").hide();
+            $("#previewBtn, #clearBtn").hide();
           }
 
         });
@@ -499,18 +499,18 @@
           selectedImgOrVid = null;
 
           if($("#postTxtArea").html().length == 0) {
-            $("#saveBtn, #previewBtn, #clearBtn").hide();
+            $("#previewBtn, #clearBtn").hide();
           }
         });
 
         $(document).on("keyup", e => {
           if($(e.target).attr("id") == "postTxtArea") {
             if($("#postTxtArea").html().length > 0) {
-              if($("#saveBtn, #previewBtn, #clearBtn").css("display") == "none") {
-                $("#saveBtn, #previewBtn, #clearBtn").css("display", "flex");
+              if($("#previewBtn, #clearBtn").css("display") == "none") {
+                $("#previewBtn, #clearBtn").css("display", "flex");
               }
             } else if ($("#postTxtArea").html().length == 0 && $("#uploadPreview").css("display") == "none") {
-              $("#saveBtn, #previewBtn, #clearBtn").hide();
+              $("#previewBtn, #clearBtn").hide();
             }
           }
         });
@@ -531,7 +531,7 @@
             $('#form-tags-4').removeTag(postTags[i]);
           }
 
-          $("#saveBtn, #previewBtn, #clearBtn").hide();
+          $("#previewBtn, #clearBtn").hide();
           selectedImgOrVid = null;
           selectedPostForEdit = "";
         });
@@ -642,7 +642,7 @@
                           $('#form-tags-4').removeTag(postTags[i]);
                         }
 
-                        $("#saveBtn, #previewBtn, #clearBtn").hide();
+                        $("#previewBtn, #clearBtn").hide();
                         selectedImgOrVid = null;
 
                         populatePostsList();
@@ -787,7 +787,7 @@
               $("#name").val("");
               $("#postTxtArea").html("").show();
               $("#uploadOptionsBtns").show();
-              $("#saveBtn, #previewBtn, #clearBtn").hide();
+              $("#previewBtn, #clearBtn").hide();
               selectedImgOrVid = null;
 
               selectedPostForEdit = postID;
@@ -872,7 +872,7 @@
 
               $("#optionsSwitchConfirmationModal").hide();
               $("#name").val(post.name);
-              $("#saveBtn, #previewBtn, #clearBtn").css("display", "flex");
+              $("#previewBtn, #clearBtn").css("display", "flex");
 
               populateSelectedPostTagsList();
             });

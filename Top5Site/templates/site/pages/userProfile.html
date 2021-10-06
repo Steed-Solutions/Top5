@@ -36,12 +36,25 @@
     <div class="profile_content">
       <div class="profile_img_container">
         <div class="profile_img">
-          <img src="{% static 'site/img/user_avatar.png' %}" alt="profilepic" />
+          <img src="{% static 'site/img/user_avatar.png' %}"
+          data-default-photo="{% static 'site/img/user_avatar.png' %}"
+           alt="profilepic" />
         </div>
         <span id="userName" class="profile_name">{{ userDetails.name }}</span>
         <span id="userEmail" class="profile_email"
-          >{{ userDetails.email }}</span
-        >
+          >{{ userDetails.email }}</span>
+
+          {% if userDetails.profilePhoto %}
+        <button id="remove_photo" class="upload-button remove-photo"><i class="fas fa-trash-alt"></i>&nbsp;&nbsp;Remove photo</button>
+
+        {% else %}
+         <label class="upload-button upload-file-label" for="upload_photo">
+          <i class="fa fa-upload"></i>&nbsp;&nbsp;
+           Choose a file
+           <input type="file" id="upload_photo" class="inputfile"  accept="image/*" />
+         </label>
+         {% endif %}
+
       </div>
       <div class="profile_details">
         {% comment %} <div class="gender">
@@ -304,6 +317,49 @@
         }
       })
     });
+
+    const uploadButtonContainer = $(".upload-file-label");
+    const removePhotoButton = $("#remove_photo");
+    //let storageRef = firebase.storage().ref();
+    $("#upload_photo").change(function (e) {
+      let fileCount = e.target.files.length;
+      if (fileCount) {
+        let file = e.target.files[0];
+        let reader = new FileReader();
+        if (file.size < 600000) {
+          reader.onload = function (e) {
+            let imgLink = e.target.result;
+            $(".profile_img > img").attr('src', imgLink);
+            uploadButtonContainer.hide();
+            removePhotoButton.show();
+            // console.log(imgLink);
+            // console.log(`Setting image preview ...`);
+
+          };
+          reader.readAsDataURL(file);
+          /*
+          let imageName = `IMG_244020404`;
+          let uploadTask = storageRef.child(`content/posts/${imageName}.jpg`).put(file);
+                      uploadTask.on('state_changed', function(snapshot){}, function(error) {}, function() {
+                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                          $(".profile_img > img").attr("src", downloadURL);
+
+                        });
+                      });*/
+        } else {
+          console.log("File is too big, compress");
+
+        }
+      }
+    });
+
+    removePhotoButton.click((e) => {
+        let defaultImage = $(".profile_img > img").data("default-photo");
+        $(".profile_img > img").attr('src', defaultImage);
+        removePhotoButton.hide();
+        uploadButtonContainer.show();
+    });
+
 
     /*$("#editProfileBtn").click(() => {
       if($("#editProfileBtn").text().indexOf("Edit") > -1) {

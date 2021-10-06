@@ -12,8 +12,16 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+
+from django.contrib.staticfiles import finders
+
+import firebase_admin
+from firebase_admin import credentials as adminCredentials, auth as adminAuth, exceptions as firebaseExceptions
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -21,6 +29,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '5ys+6i#@si44=3i$ay6i+eyu*w*(je#n#6ns_9bkyp9low2qw9'
+
+
+# cred = adminCredentials.Certificate(finders.find(
+#     'site/key/top-50-9951b-firebase-adminsdk-6n5a9-5a5dfe7f4d.json'))
+# firebase_admin.initialize_app(cred)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
