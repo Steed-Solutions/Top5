@@ -919,12 +919,15 @@ def post(request, post_title_id):
         comments = list()
         commentItems = db.child(
             "comments/" + postID).get().val()
+        uid = request.session.get('uid', None)
         if commentItems != None:
             for key, val in commentItems.items():
                 val["id"] = key
 
-                val["username"] = "You" if val["userID"] == request.session['uid'] else db.child(
+                val["username"] = "You" if val["userID"] == uid else db.child(
                     "users/regularUsers/" + val["userID"] + "/name").get().val()
+
+                val["profilePhoto"] = db.child("users/regularUsers/" + val["userID"] + "/profilePhoto").get().val()
 
                 comments.append(val)
 
@@ -932,7 +935,11 @@ def post(request, post_title_id):
     else:
         return redirect("invalid")
 
-    return render(request, "site/pages/post.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "urlQuery": post_title_id, "post": post, "postMap": json.dumps(dict(post)), "serverTime": int(math.floor(time.time() * 1000))})
+    userPhoto = ""
+    if uid:
+        userPhoto = db.child("users/regularUsers/" + uid + "/profilePhoto").get().val()
+
+    return render(request, "site/pages/post.html", {"isLoggedIn": "user" in request.session, "userPhoto": userPhoto, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "urlQuery": post_title_id, "post": post, "postMap": json.dumps(dict(post)), "serverTime": int(math.floor(time.time() * 1000))})
 
 
 def profile(request):
@@ -984,14 +991,17 @@ def profile(request):
         categories[key] = val
     categoryIDs = categories.keys()
 
-    user = db.child("users/regularUsers/" + request.session['uid']).get().val()
+    uid = request.session['uid']
+    user = db.child("users/regularUsers/" + uid).get().val()
 
     userPrefFilter = 3
     userPrefCategories = []
     userDetails = {
+        'uid': uid,
         'name': 'N/A',
         'email': 'N/A',
-        'profilePhoto' :None
+        'profilePhoto': ''
+
         # 'gender': 'N/A',
         # 'description': "N/A"
     }
@@ -1004,6 +1014,9 @@ def profile(request):
 
         if 'email' in user:
             userDetails['email'] = user['email']
+
+        if 'profilePhoto' in user:
+            userDetails['profilePhoto'] = user['profilePhoto']
 
         # if 'gender' in user:
         #     userDetails['gender'] = user['gender']

@@ -87,8 +87,14 @@
           "
         >
           <img
-            src="{% static 'site/img/user_avatar.png' %}"
+
+             {% if comment.profilePhoto %}
+             src="{{comment.profilePhoto}}"
+             {% else %}
+             src="{% static 'site/img/user_avatar.png' %}"
+             {% endif %}
             alt="user"
+            class="user_photo"
             style="
               transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %});
             "
@@ -155,7 +161,13 @@
       style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %})"
     >
       <img
+
+        {% if userPhoto %}
+        src ="{{userPhoto}}"
+        {% else %}
         src="{% static 'site/img/user_avatar.png' %}"
+        {% endif %}
+
         alt="user"
         style="transform: scaleX({% if lang == 'en' %}1{% else %}-1{% endif %})"
       />
@@ -393,4 +405,6 @@
   </script>
 
   {% endblock %}
+
 </div>
+

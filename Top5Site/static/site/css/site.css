@@ -606,6 +606,8 @@ nav {
   margin-left: -0.7vw;
 }
 
+
+
 .comment {
   display: flex;
   align-items: center;
@@ -614,6 +616,8 @@ nav {
 }
 .comment > img {
   width: 3.24vw;
+  height: 3.24vw;
+  border-radius: 50%;
 }
 
 .comment_content {
@@ -687,6 +691,8 @@ nav {
   user-select: none;
   cursor: pointer;
 }
+
+
 
 #viewPrevBtn {
   display: none;
@@ -1075,6 +1081,8 @@ nav {
 /* user_profile save page css */
 
 footer {
+  /*position: fixed;*/
+  bottom: 0;
   width: 100%;
   height: 125px;
   display: grid;
