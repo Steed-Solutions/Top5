@@ -18,7 +18,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
-    display: inline-block;
+    /* display: inline-block; */
     overflow: hidden;
     padding: 0.625rem 1rem;
     

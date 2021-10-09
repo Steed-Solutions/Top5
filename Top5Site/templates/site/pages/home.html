@@ -96,7 +96,7 @@
           {% for post in recentPosts %}
           <div
             class="mySlides"
-            onclick="onCarouselSlideClicked(this, '{{ post.name }}_~_{{ post.id }}')"
+            onclick="onCarouselSlideClicked(this, '{{ post.id }}')"
           >
             {% if post.link != "" %}
             <a href="{{ post.link }}" class="progressive replace">
@@ -628,12 +628,12 @@
     posts.appendChild(post);
 
     $("#comments_count_" + postMap["id"]).click((e) => {
-      let param = encodeURI(postMap["name"] + "_~_" + postMap["id"]);
+      let param = encodeURI(postMap["id"]);
       window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
     });
 1
     $("#postContent_" + postMap["id"]).click((e) => {
-      let param = encodeURI(postMap["name"] + "_~_" + postMap["id"]);
+      let param = encodeURI(postMap["id"]);
       window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
     });
 

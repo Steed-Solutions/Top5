@@ -40,7 +40,7 @@
           <div
             class="popular_card"
             style="background: url({{ post.link }}) top center no-repeat; background-size: cover;"
-            onclick="window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI({{ post.name }}_~_{{ post.id }}))"
+            onclick="window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI({{ post.id }}))"
           >
             <span style="color: white;">{{ post.name }}</span>
           </div>
@@ -357,8 +357,6 @@
     post.setAttribute(
       "onclick",
       "window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI('" +
-        postMap["name"] +
-        "_~_" +
         postMap["id"] +
         "'))"
     );
