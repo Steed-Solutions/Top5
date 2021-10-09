@@ -96,7 +96,7 @@
           {% for post in recentPosts %}
           <div
             class="mySlides"
-            onclick="onCarouselSlideClicked(this, '{{ post.name }}_~_{{ post.id }}')"
+            onclick="onCarouselSlideClicked(this, '{{ post.id }}')"
           >
             {% if post.link != "" %}
             <a href="{{ post.link }}" class="progressive replace">

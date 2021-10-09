@@ -4,7 +4,8 @@
 build/
 **/.idea/
 **/__pycache__/
-FlamingoApi/flamingo/media/**
+**/media/**
+db.sqlite3
 .DS_Store
 .gradle
 .classpath

@@ -778,7 +778,7 @@ def categories(request, category_id='none', page_number=0):
 
 def post(request, post_title_id):
     post_title_id = unquote(post_title_id)
-    postID = post_title_id.split("_~_")[1]
+    postID = post_title_id
 
     if request.method == "POST":
         if request.POST['type'] == "like":

@@ -659,6 +659,8 @@ nav {
 
 .comment_input > img {
   width: 3.24vw;
+  height: 3.24vw;
+  border-radius: 50%;
 }
 
 .comment_input > input {
@@ -807,9 +809,9 @@ nav {
   padding-right: 5vw;
 }
 .profile_img {
-  border-radius: 50%;
+  /* border-radius: 50%;
   height: 15.67vw;
-  width: 15.67vw;
+  width: 15.67vw; */
 }
 
 .profile_img > img {

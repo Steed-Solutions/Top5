@@ -363,12 +363,12 @@
                 posts.appendChild(post);
 
                 $("#comments_count_" + postMap["id"]).click((e) => {
-                        let param = encodeURI(postMap["name"] + "_~_" + postMap["id"]);
+                        let param = encodeURI(postMap["id"]);
                         window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
                 });
 
                 $("#postContent_" + postMap["id"]).click((e) => {
-                let param = encodeURI(postMap["name"] + "_~_" + postMap["id"]);
+                let param = encodeURI(postMap["id"]);
                 window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
                 });
 
