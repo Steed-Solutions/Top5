@@ -46,9 +46,9 @@
           </div>
           {% endfor %}
         {% else %}
-          <p style="margin: auto;">
-            {% if lang == 'en' %}{{ staticTextMap.no_posts_available_en }}{% else %}{{staticTextMap.no_posts_available_fa }}{% endif %}
-          </p>
+        <p style="margin: auto;">
+          {% if lang == 'en' %}{{ staticTextMap.no_posts_available_en }}{% else %}{{staticTextMap.no_posts_available_fa }}{% endif %}
+        </p>
         {% endif %}
       </div>
     </div>
@@ -56,10 +56,25 @@
 
   <div id="searchLayout" style="display: none; margin-top: 65px">
     <div id="posts"></div>
-    <p id="noPosts" style="text-align: center; display: none">
-      {% if lang == 'en' %}{{ staticTextMap.no_posts_available_en }}{% else %}{{
-      staticTextMap.no_posts_available_fa }}{% endif %}
-    </p>
+    <div id="noPosts" style="display: none;  line-height: 2">
+      <p>
+        {% if lang == 'en' %}{{ staticTextMap.no_search_results_heading_en }}{% else %}{{staticTextMap.no_search_results_heading_fa }}{% endif %}
+      </p>
+      <p id="no_search_results">
+        {% autoescape off %}
+          {% if lang == 'en' %}{{ staticTextMap.no_search_results_en }}{% else %}{{staticTextMap.no_search_results_fa }}{% endif %}
+        {% endautoescape %}
+      </p>
+      <p>
+        {% if lang == 'en' %}{{ staticTextMap.no_search_suggestions_en }}{% else %}{{staticTextMap.no_search_suggestions_fa }}{% endif %}
+      </p>
+
+      <ul style="list-style-type:none;">
+        <li>{% if lang == 'en' %}{{ staticTextMap.search_suggestions_one_en }}{% else %}{{staticTextMap.search_suggestions_one_fa }}{% endif %}</li>
+        <li>{% if lang == 'en' %}{{ staticTextMap.search_suggestions_two_en }}{% else %}{{staticTextMap.search_suggestions_two_fa }}{% endif %}</li>
+        <li>{% if lang == 'en' %}{{ staticTextMap.search_suggestions_three_en }}{% else %}{{staticTextMap.search_suggestions_three_fa }}{% endif %}</li>
+      </ul>
+    </div>
 
     <div id="loader">
       <div class="lds-default">
@@ -196,6 +211,9 @@
 
             if (pageNumber == 0 && allLoadedPosts.length == 0) {
               $("#noPosts").show();
+              //$("#no_search_results").html(response.errorMessage);
+              
+              
             } else {
               $("#posts").show();
               $("#page").show();

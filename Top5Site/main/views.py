@@ -140,6 +140,25 @@ engAndPersianStaticText = {
     'no_posts_available_en': 'No Posts Available',
     'no_posts_available_fa': 'هیچ پستی موجود نیست',
 
+    'no_search_results_heading_en':'No results containing all your search terms were found.',
+    'no_search_results_heading_fa':'No results containing all your search terms were found.',
+
+    'no_search_results_en': 'Your search term did not match any posts',
+    'no_search_results_fa': 'Your search term did not match any posts',
+
+    'no_search_suggestions_en': 'Suggestions',
+    'no_search_suggestions_fa': 'Suggestions',
+
+
+    'search_suggestions_one_en':'- Make sure that all words are spelled correctly.',
+    'search_suggestions_one_fa':'- Make sure that all words are spelled correctly.',
+
+    'search_suggestions_two_en':'- Try different keywords.',
+    'search_suggestions_two_fa':'- Try different keywords.',
+
+    'search_suggestions_three_en':'- Try more general keywords.',
+    'search_suggestions_three_fa':'- Try more general keywords.',
+
     'no_saved_posts_en': 'No Saved Posts',
     'no_saved_posts_fa': 'بدون ارسال ذخیره شده',
 
@@ -787,7 +806,13 @@ def post(request, post_title_id):
                     "content/posts/" + postID + "/likes").get().val()
                 currLikeCount = 0 if currLikeCount == None else currLikeCount
 
-                currLikeCount += 1 if request.POST["isLike"] == "true" else -1
+                if request.POST["isLike"] == "true":
+                    currLikeCount += 1
+                else:
+                    if currLikeCount > 0:
+                        currLikeCount -= 1
+
+
                 db.child("content/posts/" +
                          postID + "/likes").set(currLikeCount)
 
@@ -1035,12 +1060,21 @@ def profile(request):
         if categoryID in categoryIDs:
             interests.append(categories[categoryID])
 
+
+
     return render(request, "site/pages/userProfile.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, 'userDetails': userDetails, "categories": categories, "interests": interests, "filterID": userPrefFilter})
 
 
 def browse(request, searchTerm=""):
     global loggedInUserCategoricalPosts
     loggedInUserCategoricalPosts = []
+
+    print("Search Term "+searchTerm)
+
+    engAndPersianStaticText['no_search_results_en'] = engAndPersianStaticText['no_search_results_en'].replace(
+        "@searchTerm", searchTerm)
+    engAndPersianStaticText['no_search_results_fa'] = engAndPersianStaticText['no_search_results_fa'].replace(
+        "@searchTerm", searchTerm)
 
     if request.method == "POST":
         if request.POST['type'] == "load":
@@ -1179,10 +1213,16 @@ def browse(request, searchTerm=""):
 
                     return JsonResponse({"result": "success", "searchTerm": str(request.POST["searchTerm"]), "posts": allPosts, "pageNum": correctedPageNumber, "pageNumForView": 1 + correctedPageNumber, "hasNext": hasNext, "loadLimit": loadLimit})
                 else:
-                    return JsonResponse({"result": "success", "searchTerm": str(request.POST["searchTerm"]), "posts": [], })
+                    errorMessage = ""
+                    if request.session['lang'] == "en":
+                        errorMessage = engAndPersianStaticText['no_search_results_en']
+                    else:
+                        errorMessage = engAndPersianStaticText['no_search_results_fa']
+
+                    return JsonResponse({"result": "success", "searchTerm": str(request.POST["searchTerm"]), "posts": [], "errorMessage": errorMessage})
             except Exception as e:
                 print(e)
-                return JsonResponse({"result": "failure", "posts": list()})
+                return JsonResponse({"result": "failure", "posts": list(), "errorMessage": str(e)})
         elif request.POST['type'] == "like":
             try:
                 currLikeCount = db.child(
@@ -1318,6 +1358,8 @@ def browse(request, searchTerm=""):
                     post['link'] = post['text'][post['text'].find(
                     "<img src=") + 10: post['text'].find(" alt" if "firebasestorage" in post['text'] else "alt") - 2]   
                 popularPosts.append(post)
+
+
 
     return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "serverTime": int(math.floor(time.time() * 1000)), "tags": selectedTagPosts, "popularPosts": popularPosts, "searchTerm": searchTerm})
 
