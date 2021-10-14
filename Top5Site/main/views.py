@@ -524,7 +524,13 @@ def home(request):
                     "content/posts/" + request.POST["postID"] + "/likes").get().val()
                 currLikeCount = 0 if currLikeCount == None else currLikeCount
 
-                currLikeCount += 1 if request.POST["isLike"] == "true" else -1
+
+                if request.POST["isLike"] == "true":
+                    currLikeCount += 1
+                else:
+                    if currLikeCount > 0:
+                        currLikeCount -= 1
+
                 db.child("content/posts/" +
                          request.POST["postID"] + "/likes").set(currLikeCount)
 
@@ -764,7 +770,12 @@ def categories(request, category_id='none', page_number=0):
                         "content/posts/" + request.POST["postID"] + "/likes").get().val()
                     currLikeCount = 0 if currLikeCount == None else currLikeCount
 
-                    currLikeCount += 1 if request.POST["isLike"] == "true" else -1
+                    if request.POST["isLike"] == "true":
+                        currLikeCount += 1
+                    else:
+                        if currLikeCount > 0:
+                            currLikeCount -= 1
+
                     db.child("content/posts/" +
                              request.POST["postID"] + "/likes").set(currLikeCount)
 
@@ -791,7 +802,8 @@ def categories(request, category_id='none', page_number=0):
                 except Exception as e:
                     print(e)
                     return JsonResponse({"result": "failure"})
-
+    # print("=========== CATEGORIES  =========")
+    # print(categories)
     return render(request, "site/pages/categories.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "isCategoryPostsPage": category_id != "none", "categoryID": category_id, "pageNumber": page_number, "categories": categories, "serverTime": int(math.floor(time.time() * 1000))})
 
 
@@ -1069,12 +1081,12 @@ def browse(request, searchTerm=""):
     global loggedInUserCategoricalPosts
     loggedInUserCategoricalPosts = []
 
-    print("Search Term "+searchTerm)
-
-    engAndPersianStaticText['no_search_results_en'] = engAndPersianStaticText['no_search_results_en'].replace(
-        "@searchTerm", searchTerm)
-    engAndPersianStaticText['no_search_results_fa'] = engAndPersianStaticText['no_search_results_fa'].replace(
-        "@searchTerm", searchTerm)
+    # print("Search Term "+searchTerm)
+    #
+    # engAndPersianStaticText['no_search_results_en'] = engAndPersianStaticText['no_search_results_en'].replace(
+    #     "@searchTerm", searchTerm)
+    # engAndPersianStaticText['no_search_results_fa'] = engAndPersianStaticText['no_search_results_fa'].replace(
+    #     "@searchTerm", searchTerm)
 
     if request.method == "POST":
         if request.POST['type'] == "load":
@@ -1229,7 +1241,12 @@ def browse(request, searchTerm=""):
                     "content/posts/" + request.POST["postID"] + "/likes").get().val()
                 currLikeCount = 0 if currLikeCount == None else currLikeCount
 
-                currLikeCount += 1 if request.POST["isLike"] == "true" else -1
+                if request.POST["isLike"] == "true":
+                    currLikeCount += 1
+                else:
+                    if currLikeCount > 0:
+                        currLikeCount -= 1
+                        
                 db.child("content/posts/" +
                          request.POST["postID"] + "/likes").set(currLikeCount)
 

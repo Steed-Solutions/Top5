@@ -60,11 +60,6 @@
       <p>
         {% if lang == 'en' %}{{ staticTextMap.no_search_results_heading_en }}{% else %}{{staticTextMap.no_search_results_heading_fa }}{% endif %}
       </p>
-      <p id="no_search_results">
-        {% autoescape off %}
-          {% if lang == 'en' %}{{ staticTextMap.no_search_results_en }}{% else %}{{staticTextMap.no_search_results_fa }}{% endif %}
-        {% endautoescape %}
-      </p>
       <p>
         {% if lang == 'en' %}{{ staticTextMap.no_search_suggestions_en }}{% else %}{{staticTextMap.no_search_suggestions_fa }}{% endif %}
       </p>
