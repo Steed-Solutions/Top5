@@ -68,6 +68,79 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Top5Site.urls'
 
+
+# LOG_DIR = '/Users/tonym/Desktop/Freelancing/Projects/IranTop5/logs'
+LOG_DIR = '/home/Irantop5/logs'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'debug.log'),
+            'formatter': 'verbose'
+        },
+        'error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'error.log'),
+            'formatter': 'verbose'
+        },
+        'info': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'info.log'),
+            'formatter': 'verbose'
+        },
+        'warning': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'warning.log'),
+            'formatter': 'verbose'
+        }
+
+    },
+    'loggers': {
+        '': {
+            'handlers': ['info', 'warning', 'error'],
+            'level': 'INFO'
+        },
+        'django': {
+            'handlers': ['file'],
+            'propagate': True,
+        },
+
+        'django.request': {
+            'handlers': ['error'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+
+        'django.server': {
+            'handlers': ['error'],
+            'level': 'ERROR',
+            'propagate': True,
+        }
+    },
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

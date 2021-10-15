@@ -6,7 +6,7 @@
 <div class="categories_page" >
         {% if not isCategoryPostsPage %}
                 <div class="Categories_sec">   
-                        {% if categories|length > 0 %}
+                        {% if categories|length > 0  %}
                                 <p class="sec_header">{% if lang == 'en' %}{{ staticTextMap.related_content_to_following_categories_en }}{% else %}{{ staticTextMap.related_content_to_following_categories_fa }}{% endif %}</p>                
                                 <div class="categories_boxes">
                                         {% for id, category in categories.items %}
@@ -77,6 +77,7 @@
         let pageNumber = {{ pageNumber }};
 
         function onCategoryClick(e) {
+                console.log("1. Opening Category ", $(e).attr("name"));
                 window.location.href = "{% url 'categories' 123456 0 %}".replace(/123456/, $(e).attr("name"));
         }
 
@@ -368,8 +369,8 @@
                 });
 
                 $("#postContent_" + postMap["id"]).click((e) => {
-                let param = encodeURI(postMap["id"]);
-                window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
+                        let param = encodeURI(postMap["id"]);
+                        window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
                 });
 
                 if ("{{ isLoggedIn }}" == "True") {
