@@ -23,55 +23,55 @@
         <div class="hero_center">
           <div>
             <h1>IRAN TOP5</h1>
-            <h3>{% if lang == 'en' %}{{ staticTextMap.your_fav_recom_site_en }}{% else %}{{ staticTextMap.your_fav_recom_site_fa }}{% endif %}</h3>
+            <h3>{% if lang == 'en' %}{{ staticTextMap.your_fav_recom_site_en }}{% else %}{{
+              staticTextMap.your_fav_recom_site_fa }}{% endif %}</h3>
             <div class="hero_search">
-              <input id="searchInput" type="text" placeholder="{% if lang == 'en' %}{{ staticTextMap.search_stuff_you_like_en }}{% else %}{{ staticTextMap.search_stuff_you_like_fa }}{% endif %}" />
+              <input id="searchInput" type="text"
+                placeholder="{% if lang == 'en' %}{{ staticTextMap.search_stuff_you_like_en }}{% else %}{{ staticTextMap.search_stuff_you_like_fa }}{% endif %}" />
               <div id="searchBtn" style="user-select: none; cursor: pointer;}">
                 <img src="{% static 'site/img/search_icon_gray.png' %}" />
-                <p>{% if lang == 'en' %}{{ staticTextMap.search_en }}{% else %}{{ staticTextMap.search_fa }}{% endif %}</p>
+                <p>{% if lang == 'en' %}{{ staticTextMap.search_en }}{% else %}{{ staticTextMap.search_fa }}{% endif %}
+                </p>
               </div>
-            </div>      
+            </div>
           </div>
-        </div>
-        <div class="hero_footer">
-          <div>
-            {% if categories|length > 0 %}
-              <h3>{% if lang == 'en' %}{{ staticTextMap.we_have_content_for_the_following_en }}{% else %}{{ staticTextMap.we_have_content_for_the_following_fa }}{% endif %}</h3>
+
+          <div class="hero_footer">
+            <div>
+              {% if categories|length > 0 %}
+              <h3>{% if lang == 'en' %}{{ staticTextMap.we_have_content_for_the_following_en }}{% else %}{{
+                staticTextMap.we_have_content_for_the_following_fa }}{% endif %}</h3>
               <div class="hero_categories">
                 {% for categoryID, category in categories.items %}
-                  <span name="{{ categoryID }}" onclick='onCategoryClick(this)'>
-                    <div><img loading='lazy' src="{{ category.imgURL }}" /></div>
-                  </span>
+                <span name="{{ categoryID }}" onclick='onCategoryClick(this)'>
+                  <div><img loading='lazy' src="{{ category.imgURL }}" /></div>
+                </span>
                 {% endfor %}
-              </div>          
-            {% endif %}
+              </div>
+              {% endif %}
+            </div>
           </div>
         </div>
+
       </div>
     </div>
-    {% comment %} <div
-      class="search_field"
-      style="
+    {% comment %} <div class="search_field" style="
         width: 25.6vw;
         height: 2.73vw;
         align-self: {% if lang == 'en' %}flex-end{% else %}flex-start{% endif %};
         margin: 0 6.3vw;
         transform: scale({% if lang == 'en' %}1{% else %}-1{% endif %});
-      "
-    >
+      ">
       <img src="{% static 'site/img/search_icon_gray.png' %}" alt="search" />
-      <input
-        id="searchInp"
-        type="text"
-        style="
+      <input id="searchInp" type="text" style="
           transform: inherit;
           direction: {% if lang == 'en' %}ltr{% else %}rtl{% endif %};
           "
-        placeholder="{% if lang == 'en' %}{{ staticTextMap.search_placeholder_en }}{% else %}{{ staticTextMap.search_placeholder_fa }}{% endif %}"
-      />
+        placeholder="{% if lang == 'en' %}{{ staticTextMap.search_placeholder_en }}{% else %}{{ staticTextMap.search_placeholder_fa }}{% endif %}" />
     </div> {% endcomment %}
 
-    <div class="ad"><a href="https://www.digikala.com/search/category-dk-ds-gift-card/"><img src="{% static 'site/img/ad_banner.png' %}" /></a></div>
+    <div class="ad"><a href="https://www.digikala.com/search/category-dk-ds-gift-card/"><img
+          src="{% static 'site/img/ad_banner.png' %}" /></a></div>
 
     {% comment %} <div class="image_banner">
       <div>
@@ -91,36 +91,34 @@
 
     <!-- Slideshow container -->
     {% if recentPosts|length > 0 %}
-      <div id="carousel">
-        <div class="slideshow-container">
-          {% for post in recentPosts %}
-          <div
-            class="mySlides"
-            onclick="onCarouselSlideClicked(this, '{{ post.id }}')"
-          >
-            {% if post.link != "" %}
-            <a href="{{ post.link }}" class="progressive replace">
-              <img src="{% if 'minLink' in post %}{{ post.minLink }}{% else %}{{ post.link }}{% endif %}" class="preview" alt="image" style="width: 100%" />
-            </a>
-            {% endif %}
-            <div>
-              <div class="text">{{ post.name }}</div>
-            </div>
+    <div id="carousel">
+      <div class="slideshow-container">
+        {% for post in recentPosts %}
+        <div class="mySlides" onclick="onCarouselSlideClicked(this, '{{ post.id }}')">
+          {% if post.link != "" %}
+          <a href="{{ post.link }}" class="progressive replace">
+            <img src="{% if 'minLink' in post %}{{ post.minLink }}{% else %}{{ post.link }}{% endif %}" class="preview"
+              alt="image" style="width: 100%" />
+          </a>
+          {% endif %}
+          <div>
+            <div class="text">{{ post.name }}</div>
           </div>
-          {% endfor %}        
         </div>
-        <br />
-
-        <!-- Next and previous buttons -->
-        <a class="prev" onclick="prevSlide()">&#10094;</a>
-        <a class="next" onclick="nextSlide()">&#10095;</a>
-
-        <div id="indicators" style="text-align: center">
-          {% for post in recentPosts %}
-            <span class="indicator" onclick="currentSlide({{ forloop.counter }})"></span>
-          {% endfor %}
-        </div>
+        {% endfor %}
       </div>
+      <br />
+
+      <!-- Next and previous buttons -->
+      <a class="prev" onclick="prevSlide()">&#10094;</a>
+      <a class="next" onclick="nextSlide()">&#10095;</a>
+
+      <div id="indicators" style="text-align: center">
+        {% for post in recentPosts %}
+        <span class="indicator" onclick="currentSlide({{ forloop.counter }})"></span>
+        {% endfor %}
+      </div>
+    </div>
     {% endif %}
 
     {% comment %} Carousel End {% endcomment %}
@@ -165,7 +163,8 @@
         </div>
       </div>
       <p id="page">
-        {% if lang == 'en' %}{{ staticTextMap.page_en }}{% else %}{{ staticTextMap.page_fa }}{% endif %} <span id="pageNum">1</span>
+        {% if lang == 'en' %}{{ staticTextMap.page_en }}{% else %}{{ staticTextMap.page_fa }}{% endif %} <span
+          id="pageNum">1</span>
       </p>
     </div> {% endcomment %}
   </div>
@@ -176,11 +175,11 @@
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8BET22Z9HF"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
 
-  gtag('config', 'G-8BET22Z9HF');
+  gtag('config', 'G-8BET22Z9HF');
 </script>
 
 <script>
@@ -249,11 +248,11 @@
     indicators[slideIndex - 1].className += " active";
   }
 
-  function onCarouselSlideClicked(e, urlParam){
+  function onCarouselSlideClicked(e, urlParam) {
     window.location.href = "{% url 'post' 123456 %}".replace(/123456/, encodeURI(urlParam));
   }
 
-  if({{ recentPostsCount | safe }} > 0) {    
+  if ({{ recentPostsCount | safe }} > 0) {
     showSlides(slideIndex);
     let carouselTimer = setInterval(() => plusSlides(1), 5000);
 
@@ -262,13 +261,13 @@
       showSlides((slideIndex += n));
     }
 
-    function nextSlide(){
+    function nextSlide() {
       clearInterval(carouselTimer);
       plusSlides(1);
       carouselTimer = setInterval(() => plusSlides(1), 5000);
     }
 
-    function prevSlide(){
+    function prevSlide() {
       clearInterval(carouselTimer);
       plusSlides(-1);
       carouselTimer = setInterval(() => plusSlides(1), 5000);
@@ -280,7 +279,7 @@
 
   function loadPosts() {
     isLoadingPosts = true;
-    
+
     $("#loader").show();
 
     data = {
@@ -294,8 +293,8 @@
       url: "{% url 'home' %}",
       data: data,
       success: (response) => {
-        if(response.result == "success") {
-          if (response.posts.length > 0) {          
+        if (response.result == "success") {
+          if (response.posts.length > 0) {
             allLoadedPosts = [];
             response.posts.forEach((post) => {
               allLoadedPosts.push(post);
@@ -309,7 +308,7 @@
           }
           $("#loader").hide();
         } else {
-          if('invalid' in response) {
+          if ('invalid' in response) {
             window.location.href = "{% url 'invalid' %}";
           }
         }
@@ -336,26 +335,26 @@
         if (response.result == "success") {
           $(
             "[name='like_" +
-              postID +
-              "'] > span:first-child, #selectedPostActionAndComments [name='like_" +
-              postID +
-              "'] > span:first-child"
+            postID +
+            "'] > span:first-child, #selectedPostActionAndComments [name='like_" +
+            postID +
+            "'] > span:first-child"
           )
             .toggleClass("far")
             .toggleClass("fas");
           $(
             "[name='like_" +
-              postID +
-              "'] > span:first-child, #selectedPostActionAndComments [name='like_" +
-              postID +
-              "'] > span:first-child"
+            postID +
+            "'] > span:first-child, #selectedPostActionAndComments [name='like_" +
+            postID +
+            "'] > span:first-child"
           ).css("color", isLike ? "#D7443E" : "black");
           $(
             "[name='like_" +
-              postID +
-              "'] > span:last-child, #selectedPostActionAndComments [name='like_" +
-              postID +
-              "'] > span:last-child"
+            postID +
+            "'] > span:last-child, #selectedPostActionAndComments [name='like_" +
+            postID +
+            "'] > span:last-child"
           ).html(response.likes + " like" + (response.likes != 1 ? "s" : ""));
         }
       },
@@ -462,8 +461,8 @@
         if (response.result == "success") {
           $(
             "[name='save_" +
-              postID +
-              "'] > span"
+            postID +
+            "'] > span"
           )
             .toggleClass("far")
             .toggleClass("fas");
@@ -503,7 +502,7 @@
     let postContent = document.createElement("div");
     postContent.setAttribute("id", "postContent_" + postMap["id"]);
     postContent.classList.add("post_content");
-    if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {      
+    if (postMap["type"].indexOf("img") >= 0 || (postMap["type"] == "article" && postMap["link"] != "")) {
       postContent.innerHTML =
         "<a href='" + postMap["link"] + "' class='progressive replace' style='cursor: inherit;width: inherit;height: inherit;position: unset;''><img src='" +
         ("minLink" in postMap ? postMap["minLink"] : postMap["link"]) +
@@ -554,7 +553,7 @@
       "' class='post_action_item'><span class='far fa-comment'></span><span {% if lang != 'en' %}style='direction: rtl;'{% endif %}>" +
       postMap["comments"] +
       " " +
-      (postMap["comments"] != 1 ? "{% if lang == 'en' %}{{ staticTextMap.comments_en }}{% else %}{{ staticTextMap.comments_fa }}{% endif %}" : "{% if lang == 'en' %}{{ staticTextMap.comment_en }}{% else %}{{ staticTextMap.comment_fa }}{% endif %}") +      
+      (postMap["comments"] != 1 ? "{% if lang == 'en' %}{{ staticTextMap.comments_en }}{% else %}{{ staticTextMap.comments_fa }}{% endif %}" : "{% if lang == 'en' %}{{ staticTextMap.comment_en }}{% else %}{{ staticTextMap.comment_fa }}{% endif %}") +
       "</span></div>";
 
     let saveBtn = document.createElement("div");
@@ -627,7 +626,7 @@
       let param = encodeURI(postMap["id"]);
       window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
     });
-1
+    1
     $("#postContent_" + postMap["id"]).click((e) => {
       let param = encodeURI(postMap["id"]);
       window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
@@ -689,9 +688,9 @@
   loadPosts();
 
   window.onscroll = function () {
-    if(!isLoadingPosts) {      
-      if(!isNoMorePosts && $(".post_content").length > 0 && $(".post_content").length % 10 == 0) {
-        if($(".post:nth-last-child(2)")[0].getBoundingClientRect().top <= 0) {
+    if (!isLoadingPosts) {
+      if (!isNoMorePosts && $(".post_content").length > 0 && $(".post_content").length % 10 == 0) {
+        if ($(".post:nth-last-child(2)")[0].getBoundingClientRect().top <= 0) {
           pageNumber += 1;
           loadPosts();
         }

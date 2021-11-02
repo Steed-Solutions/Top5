@@ -69,7 +69,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'Top5Site.urls'
 
 
-# LOG_DIR = '/Users/tonym/Desktop/Freelancing/Projects/IranTop5/logs'
+#LOG_DIR = '/Users/tonym/Desktop/Freelancing/Projects/IranTop5/logs'
 LOG_DIR = '/home/Irantop5/logs'
 
 LOGGING = {

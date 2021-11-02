@@ -41,7 +41,10 @@ public class CredentialsModel {
                 firebaseDatabase.child("users/regularUsers/" + user.uid + "/name").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        user.name = snapshot.getValue().toString();
+                        final Object snapshotValue = snapshot.getValue();
+                        if (snapshotValue != null) {
+                            user.name = snapshotValue.toString();
+                        }
 
                         authenticatedUserMutableLiveData.setValue(user);
                     }
@@ -84,10 +87,14 @@ public class CredentialsModel {
                             firebaseDatabase.child("users/regularUsers/" + user.uid + "/name").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    user.name = snapshot.getValue().toString();
+                                    final Object snapshotValue = snapshot.getValue();
+                                    if (snapshotValue != null) {
+                                        user.name = snapshotValue.toString();
+                                    }
 
                                     authResponse.user = user;
                                     authenticatedUserMutableLiveData.setValue(authResponse);
+
                                 }
 
                                 @Override

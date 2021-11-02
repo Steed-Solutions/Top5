@@ -40,7 +40,7 @@ Iran Top 5 iranian recommendation website
       or
 
       ```
-      $ ./manage.py runserver 0.0.0.0:8000
+      $ python manage.py runserver 0.0.0.0:8000
       ```
    
 6. Copy the following url in a browser
