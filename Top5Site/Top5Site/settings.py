@@ -36,7 +36,7 @@ SECRET_KEY = '5ys+6i#@si44=3i$ay6i+eyu*w*(je#n#6ns_9bkyp9low2qw9'
 # firebase_admin.initialize_app(cred)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "*"
@@ -69,8 +69,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'Top5Site.urls'
 
 
-#LOG_DIR = '/Users/tonym/Desktop/Freelancing/Projects/IranTop5/logs'
-LOG_DIR = '/home/Irantop5/logs'
+LOG_DIR = '/Users/tonym/Desktop/Freelancing/Projects/IranTop5/logs' if DEBUG else '/home/Irantop5/logs'
 
 LOGGING = {
     'version': 1,
