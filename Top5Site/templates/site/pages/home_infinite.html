@@ -23,8 +23,7 @@
         <div class="hero_center">
           <div>
             <h1>IRAN TOP5</h1>
-            <h3>{% if lang == 'en' %}{{ staticTextMap.your_fav_recom_site_en }}{% else %}{{
-              staticTextMap.your_fav_recom_site_fa }}{% endif %}</h3>
+            <h3>{% if lang == 'en'%}{{ staticTextMap.your_fav_recom_site_en }}{% else %}{{ staticTextMap.your_fav_recom_site_fa }}{% endif %}</h3>
             <div class="hero_search">
               <input id="searchInput" type="text"
                 placeholder="{% if lang == 'en' %}{{ staticTextMap.search_stuff_you_like_en }}{% else %}{{ staticTextMap.search_stuff_you_like_fa }}{% endif %}" />
@@ -36,11 +35,10 @@
             </div>
           </div>
 
-          <div class="hero_footer">
+          <div>
             <div>
               {% if categories|length > 0 %}
-              <h3>{% if lang == 'en' %}{{ staticTextMap.we_have_content_for_the_following_en }}{% else %}{{
-                staticTextMap.we_have_content_for_the_following_fa }}{% endif %}</h3>
+              <h3>{% if lang == 'en' %}{{ staticTextMap.we_have_content_for_the_following_en }}{% else %}{{ staticTextMap.we_have_content_for_the_following_fa }}{% endif %}</h3>
               <div class="hero_categories">
                 {% for categoryID, category in categories.items %}
                 <span name="{{ categoryID }}" onclick='onCategoryClick(this)'>

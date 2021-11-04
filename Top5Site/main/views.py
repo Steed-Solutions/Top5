@@ -1371,12 +1371,14 @@ def browse(request, searchTerm=""):
             post = db.child("content/posts/" + postID).get().val()
 
             if post != None:
+                
+                post['id'] = postID
                 if post['type'] == "article" and post['text'].find("<img") > -1:
                     post['link'] = post['text'][post['text'].find(
                     "<img src=") + 10: post['text'].find(" alt" if "firebasestorage" in post['text'] else "alt") - 2]   
                 popularPosts.append(post)
 
-
+       
 
     return render(request, "site/pages/browse.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText, "userID": request.session['uid'] if "user" in request.session else "", "serverTime": int(math.floor(time.time() * 1000)), "tags": selectedTagPosts, "popularPosts": popularPosts, "searchTerm": searchTerm})
 

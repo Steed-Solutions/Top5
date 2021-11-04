@@ -39,8 +39,9 @@
           {% for post in popularPosts %}
           <div
             class="popular_card"
+            data-post-id="{{ post.id }}"
             style="background: url({{ post.link }}) top center no-repeat; background-size: cover;"
-            onclick="window.location.href = '{% url 'post' 123456 %}'.replace(/123456/, encodeURI({{ post.id }}))"
+            onclick="openPost('{{ post.id }}')"
           >
             <span style="color: white;">{{ post.name }}</span>
           </div>
@@ -131,6 +132,11 @@
   $("#nextBtn").click(() => {
     window.location.href = "{% url 'home' %}";
   });
+
+
+  function openPost(postId)  {
+    window.location.href =  "{% url 'post' 123456 %}".replace(/123456/, postId); 
+  };
 
   function loadSearchResults(searchTerm, direction) {
     $("#viewMoreBtn, #viewPrevBtn").hide();
