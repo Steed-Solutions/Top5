@@ -303,16 +303,17 @@
               $("#noPosts").show();
             }
           }
-          $("#loader").hide();
+         
         } else {
           if ('invalid' in response) {
             window.location.href = "{% url 'invalid' %}";
           }
         }
-
+        $("#loader").hide();
         isLoadingPosts = false;
       },
       error: (xhr, errmsg, err) => {
+        $("#loader").hide();
         console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
       },
     });
