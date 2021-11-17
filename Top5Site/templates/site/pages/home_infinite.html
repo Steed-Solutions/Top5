@@ -278,6 +278,7 @@
     isLoadingPosts = true;
 
     $("#loader").show();
+    console.log("NikuBad", "{{ csrf_token }}");
 
     data = {
       type: "load",
@@ -290,6 +291,7 @@
       url: "{% url 'home' %}",
       data: data,
       success: (response) => {
+        console.log("POSTS", response);
         if (response.result == "success") {
           if (response.posts.length > 0) {
             allLoadedPosts = [];
@@ -313,6 +315,7 @@
         isLoadingPosts = false;
       },
       error: (xhr, errmsg, err) => {
+        console.log("Loading Posts ... ", xhr.status);
         $("#loader").hide();
         console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
       },

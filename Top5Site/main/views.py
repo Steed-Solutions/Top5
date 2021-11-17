@@ -1,3 +1,6 @@
+import logging
+import sys, os
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 
@@ -15,6 +18,9 @@ import pyrebase
 
 import json
 from urllib.parse import unquote
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 
 if not firebase_admin._apps:
@@ -310,18 +316,19 @@ def home(request):
 
                         userPrefCategories = db.child(
                             "users/regularUsers/" + request.session['uid'] + "/preferences/categories").get().val()
-                        userPrefCategories = [] if userPrefCategories == None else [
-                            k for k, v in userPrefCategories.items()]
+                        # print(userPrefCategories)
+                        userPrefCategories = [] if userPrefCategories == None else userPrefCategories
 
                         if len(loggedInUserCategoricalPosts) == 0:
                             allCategoricalPosts = {}
-                            for categoryID in userPrefCategories:
+                            for categoryID, categoryValue in userPrefCategories.items():
                                 if categoryID in categoryIDs:
                                     categoricalPosts = {}
                                     try:
                                         categoricalPosts = db.child("content").child("posts").order_by_child(
                                             "category").equal_to(categoryID).get().val()
-                                        if categoricalPosts != None:
+                                        # print(categoricalPosts)
+                                        if len(categoricalPosts):
                                             allCategoricalPosts.update(
                                                 {k: v for k, v in categoricalPosts.items()})
                                     except IndexError:
@@ -516,7 +523,11 @@ def home(request):
                 else:
                     return JsonResponse({"result": "success", "posts": []})
             except Exception as e:
-                print(e)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                
+                logger.error("Home Posts ERROR ...")
+                logger.error(str(exc_tb.tb_lineno)+":"+str(e))
+
                 return JsonResponse({"result": "failure"})
         elif request.POST['type'] == "like":
             try:
@@ -818,22 +829,28 @@ def post(request, post_title_id):
                     "content/posts/" + postID + "/likes").get().val()
                 currLikeCount = 0 if currLikeCount == None else currLikeCount
 
-                if request.POST["isLike"] == "true":
+                #TODO:Check if user has liked post already
+                hasLiked = False if not "user" in request.session else db.child(
+                "likes/" + postID + "/" + request.session['uid']).get().val() != None
+                if request.POST["isLike"] == "true" and not hasLiked:
                     currLikeCount += 1
-                else:
+
+                    db.child(
+                        "likes/" + postID + "/" + request.session['uid']).set("userID")
+
+                if request.POST["isLike"] == "false" and hasLiked:
                     if currLikeCount > 0:
                         currLikeCount -= 1
+
+                        db.child(
+                        "likes/" + postID + "/" + request.session['uid']).remove()
 
 
                 db.child("content/posts/" +
                          postID + "/likes").set(currLikeCount)
 
-                if request.POST["isLike"] == "true":
-                    db.child(
-                        "likes/" + postID + "/" + request.session['uid']).set("userID")
-                else:
-                    db.child(
-                        "likes/" + postID + "/" + request.session['uid']).remove()
+        
+                   
 
                 return JsonResponse({"result": "success", "likes": currLikeCount})
             except:
@@ -910,10 +927,14 @@ def post(request, post_title_id):
 
         likeStr = "You" if isLiked else ""
         likes = db.child("likes/" + postID).get().val()
+        post["likesCount"] = 0
         if likes != None:
             likes = list(dict(likes).keys())
+            # print("Like Count is  "+str(len(likes)))
+            post["likesCount"] = len(likes)
             likesCount = len(likes) + (-1 if isLiked else 0)
             limit = 2 if isLiked else 3
+
 
             namedUsers = []
             for i in range(0, limit):
@@ -1115,7 +1136,7 @@ def browse(request, searchTerm=""):
                                 for postID in wordPostIDs[wordID].items():
                                     postIDs[postID[0]] = "postID"
 
-                    print(postIDs)  
+                    # print(postIDs)  
                     postIDs = sorted(postIDs)
 
                     maxPossiblePages = (len(postIDs) % loadLimit) + 1

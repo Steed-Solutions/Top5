@@ -1031,7 +1031,12 @@ public class MainModel {
                                     firebaseDatabase.child("content").child("posts").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot postSnapshot) {
-                                            String postText = postSnapshot.child("text").getValue().toString();
+                                            final Object childValue = postSnapshot.child("text").getValue();
+                                            String postText = "";
+
+                                            if(childValue!=null) {
+                                                postText = childValue.toString();
+                                            }
                                             String link = !postSnapshot.child("type").getValue().toString().equals("txt") ? postSnapshot.child("link").getValue().toString() : "";
                                             if (postSnapshot.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
                                                 link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
