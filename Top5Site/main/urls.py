@@ -8,6 +8,8 @@ urlpatterns = [
     path('categories/<str:category_id>/<int:page_number>/',
          views.categories, name="categories"),
     path('profile/', views.profile, name="profile"),
+    path('privacy/<str:lang>', views.privacyPolicy, name="privacyPolicy"),
+    path('terms/<str:lang>', views.termsAndConditions, name="termsAndConditions"),
     path('browse/', views.browse, name="browse"),
     path('browse/<str:searchTerm>/', views.browse, name="browse"),
     path('tags/<str:tag>/', views.tags, name="tags"),

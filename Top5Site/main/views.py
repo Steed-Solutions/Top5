@@ -206,7 +206,7 @@ def credentials(request):
 
                     uid = user['localId']
 
-                    print(uid)
+                    # print(uid)
 
                     userCheck = db.child(
                         "users/regularUsers/" + uid).get().val()
@@ -292,6 +292,7 @@ def home(request):
     if request.method == "POST":
         if request.POST['type'] == "load":
             page_number = int(request.POST['page_number'])
+            # print(f"Page Number {page_number}")
             try:
                 if(len(categories) > 0):
                     isLoggedIn = "user" in request.session
@@ -316,9 +317,9 @@ def home(request):
 
                         userPrefCategories = db.child(
                             "users/regularUsers/" + request.session['uid'] + "/preferences/categories").get().val()
-                        # print(userPrefCategories)
+                        
                         userPrefCategories = [] if userPrefCategories == None else userPrefCategories
-
+                        # print(userPrefCategories)
                         if len(loggedInUserCategoricalPosts) == 0:
                             allCategoricalPosts = {}
                             for categoryID, categoryValue in userPrefCategories.items():
@@ -327,12 +328,30 @@ def home(request):
                                     try:
                                         categoricalPosts = db.child("content").child("posts").order_by_child(
                                             "category").equal_to(categoryID).get().val()
-                                        # print(categoricalPosts)
+
+                                        logger.info("===Categorical Posts ======")
+                                        logger.info("Category Post Size "+str(len(categoricalPosts)))
+                                        
                                         if len(categoricalPosts):
-                                            allCategoricalPosts.update(
-                                                {k: v for k, v in categoricalPosts.items()})
-                                    except IndexError:
+                                            if isinstance(categoricalPosts, dict):                                       
+                                                # print("Dict Boss ")
+                                                # print(type(categoricalPosts))
+                                                allCategoricalPosts.update(
+                                                    {k: v for k, v in categoricalPosts.items()})
+                                            else:
+                                                # print("List Boss")
+                                                # print(type(categoricalPosts))
+                                                for catPost in categoricalPosts:
+                                                    allCategoricalPosts.update(
+                                                        {k: v for k, v in catPost.items()})
+                                    except IndexError as ie:
+                                        exc_type, exc_obj, exc_tb = sys.exc_info()
+                
+                                        logger.error("Category Log ERROR ...")
+                                        logger.error(str(exc_tb.tb_lineno)+":"+str(ie))
                                         continue
+                                    # logger.info("===allCategoricalPosts ======")
+                                    # logger.info(allCategoricalPosts)
 
                             loggedInUserCategoricalPosts = sorted(
                                 allCategoricalPosts.items(), reverse=True)
@@ -365,6 +384,7 @@ def home(request):
                                 endAt = len(validPosts)
                             selectedPosts = validPosts[startAt:endAt]
                         else:
+                            # print("=== JSON response 5")
                             return JsonResponse({"result": "success", "posts": []})
 
                         for post in selectedPosts:
@@ -450,6 +470,7 @@ def home(request):
                                 endAt = len(postIDs)
                             selectedPostIds = postIDs[startAt:endAt]
                         else:
+                            # print("=== JSON response 4")
                             return JsonResponse({"result": "success", "posts": []})
 
                         for postID in selectedPostIds:
@@ -518,9 +539,10 @@ def home(request):
                             # post["allComments"] = comments
 
                             allPosts.append(post)
-
+                    # print("=== JSON response 3")
                     return JsonResponse({"result": "success", "posts": allPosts})
                 else:
+                    # print("=== JSON response 2")
                     return JsonResponse({"result": "success", "posts": []})
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -1333,7 +1355,7 @@ def browse(request, searchTerm=""):
 
                 return JsonResponse({"result": "success"})
             except Exception as e:
-                print(e)
+                # print(e)
                 return JsonResponse({"result": "failure"})
 
     allTagsCount = db.child("tags/count").get().val()
@@ -1538,6 +1560,12 @@ def comingSoon(request):
 def invalid(request):
     return render(request, "invalid.html", {"isLoggedIn": "user" in request.session, "lang": request.session['lang'] if "lang" in request.session else "en", "staticTextMap": engAndPersianStaticText})
 
+def privacyPolicy(request, lang):
+    return render(request, f"site/pages/privacy_policy_{lang}.html")
+
+
+def termsAndConditions(request, lang):
+    return render(request, f"site/pages/terms_conditions_{lang}.html")
 
 def logout(request):
     global loggedInUserCategoricalPosts
