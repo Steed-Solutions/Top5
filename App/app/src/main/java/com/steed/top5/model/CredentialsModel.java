@@ -123,50 +123,47 @@ public class CredentialsModel {
 
     public MutableLiveData<AuthResponse> firebaseSignUpWithCredentials(final User credentials) {
         final MutableLiveData<AuthResponse> authenticatedUserMutableLiveData = new MutableLiveData<>();
-        firebaseAuth.createUserWithEmailAndPassword(credentials.email, credentials.password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> authTask) {
-                final AuthResponse authResponse = new AuthResponse();
-                if (authTask.isSuccessful()) {
-                    final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                    if (firebaseUser != null) {
-                        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(credentials.name).build();
-                        final User user = new User();
-                        user.uid = firebaseUser.getUid();
-                        firebaseUser.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    user.name = firebaseUser.getDisplayName();
-                                    user.email = firebaseUser.getEmail();
-                                    user.isNew = true;
-                                    authResponse.user = user;
+        firebaseAuth.createUserWithEmailAndPassword(credentials.email, credentials.password).addOnCompleteListener(authTask -> {
+            final AuthResponse authResponse = new AuthResponse();
+            if (authTask.isSuccessful()) {
+                final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser != null) {
+                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(credentials.name).build();
+                    final User user = new User();
+                    user.uid = firebaseUser.getUid();
+                    firebaseUser.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                user.name = firebaseUser.getDisplayName();
+                                user.email = firebaseUser.getEmail();
+                                user.isNew = true;
+                                authResponse.user = user;
 
-                                    firebaseDatabase.child("users").child("regularUsers").child(user.uid).setValue(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                authenticatedUserMutableLiveData.setValue(authResponse);
-                                            } else {
-                                                authResponse.isError = true;
-                                                authResponse.statusMessage = task.getException().getMessage();
-                                                authenticatedUserMutableLiveData.setValue(authResponse);
-                                            }
+                                firebaseDatabase.child("users").child("regularUsers").child(user.uid).setValue(user.toJson()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            authenticatedUserMutableLiveData.setValue(authResponse);
+                                        } else {
+                                            authResponse.isError = true;
+                                            authResponse.statusMessage = task.getException().getMessage();
+                                            authenticatedUserMutableLiveData.setValue(authResponse);
                                         }
-                                    });
-                                } else {
-                                    authResponse.isError = true;
-                                    authResponse.statusMessage = task.getException().getMessage();
-                                    authenticatedUserMutableLiveData.setValue(authResponse);
-                                }
+                                    }
+                                });
+                            } else {
+                                authResponse.isError = true;
+                                authResponse.statusMessage = task.getException().getMessage();
+                                authenticatedUserMutableLiveData.setValue(authResponse);
                             }
-                        });
-                    }
-                } else {
-                    authResponse.isError = true;
-                    authResponse.statusMessage = authTask.getException().getMessage();
-                    authenticatedUserMutableLiveData.setValue(authResponse);
+                        }
+                    });
                 }
+            } else {
+                authResponse.isError = true;
+                authResponse.statusMessage = authTask.getException().getMessage();
+                authenticatedUserMutableLiveData.setValue(authResponse);
             }
         });
         return authenticatedUserMutableLiveData;

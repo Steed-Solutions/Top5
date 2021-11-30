@@ -52,5 +52,7 @@
 <!--    <string name="gender_female">زن</string>-->
 <!--    <string name="gender_other">دیگر</string>-->
 <!--    <string name="gender_prefer_not_to_say">ترجیح میدهم نگویم</string>-->
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_use">Terms of Use</string>
 
 </resources>

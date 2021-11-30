@@ -11,6 +11,9 @@ public class Constants {
 
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
+    public static String PRIVACY_POLICY_URL="https://www.irantop5.com/privacy/en";
+    public static String TERMS_URL="https://www.irantop5.com/terms/en";
+
     public static final int USER_TAGS_LIMIT = 100;
 
 }

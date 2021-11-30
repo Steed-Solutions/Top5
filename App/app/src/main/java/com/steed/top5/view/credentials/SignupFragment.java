@@ -25,10 +25,14 @@ import com.steed.top5.databinding.FragmentSignupBinding;
 import com.steed.top5.pojo.AuthResponse;
 import com.steed.top5.pojo.User;
 import com.steed.top5.singleton.UserSingleton;
+import com.steed.top5.util.ChromeTabUtils;
 import com.steed.top5.util.Constants;
 import com.steed.top5.viewmodel.CredentialsViewModel;
 
 import java.util.regex.Pattern;
+
+import static com.steed.top5.util.Constants.PRIVACY_POLICY_URL;
+import static com.steed.top5.util.Constants.TERMS_URL;
 
 
 /**
@@ -41,6 +45,7 @@ public class SignupFragment extends Fragment {
     private CredentialsViewModel viewModel;
 
     private UserSingleton userSingleton = UserSingleton.getInstance();
+    private ChromeTabUtils chromeTabUtils;
 
 //    private String selectedGender;
 
@@ -55,6 +60,7 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        chromeTabUtils = new ChromeTabUtils(getActivity());
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_signup, container, false);
 
         controller = NavHostFragment.findNavController(this);
@@ -93,25 +99,30 @@ public class SignupFragment extends Fragment {
                 if (validateForm()) {
                     showOverlay();
                     viewModel.signUpWithCredentials(new User(binding.usernameInp.getText().toString().trim(), binding.emailInp.getText().toString().trim(), binding.passwordInp.getText().toString().trim()));
-                    viewModel.authenticatedUserLiveData.observe(requireActivity(), new Observer<AuthResponse>() {
-                        @Override
-                        public void onChanged(AuthResponse authResponse) {
-                            hideOverlay();
-                            if (authResponse.isError) {
-                                showError(authResponse.statusMessage);
-                            } else {
-                                userSingleton.currentUser = authResponse.user;
-                                controller.navigate(SignupFragmentDirections.actionSignupFragmentToMainActivity());
-                            }
+                    viewModel.authenticatedUserLiveData.observe(requireActivity(), authResponse -> {
+                        hideOverlay();
+                        if (authResponse.isError) {
+                            showError(authResponse.statusMessage);
+                        } else {
+                            userSingleton.currentUser = authResponse.user;
+                            controller.navigate(SignupFragmentDirections.actionSignupFragmentToMainActivity());
+                        }
 
-                            if(viewModel.authenticatedUserLiveData.hasActiveObservers()) {
-                                viewModel.authenticatedUserLiveData.removeObservers(requireActivity());
-                            }
+                        if(viewModel.authenticatedUserLiveData.hasActiveObservers()) {
+                            viewModel.authenticatedUserLiveData.removeObservers(requireActivity());
                         }
                     });
                 }
 //                controller.navigate(R.id.action_signupFragment_to_mainActivity);
             }
+        });
+
+        binding.termsOfUseTextView.setOnClickListener(view -> {
+            chromeTabUtils.openUrl(TERMS_URL);
+        });
+
+        binding.privacyPolicyTextView.setOnClickListener(view -> {
+            chromeTabUtils.openUrl(PRIVACY_POLICY_URL);
         });
     }
 
@@ -204,12 +215,7 @@ public class SignupFragment extends Fragment {
     private void showError(String message) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(requireActivity(), R.style.AlertDialogStyle);
         alertDialogBuilder.setMessage(message);
-        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        alertDialogBuilder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();

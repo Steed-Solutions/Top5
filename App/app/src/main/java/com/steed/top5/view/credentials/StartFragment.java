@@ -17,6 +17,10 @@ import android.view.ViewGroup;
 
 import com.steed.top5.R;
 import com.steed.top5.databinding.FragmentStartBinding;
+import com.steed.top5.util.ChromeTabUtils;
+
+import static com.steed.top5.util.Constants.PRIVACY_POLICY_URL;
+import static com.steed.top5.util.Constants.TERMS_URL;
 
 
 /**
@@ -26,6 +30,8 @@ public class StartFragment extends Fragment {
 
     private FragmentStartBinding binding;
     private NavController controller;
+    private ChromeTabUtils chromeTabUtils;
+
 
     public StartFragment() {
         // Required empty public constructor
@@ -36,7 +42,7 @@ public class StartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_start, container, false);
-
+        chromeTabUtils = new ChromeTabUtils(getActivity());
         controller = NavHostFragment.findNavController(this);
 
 //        binding.newQuickLoginTxt.setText(getText(R.string.new_quick_login_face_id));
@@ -53,6 +59,14 @@ public class StartFragment extends Fragment {
             public void onClick(View v) {
                 controller.navigate(R.id.action_startFragment_to_signupFragment);
             }
+        });
+
+        binding.termsOfUseTextView.setOnClickListener(view -> {
+            chromeTabUtils.openUrl(TERMS_URL);
+        });
+
+        binding.privacyPolicyTextView.setOnClickListener(view -> {
+            chromeTabUtils.openUrl(PRIVACY_POLICY_URL);
         });
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {

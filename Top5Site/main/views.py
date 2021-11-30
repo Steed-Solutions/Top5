@@ -372,8 +372,8 @@ def home(request):
                             isRecentlyViewed = postID in userRecentlyViewed.values()
                             hasChance = random.randint(1, 3) % 3 == 0
 
-                            if (userPrefFilter == 0 and hasCommonTags) or (userPrefFilter == 1 and isRecentlyViewed) or (userPrefFilter == 2 and (hasChance or hasCommonTags)) or (userPrefFilter == 3):
-                                validPosts.append(post)
+                            #if (userPrefFilter == 0 and hasCommonTags) or (userPrefFilter == 1 and isRecentlyViewed) or (userPrefFilter == 2 and (hasChance or hasCommonTags)) or (userPrefFilter == 3):
+                            validPosts.append(post)
 
                         startAt = page_number * loadLimit
 
@@ -384,7 +384,7 @@ def home(request):
                                 endAt = len(validPosts)
                             selectedPosts = validPosts[startAt:endAt]
                         else:
-                            # print("=== JSON response 5")
+                            print("=== JSON response 5")
                             return JsonResponse({"result": "success", "posts": []})
 
                         for post in selectedPosts:

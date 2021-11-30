@@ -191,6 +191,46 @@
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintTop_toBottomOf="@+id/face_id_btn" />-->
 
+        <LinearLayout
+            android:id="@+id/footerLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintWidth_percent="0.853"
+            app:layout_constraintDimensionRatio="W, 0.153:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <TextView
+                android:id="@+id/privacyPolicyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/privacy_policy"
+                android:textColor="@color/url_link"
+                android:fontFamily="@font/titillium_medium"
+                app:autoSizeMaxTextSize="13sp"
+                app:autoSizeMinTextSize="11sp"
+                app:autoSizeStepGranularity="0.8sp"
+                app:autoSizeTextType="uniform" />
+
+            <TextView
+                android:id="@+id/termsOfUseTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/terms_of_use"
+                android:textColor="@color/url_link"
+                android:fontFamily="@font/titillium_medium"
+                app:autoSizeMaxTextSize="13sp"
+                app:autoSizeMinTextSize="11sp"
+                app:autoSizeStepGranularity="0.8sp"
+                app:autoSizeTextType="uniform" />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

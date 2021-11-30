@@ -47,6 +47,9 @@
     <string name="english">English</string>
     <string name="persian">Persian</string>
 
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_use">Terms of Service</string>
+
     <!--    <string name="gender_male">Male</string>-->
     <!--    <string name="gender_female">Female</string>-->
     <!--    <string name="gender_other">Other</string>-->

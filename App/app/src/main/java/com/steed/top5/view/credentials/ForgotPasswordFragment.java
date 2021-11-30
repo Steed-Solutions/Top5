@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.steed.top5.R;
 import com.steed.top5.databinding.FragmentForgotPasswordBinding;
 import com.steed.top5.databinding.FragmentProfileBinding;
+import com.steed.top5.util.ChromeTabUtils;
 import com.steed.top5.util.Constants;
 import com.steed.top5.viewmodel.CredentialsViewModel;
 
@@ -28,6 +29,9 @@ public class ForgotPasswordFragment extends Fragment {
     private FragmentForgotPasswordBinding binding;
     private NavController controller;
     private CredentialsViewModel viewModel;
+
+
+
 
     public ForgotPasswordFragment() {
         // Required empty public constructor
