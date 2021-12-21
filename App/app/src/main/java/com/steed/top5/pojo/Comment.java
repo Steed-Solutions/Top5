@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Comment {
 
-    public String id, userID, comment, userName;
+    public String id, userID, comment, userName,userPhoto;
     public long timestamp;
     public Post post;
 

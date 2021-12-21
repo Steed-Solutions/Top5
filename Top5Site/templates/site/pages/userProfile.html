@@ -51,10 +51,10 @@
           >{{ userDetails.email }}</span>
 
         <br/>
-        <button id="remove_photo" class="upload-button remove-photo"><i class="fas fa-trash-alt"></i>&nbsp;&nbsp;Remove photo</button>
+        <button id="remove_photo" class="upload-button remove-photo hide-button"><i class="fas fa-trash-alt"></i>&nbsp;&nbsp;Remove photo</button>
 
 
-         <label class="upload-button upload-file-label" for="upload_photo">
+         <label class="upload-button upload-file-label hide-button" for="upload_photo">
           <i class="fa fa-upload"></i>&nbsp;&nbsp;
            Choose a file
            <input type="file" id="upload_photo" class="inputfile"  accept="image/*" />
@@ -338,11 +338,17 @@
     console.log("userProfile", userDetails);
 
     if(userDetails.profilePhoto==""){
-      uploadButtonContainer.show();
-      removePhotoButton.hide();
+      // uploadButtonContainer.show();
+      // removePhotoButton.hide();
+
+      uploadButtonContainer.removeClass("hide-button");
+      removePhotoButton.addClass("hide-button");
     }else{
-      uploadButtonContainer.hide();
-      removePhotoButton.show();
+      // uploadButtonContainer.hide();
+      // removePhotoButton.show();
+
+      uploadButtonContainer.addClass("hide-button");
+      removePhotoButton.removeClass("hide-button");
     }
 
     let database = firebase.database();
@@ -372,8 +378,12 @@
           reader.onload = function (e) {
             let imgLink = e.target.result;
             $(".profile_img > img").attr('src', imgLink);
-            uploadButtonContainer.hide();
-            removePhotoButton.show();
+            // uploadButtonContainer.hide();
+            // removePhotoButton.show();
+
+
+            uploadButtonContainer.addClass("hide-button");
+            removePhotoButton.removeClass("hide-button");
             // console.log(imgLink);
             // console.log(`Setting image preview ...`);
 
@@ -397,8 +407,13 @@
 
     removePhotoButton.click((e) => {
         $(".profile_img > img").attr('src', defaultImage);
-        removePhotoButton.hide();
-        uploadButtonContainer.show();
+        // removePhotoButton.hide();
+        // uploadButtonContainer.show();
+
+        removePhotoButton.addClass("hide-button");
+        uploadButtonContainer.removeClass("hide-button");
+      
+
         removeProfilePhoto();
     });
 

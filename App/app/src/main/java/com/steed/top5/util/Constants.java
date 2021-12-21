@@ -3,6 +3,8 @@ package com.steed.top5.util;
 public class Constants {
 
     public static final String ADMOB_ID = "ca-app-pub-2988795028609271~8613221763";
+    public static final String SELECTED_PHOTO_EXTRA ="com.steed.top5.selected_media_photo";
+    public static final int PHOTO_PICKER_REQUEST_CODE = 3;
 
     public static final String PREFERENCE_SHARED_PREF = "pref";
     public static final String PREFERRED_LANG_PREFERRED = "lang";

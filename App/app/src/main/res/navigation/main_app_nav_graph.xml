@@ -38,6 +38,41 @@
             android:id="@+id/action_browseFragment_to_tagPostsFragment"
             app:destination="@id/tagPostsFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.steed.top5.view.main.CategoryFragment"
+        android:label="CategoryFragment"
+        tools:layout="@layout/fragment_category" >
+
+        <action
+            android:id="@+id/action_categoryFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_filtersFragment"
+            app:destination="@id/filtersFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_postsByCategoryFragment"
+            app:destination="@id/postsByCategoryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/postsByCategoryFragment"
+        android:name="com.steed.top5.view.main.PostsByCategoryFragment"
+        android:label="PostsByCategoryFragment"
+        tools:layout="@layout/fragment_posts_by_category" >
+        <argument
+            android:name="categoryID"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_postsByCategoryFragment_to_contentFragment"
+            app:destination="@id/contentFragment" />
+
+        <action
+            android:id="@+id/action_postsByCategoryFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
+    </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.steed.top5.view.main.HomeFragment"
@@ -140,7 +175,7 @@
         android:id="@+id/tagPostsFragment"
         android:name="com.steed.top5.view.main.TagPostsFragment"
         android:label="TagPostsFragment"
-        tools:layout="@layout/fragment_browse" >
+        tools:layout="@layout/fragment_browse">
         <argument
             android:name="tagNameArg"
             app:argType="string" />

@@ -9,6 +9,7 @@ public class User implements Serializable {
     public String name;
     public String email;
     public String password;
+    public String profilePhoto;
 //    public String gender;
 //    public String bio;
     public ArrayList<String> categories;

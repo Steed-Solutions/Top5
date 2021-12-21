@@ -25,6 +25,7 @@
     <string name="user_pref_ins">برخی از موضوعات مورد علاقه خود را انتخاب کنید یا محتوای مورد علاقه خود را جستجو کنید</string>
     <string name="search_txt_placeholder">...کلیدواژه ها را وارد کنید</string>
     <string name="popular">محبوب</string>
+    <string name="category">دسته بندی</string>
     <string name="save">صرفه جویی</string>
     <string name="filter">فیلتر</string>
     <string name="filter_made_for_you">ساخته شده برای تو</string>
@@ -35,6 +36,10 @@
     <string name="your_interests">علایق شما</string>
     <string name="language">زبان</string>
     <string name="edit_profile">ویرایش نمایه</string>
+    <string name="title_edit_profile_photo">dd</string>
+    <string name="browse_photo_title">عکس پروفایل را انتخاب کنید</string>
+    <string name="gallery">گالری</string>
+    <string name="photo">دوربین</string>
 <!--    <string name="gender">جنس</string>-->
 <!--    <string name="bio">بیو</string>-->
     <string name="loading">جستجو</string>
@@ -52,7 +57,7 @@
 <!--    <string name="gender_female">زن</string>-->
 <!--    <string name="gender_other">دیگر</string>-->
 <!--    <string name="gender_prefer_not_to_say">ترجیح میدهم نگویم</string>-->
-    <string name="privacy_policy">Privacy Policy</string>
-    <string name="terms_of_use">Terms of Use</string>
+    <string name="privacy_policy">سیاست حفظ حریم خصوصی</string>
+    <string name="terms_of_use">شرایط استفاده</string>
 
 </resources>

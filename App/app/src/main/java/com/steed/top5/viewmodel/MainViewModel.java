@@ -26,7 +26,7 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<LikeResponse> postLikedOrUnlikedLiveData;
     public LiveData<ArrayList<Category>> allCategoriesLiveData, queriedCategoriesLiveData, selectedCategoriesLiveData;
     public LiveData<SaveResponse> saveResponseLiveData, filtersAndCategoriesSaveResponseLiveData, savePostLiveData, completionResponseLiveData, filterIDSavedLiveData;
-    public LiveData<PostsResponse> allPostsLiveData, allSavedPostsLiveData, allQueriedPostsLiveData, mostPopularPosts, allTagPostsLiveData;
+    public LiveData<PostsResponse> allPostsLiveData, categoryPostsLiveData,allSavedPostsLiveData, allQueriedPostsLiveData, mostPopularPosts, allTagPostsLiveData;
     public LiveData<TagsResponse> topTaggedPosts;
     public LiveData<FiltersResponse> filtersResponseLiveData;
     public LiveData<CommentsResponse> allPostCommentsLiveData, commentOnPostLiveData, deleteCommentLiveData;
@@ -99,6 +99,10 @@ public class MainViewModel extends AndroidViewModel {
 
     public void getAllSavedPosts() {
         allSavedPostsLiveData = mainModel.getAllSavedPosts();
+    }
+
+    public void getCategoryPosts(String categoryID) {
+        categoryPostsLiveData = mainModel.getCategoryPosts(categoryID);
     }
 
     public void savePost(Post post) {

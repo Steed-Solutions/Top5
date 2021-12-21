@@ -541,9 +541,9 @@
       " fa-heart' style='" +
       (postMap["isLiked"] ? "color: #D7443E" : "") +
       "'></span><span {% if lang != 'en' %}style='direction: rtl;'{% endif %}>" +
-      postMap["likes"] +
+      postMap["likesCount"] +
       " " +
-      (postMap["likes"] != 1 ? "{% if lang == 'en' %}{{ staticTextMap.likes_en }}{% else %}{{ staticTextMap.likes_fa }}{% endif %}" : "{% if lang == 'en' %}{{ staticTextMap.like_en }}{% else %}{{ staticTextMap.like_fa }}{% endif %}") +
+      (postMap["likesCount"] != 1 ? "{% if lang == 'en' %}{{ staticTextMap.likes_en }}{% else %}{{ staticTextMap.likes_fa }}{% endif %}" : "{% if lang == 'en' %}{{ staticTextMap.like_en }}{% else %}{{ staticTextMap.like_fa }}{% endif %}") +
       "</span>";
 
     postAction.appendChild(likeBtn);
@@ -624,8 +624,12 @@
     posts.appendChild(post);
 
     $("#comments_count_" + postMap["id"]).click((e) => {
-      let param = encodeURI(postMap["id"]);
-      window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
+      if ("{{ isLoggedIn }}" == "True") {
+        let param = encodeURI(postMap["id"]);
+        window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
+      }else{
+          loginUser();
+      }
     });
     1
     $("#postContent_" + postMap["id"]).click((e) => {
@@ -633,17 +637,21 @@
       window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
     });
 
-    if ("{{ isLoggedIn }}" == "True") {
+  
       $("[name='like_" + postMap["id"] + "']").click((e) => {
-        postID = $(e.target)
-          .closest(".post_action_item")
-          .attr("name")
-          .replace("like_", "");
+        if ("{{ isLoggedIn }}" == "True") {
+          postID = $(e.target)
+            .closest(".post_action_item")
+            .attr("name")
+            .replace("like_", "");
 
-        likePost(
-          postID,
-          $("[name='like_" + postID + "'] > span:first-child").hasClass("far")
-        );
+          likePost(
+            postID,
+            $("[name='like_" + postID + "'] > span:first-child").hasClass("far")
+          );
+        }else{
+          loginUser();
+        }
       });
 
       /*$(".postBtn_" + postMap["id"]).click((e) => {
@@ -653,6 +661,7 @@
       });*/
 
       $("[name='save_" + postMap["id"] + "']").click((e) => {
+        if ("{{ isLoggedIn }}" == "True") {
         postID = $(e.target)
           .closest(".post_action_item")
           .attr("name")
@@ -665,10 +674,18 @@
           categoryID,
           $("[name='save_" + postID + "'] > span").hasClass("far")
         );
+        }else{
+          loginUser();
+        }
       });
-    }
+   
 
     return post;
+  }
+
+  function loginUser(){
+    //window.location.href = "{% url 'credentials' %}";
+    window.location.href = "{% url 'credentials' %}?next={{request.path}}";
   }
 
   let selectedCommentForDeletion = {};

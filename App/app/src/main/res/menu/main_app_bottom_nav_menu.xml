@@ -8,10 +8,18 @@
         android:title=""
         app:showAsAction="ifRoom" />
 
+
+    <item
+        android:id="@+id/categoryFragment"
+        android:icon="@drawable/category"
+        android:orderInCategory="2"
+        android:title=""
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/browseFragment"
         android:icon="@drawable/search"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:title=""
         app:showAsAction="ifRoom" />
 
@@ -19,7 +27,7 @@
     <item
         android:id="@+id/savedFragment"
         android:icon="@drawable/download"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         android:title=""
         app:showAsAction="ifRoom" />
 

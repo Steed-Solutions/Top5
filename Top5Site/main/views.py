@@ -197,6 +197,7 @@ def credentials(request):
     if "user" in request.session:
         return redirect('home')
 
+    redirect_to = request.GET.get('next', '')
     if request.method == "POST":
         if 'username' in request.POST:
             if request.POST['username'] == "":
@@ -222,7 +223,9 @@ def credentials(request):
                     request.session['uid'] = uid
                     request.session['lang'] = 'en'
 
-                    return JsonResponse({"result": "success"})
+                    redirect_to = request.POST.get('redirect_to', '')
+
+                    return JsonResponse({"result": "success", "redirect_to":redirect_to})
                 except Exception as e:
                     print(e)
                     return JsonResponse({"result": "failure"})
@@ -273,7 +276,11 @@ def credentials(request):
         val["id"] = key
         categories.append(val)
 
-    return render(request, "credentials/credentials.html", {"categories": categories})
+    # redirect_to = request.GET.get('next', '')
+    # if redirect_to:
+    #     return redirect(redirect_to) 
+
+    return render(request, "credentials/credentials.html", {"categories": categories,"redirect_to":redirect_to})
 
 
 def home(request):
@@ -329,8 +336,8 @@ def home(request):
                                         categoricalPosts = db.child("content").child("posts").order_by_child(
                                             "category").equal_to(categoryID).get().val()
 
-                                        logger.info("===Categorical Posts ======")
-                                        logger.info("Category Post Size "+str(len(categoricalPosts)))
+                                        # logger.info("===Categorical Posts ======")
+                                        # logger.info("Category Post Size "+str(len(categoricalPosts)))
                                         
                                         if len(categoricalPosts):
                                             if isinstance(categoricalPosts, dict):                                       
@@ -402,6 +409,7 @@ def home(request):
                             likes = db.child("likes/" + post['id']).get().val()
                             if likes != None:
                                 likes = list(dict(likes).keys())
+                                post["likesCount"] = len(likes)
                                 likesCount = len(likes) + \
                                     (-1 if isLiked else 0)
                                 limit = 2 if isLiked else 3
@@ -492,6 +500,7 @@ def home(request):
                             likes = db.child("likes/" + postID).get().val()
                             if likes != None:
                                 likes = list(dict(likes).keys())
+                                post["likesCount"] = len(likes)
                                 likesCount = len(likes)
                                 limit = 3
 

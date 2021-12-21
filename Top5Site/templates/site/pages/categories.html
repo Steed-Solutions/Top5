@@ -223,6 +223,11 @@
                 });
         }
 
+        function loginUser(){
+                //?next={{request.path}}
+           window.location.href = "{% url 'credentials' %}?next={{request.path}}";
+        }
+
         function createPostElement(postMap) {
                 let post = document.createElement("div");
                 post.setAttribute("id", "post_" + postMap["id"]);
@@ -381,8 +386,9 @@
                         window.location.href = "{% url 'post' 123456 %}".replace(/123456/, param);
                 });
 
-                if ("{{ isLoggedIn }}" == "True") {
-                        $("[name='like_" + postMap["id"] + "']").click((e) => {
+                
+                 $("[name='like_" + postMap["id"] + "']").click((e) => {
+                        if ("{{ isLoggedIn }}" == "True") {
                                 postID = $(e.target)
                                 .closest(".post_action_item")
                                 .attr("name")
@@ -392,15 +398,23 @@
                                 postID,
                                 $("[name='like_" + postID + "'] > span:first-child").hasClass("far")
                                 );
-                        });
+                        }else{
+                                loginUser();
+                        }
+                });
 
-                        $(".postBtn_" + postMap["id"]).click((e) => {
-                                postID = $(e.target).attr("class").replace("postBtn_", "");
-                                commentInp = $("#comment_inp_" + postID).val();
-                                commentOnPost(postID, commentInp);
-                        });
+                $(".postBtn_" + postMap["id"]).click((e) => {
+                                if ("{{ isLoggedIn }}" == "True") {
+                                        postID = $(e.target).attr("class").replace("postBtn_", "");
+                                        commentInp = $("#comment_inp_" + postID).val();
+                                        commentOnPost(postID, commentInp);
+                                }else{
+                                        loginUser();
+                                }
+                });
 
-                        $("[name='save_" + postMap["id"] + "']").click((e) => {
+                $("[name='save_" + postMap["id"] + "']").click((e) => {
+                        if ("{{ isLoggedIn }}" == "True") {
                                 postID = $(e.target)
                                 .closest(".post_action_item")
                                 .attr("name")
@@ -413,8 +427,11 @@
                                 categoryID,
                                 $("[name='save_" + postID + "'] > span").hasClass("far")
                                 );
-                        });
-                }
+                        }else{
+                                loginUser();
+                        }
+                });
+                
 
                 return post;
         }

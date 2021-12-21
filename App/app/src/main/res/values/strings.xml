@@ -23,6 +23,7 @@
     <!--    <string name="hint_bio">Tell us a bit about yourself</string>-->
     <string name="user_pref_ins">Choose some topics you like, or search for your favorite content</string>
     <string name="search_txt_placeholder">Enter keywords...</string>
+    <string name="category">CATEGORY</string>
     <string name="popular">POPULAR</string>
     <string name="save">SAVE</string>
     <string name="filter">FILTER</string>
@@ -34,6 +35,10 @@
     <string name="your_interests">Your interests</string>
     <string name="language">Language</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="title_edit_profile_photo">Edit Profile Photo</string>
+    <string name="browse_photo_title">Select Profile Photo</string>
+    <string name="gallery">Gallery</string>
+    <string name="photo">Camera</string>
     <!--    <string name="gender">GENDER</string>-->
     <!--    <string name="bio">BIO</string>-->
     <string name="loading">LOADING</string>
@@ -49,6 +54,8 @@
 
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_of_use">Terms of Service</string>
+
+
 
     <!--    <string name="gender_male">Male</string>-->
     <!--    <string name="gender_female">Female</string>-->

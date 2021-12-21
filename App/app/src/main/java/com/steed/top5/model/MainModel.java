@@ -27,9 +27,11 @@ import com.steed.top5.pojo.Post;
 import com.steed.top5.pojo.PostsResponse;
 import com.steed.top5.pojo.SaveResponse;
 import com.steed.top5.pojo.TagsResponse;
+import com.steed.top5.pojo.User;
 import com.steed.top5.singleton.TagsSingleton;
 import com.steed.top5.singleton.UserSingleton;
 import com.steed.top5.util.Constants;
+import com.steed.top5.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +43,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class MainModel {
-
+    private String TAG = "MainModel";
     private UserSingleton userSingleton = UserSingleton.getInstance();
     private TagsSingleton tagsSingleton = TagsSingleton.getInstance();
 
@@ -269,7 +271,10 @@ public class MainModel {
                                     String postText = post.child("text").getValue().toString();
                                     String link = !post.child("type").getValue().toString().equals("txt") ? post.child("link").getValue().toString() : "";
                                     if (post.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
-                                        link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+//                                        link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                        //link = postText.substring(postText.indexOf("<img src="), postText.indexOf("alt") - 2);
+
+                                        link = StringUtils.extractImageLink(postText);
                                     }
 
                                     Post currPost = new Post(
@@ -618,12 +623,17 @@ public class MainModel {
                         Comment currComment = new Comment(post, comment.getKey(), comment.child("userID").getValue().toString(), comment.child("comment").getValue().toString(), (long) comment.child("timestamp").getValue());
 
                         if (!comment.child("userID").getValue().toString().equals(userSingleton.currentUser.uid)) {
-                            firebaseDatabase.child("users").child("regularUsers").child(comment.child("userID").getValue().toString()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                            firebaseDatabase.child("users").child("regularUsers").child(comment.child("userID").getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot nameSnapshot) {
+
                                     if (snapshot.exists()) {
-                                        currComment.userName = nameSnapshot.getValue().toString();
-                                        comments.add(currComment);
+                                        User userSnapshot = nameSnapshot.getValue(User.class);
+                                        if (userSnapshot != null) {
+                                            currComment.userName = userSnapshot.name;
+                                            currComment.userPhoto = userSnapshot.profilePhoto;
+                                            comments.add(currComment);
+                                        }
                                     } else {
                                         totalCount[0]--;
                                     }
@@ -800,7 +810,8 @@ public class MainModel {
                                         String postText = postSnapshot.child("text").getValue().toString();
                                         String link = !postSnapshot.child("type").getValue().toString().equals("txt") ? postSnapshot.child("link").getValue().toString() : "";
                                         if (postSnapshot.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
-                                            link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                            //link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                            link = StringUtils.extractImageLink(postText);
                                         }
 
                                         Post currPost = new Post(
@@ -875,6 +886,99 @@ public class MainModel {
         });
 
         return allSavedPostsLiveData;
+    }
+
+    public MutableLiveData<PostsResponse> getCategoryPosts(String categoryId) {
+        final HashMap<String, Category> categoryIDToCategory = new HashMap<>();
+        for (Category category : categories) {
+            categoryIDToCategory.put(category.id, category);
+        }
+
+        //limitToFirst(20)
+
+        MutableLiveData<PostsResponse> categoryPostsLiveData = new MutableLiveData<>();
+        firebaseDatabase.child("content").child("posts").orderByChild("category").equalTo(categoryId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                PostsResponse postsResponse = new PostsResponse();
+                postsResponse.posts = new ArrayList<>();
+                if (dataSnapshot.exists()) {
+                    long postsLimit = dataSnapshot.getChildrenCount();
+                    for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        ArrayList<String> tags = new ArrayList<>();
+
+                        for (DataSnapshot tag : postSnapshot.child("tags").getChildren()) {
+                            tags.add(tag.getKey());
+                        }
+
+                        String postText = postSnapshot.child("text").getValue().toString();
+                        String link = !postSnapshot.child("type").getValue().toString().equals("txt") ? postSnapshot.child("link").getValue().toString() : "";
+                        if (postSnapshot.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
+                            //link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                            link = StringUtils.extractImageLink(postText);
+                        }
+
+                        final String postID = postSnapshot.getKey();
+                        final String categoryId = postSnapshot.child("category").getValue().toString();
+                        Post currPost = new Post(
+                                postSnapshot.getKey(),
+                                postSnapshot.child("type").getValue().toString(),
+                                postSnapshot.child("name").getValue().toString(),
+                                link,
+                                postText,
+                                (long) postSnapshot.child("likes").getValue(),
+                                (long) postSnapshot.child("comments").getValue(),
+                                categoryIDToCategory.get(categoryId),
+                                tags
+                        );
+
+                        firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("saved").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                currPost.isSaved = snapshot.exists();
+
+                                firebaseDatabase.child("likes").child(postID).child(userSingleton.currentUser.uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot likesSnapshot) {
+                                        currPost.isLiked = likesSnapshot.exists();
+                                        postsResponse.posts.add(currPost);
+
+                                        if (postsResponse.posts.size() == postsLimit) {
+                                            Collections.reverse(postsResponse.posts);
+                                            categoryPostsLiveData.setValue(postsResponse);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                    }
+
+
+                }else {
+                    postsResponse.isError = true;
+                    postsResponse.statusMessage = "No Posts Available";
+                    categoryPostsLiveData.postValue(postsResponse);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return categoryPostsLiveData;
     }
 
     public MutableLiveData<SaveResponse> savePost(Post post) {
@@ -1034,12 +1138,13 @@ public class MainModel {
                                             final Object childValue = postSnapshot.child("text").getValue();
                                             String postText = "";
 
-                                            if(childValue!=null) {
+                                            if (childValue != null) {
                                                 postText = childValue.toString();
                                             }
                                             String link = !postSnapshot.child("type").getValue().toString().equals("txt") ? postSnapshot.child("link").getValue().toString() : "";
                                             if (postSnapshot.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
-                                                link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                                // link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                                link = StringUtils.extractImageLink(postText);
                                             }
 
                                             HashMap<String, String> tagMap = new HashMap<>();
@@ -1126,7 +1231,8 @@ public class MainModel {
                     String postText = postSnapshot.child("text").getValue().toString();
                     String link = !postSnapshot.child("type").getValue().toString().equals("txt") ? postSnapshot.child("link").getValue().toString() : "";
                     if (postSnapshot.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
-                        link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                        //link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                        link = StringUtils.extractImageLink(postText);
                     }
 
                     Post currPost = new Post(
@@ -1217,7 +1323,8 @@ public class MainModel {
                             String postText = post.child("text").getValue().toString();
                             String link = !post.child("type").getValue().toString().equals("txt") ? post.child("link").getValue().toString() : "";
                             if (post.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
-                                link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                //link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                                link = StringUtils.extractImageLink(postText);
                             }
 
                             Post currPost = new Post(
@@ -1309,7 +1416,9 @@ public class MainModel {
                     String postText = post.child("text").getValue().toString();
                     String link = !post.child("type").getValue().toString().equals("txt") ? post.child("link").getValue().toString() : "";
                     if (post.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
-                        link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                        //link = postText.substring(postText.indexOf("<img src=") + 10, postText.indexOf("alt") - 2);
+                        link = StringUtils.extractImageLink(postText);
+                        Log.i(TAG, "Tag Link " + link);
                     }
 
                     Post currPost = new Post(

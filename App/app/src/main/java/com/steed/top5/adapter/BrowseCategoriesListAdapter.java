@@ -41,9 +41,9 @@ public class BrowseCategoriesListAdapter extends RecyclerView.Adapter<BrowseCate
     public void onBindViewHolder(@NonNull final BrowseCategoriesListAdapter.BrowseCategoriesListViewHolder holder, int position) {
         HashMap<String, String> map = items.get(position);
 
-        holder.binding.itemName.setText(map.get("tag").toString());
+        holder.binding.itemName.setText(map.get("tag"));
 
-        Glide.with(context).load(map.get("image").toString()).into(holder.binding.image);
+        Glide.with(context).load(map.get("image")).into(holder.binding.image);
 
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override

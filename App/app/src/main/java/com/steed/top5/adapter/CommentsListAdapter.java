@@ -1,5 +1,6 @@
 package com.steed.top5.adapter;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.steed.top5.R;
 import com.steed.top5.databinding.CommentsListSingleItemLayoutBinding;
 import com.steed.top5.listener.CommentsListItemClickListener;
@@ -44,6 +47,12 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
         holder.binding.name.setText(comment.userName);
         holder.binding.timestamp.setText(getFormattedTime(comment.timestamp));
         holder.binding.comment.setText(comment.comment);
+
+        if(!TextUtils.isEmpty(comment.userPhoto)) {
+            Glide.with(holder.itemView.getContext()).load(comment.userPhoto).apply(new RequestOptions()
+                    .placeholder(R.drawable.user_avatar)).into(holder.binding.userImage);
+        }
+
 
         holder.binding.deleteCommentBtn.setVisibility(comment.userID.equals(userSingleton.currentUser.uid) ? View.VISIBLE : View.INVISIBLE);
 

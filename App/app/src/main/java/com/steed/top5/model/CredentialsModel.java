@@ -1,5 +1,8 @@
 package com.steed.top5.model;
 
+import android.net.Uri;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
@@ -18,6 +21,7 @@ import com.steed.top5.pojo.AuthResponse;
 import com.steed.top5.pojo.User;
 
 public class CredentialsModel {
+    private String TAG = "CredentialsModel";
 
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private DatabaseReference firebaseDatabase = FirebaseDatabase.getInstance().getReference();
@@ -31,19 +35,23 @@ public class CredentialsModel {
             user.isAuthenticated = false;
             authenticatedUserMutableLiveData.setValue(user);
         } else {
+
             user.uid = firebaseUser.getUid();
             user.name = firebaseUser.getDisplayName();
             user.email = firebaseUser.getEmail();
+
             user.isAuthenticated = true;
+            Log.i(TAG, "Name : "+user.name);
 
 
-            if (user.name.isEmpty()) {
-                firebaseDatabase.child("users/regularUsers/" + user.uid + "/name").addListenerForSingleValueEvent(new ValueEventListener() {
+            //if (user.name.isEmpty()) {
+                firebaseDatabase.child("users/regularUsers/" + user.uid).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        final Object snapshotValue = snapshot.getValue();
-                        if (snapshotValue != null) {
-                            user.name = snapshotValue.toString();
+                        User userSnapshot = snapshot.getValue(User.class);
+                        if (userSnapshot != null) {
+                            user.name = userSnapshot.name;
+                            user.profilePhoto = userSnapshot.profilePhoto;
                         }
 
                         authenticatedUserMutableLiveData.setValue(user);
@@ -54,9 +62,9 @@ public class CredentialsModel {
 
                     }
                 });
-            } else {
-                authenticatedUserMutableLiveData.setValue(user);
-            }
+//            } else {
+//                authenticatedUserMutableLiveData.setValue(user);
+//            }
 
         }
         return authenticatedUserMutableLiveData;
@@ -71,11 +79,11 @@ public class CredentialsModel {
                 if (authTask.isSuccessful()) {
                     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                     if (firebaseUser != null) {
-
                         User user = new User();
                         user.uid = firebaseUser.getUid();
                         user.name = firebaseUser.getDisplayName();
                         user.email = firebaseUser.getEmail();
+
                         user.isNew = false;
 
                         try {
@@ -83,13 +91,20 @@ public class CredentialsModel {
                         } catch (Exception e) {
                         }
 
-                        if (user.name == null) {
-                            firebaseDatabase.child("users/regularUsers/" + user.uid + "/name").addListenerForSingleValueEvent(new ValueEventListener() {
+                        Log.i(TAG, "Name : "+user.name);
+                        final Uri photoUrl = firebaseUser.getPhotoUrl();
+                        if(photoUrl!=null) {
+                            Log.i(TAG, "Profile Url : " + photoUrl.toString());
+                        }
+
+                        //if (user.name == null) {
+                            firebaseDatabase.child("users/regularUsers/" + user.uid).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    final Object snapshotValue = snapshot.getValue();
+                                    final User snapshotValue = snapshot.getValue(User.class);
                                     if (snapshotValue != null) {
-                                        user.name = snapshotValue.toString();
+                                        user.name = snapshotValue.name;
+                                        user.profilePhoto = snapshotValue.profilePhoto;
                                     }
 
                                     authResponse.user = user;
@@ -102,10 +117,10 @@ public class CredentialsModel {
 
                                 }
                             });
-                        } else {
-                            authResponse.user = user;
-                            authenticatedUserMutableLiveData.setValue(authResponse);
-                        }
+//                        } else {
+//                            authResponse.user = user;
+//                            authenticatedUserMutableLiveData.setValue(authResponse);
+//                        }
                     } else {
                         authResponse.isError = true;
                         authResponse.statusMessage = "Some error occurred.";

@@ -365,46 +365,68 @@
         });
       }
 
-      if ("{{ isLoggedIn }}" == "True") {
+      function loginUser(){
+        //window.location.href = "{% url 'credentials' %}";
+        window.location.href = "{% url 'credentials' %}?next={{request.path}}";
+      }
+
         $(
           "#selectedPostActionAndComments [name='like_" + postMap["id"] + "']"
         ).click((e) => {
-          likePost(this,
-            $(
-              "#selectedPostActionAndComments [name='like_" +
-                postID +
-                "'] > span:first-child"
-            ).hasClass("far")
-          );
+
+          if ("{{ isLoggedIn }}" == "True") {
+            likePost(this,
+              $(
+                "#selectedPostActionAndComments [name='like_" +
+                  postID +
+                  "'] > span:first-child"
+              ).hasClass("far")
+            );
+          }else{
+            loginUser();
+          }
+
         });
 
         $("#postBtn").click(
           (e) => {
-            commentInp = $(
-              "#selectedPostActionAndComments #comment_inp_" + postID
-            ).val();
-            commentOnPost(commentInp);
+            if ("{{ isLoggedIn }}" == "True") {
+              commentInp = $(
+                "#selectedPostActionAndComments #comment_inp_" + postID
+              ).val();
+              commentOnPost(commentInp);
+            }else{
+             loginUser();
+            }
           }
         );
 
         $(
           "#selectedPostActionAndComments [name='save_" + postMap["id"] + "']"
         ).click((e) => {
-          categoryID = $(e.target)
-            .closest(".post_action_item")
-            .attr("data-category-id");
-          savePost(
-            categoryID,
-            $(
-              "#selectedPostActionAndComments [name='save_" + postID + "'] > span"
-            ).hasClass("far")
-          );
+          if ("{{ isLoggedIn }}" == "True") {
+            categoryID = $(e.target)
+              .closest(".post_action_item")
+              .attr("data-category-id");
+            savePost(
+              categoryID,
+              $(
+                "#selectedPostActionAndComments [name='save_" + postID + "'] > span"
+              ).hasClass("far")
+            );
+          }else{
+            loginUser();
+          }
+
         });
 
         $("#confirmCommentDeletionBtn").click(() => {
-          deleteComment(selectedCommentForDeletion);
+          if ("{{ isLoggedIn }}" == "True") {
+           deleteComment(selectedCommentForDeletion);
+          }else{
+            loginUser();
+          }
         });
-      }
     });
   </script>
 

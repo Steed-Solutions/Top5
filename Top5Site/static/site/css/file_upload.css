@@ -10,9 +10,9 @@
 }
 
 .profile_img_container .upload-button {
-    width: 40%;
-    margin: 0 30%;
-    font-size: 1rem;
+    width: 90%;
+    margin: 0 5%;
+    font-size: 0.7rem;
     text-align: center;
     font-weight: 700;
     text-overflow: ellipsis;
@@ -20,7 +20,8 @@
     cursor: pointer;
     /* display: inline-block; */
     overflow: hidden;
-    padding: 0.625rem 1rem;
+    padding: 0.3rem 0.5rem;
+   
     
 }
 
@@ -44,4 +45,22 @@
 .profile_img_container  .upload-button.remove-photo:hover  {
     background-color: #ff3333;
     color: #ffffff;
+}
+
+.hide-button {
+    display: none;
+}
+  
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+
+    .profile_img_container .upload-button {
+        width: 40%;
+        margin: 0 30%;
+        padding: 0.625rem 1rem;
+        font-size: 1rem;
+
+    }
+  
+    
 }
