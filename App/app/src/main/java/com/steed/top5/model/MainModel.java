@@ -1303,10 +1303,13 @@ public class MainModel {
 
         PostsResponse postsResponse = new PostsResponse();
         postsResponse.posts = new ArrayList<>();
+        String word = searchTerm;
 
-        for (String word : searchWords) {
+        Log.i(TAG, "Search Term "+searchTerm);
+        //+ "\uf8ff"
+        //for (String word : searchWords) {
             if (!word.equals("")) {
-                firebaseDatabase.child("content").child("posts").orderByChild("words/" + word.toLowerCase(Locale.ENGLISH) + "\uf8ff").equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+                firebaseDatabase.child("content").child("posts").orderByChild("words/" + word.toLowerCase(Locale.ENGLISH)).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.getChildrenCount() == 0) {
@@ -1380,7 +1383,7 @@ public class MainModel {
                     }
                 });
             }
-        }
+        //}
 
 
         return allQueriedPostsLiveData;

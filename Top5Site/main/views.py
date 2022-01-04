@@ -763,7 +763,7 @@ def categories(request, category_id='none', page_number=0):
 
                                         likeStr += namedUsers[i]
 
-                                    likeStr += " and " + remainingLikes + \
+                                    likeStr += " and " + str(remainingLikes) + \
                                         " other like this" if remainingLikes > 0 else " like this"
                                 elif len(namedUsers) == 0:
                                     likeStr = "You like this"
@@ -804,7 +804,12 @@ def categories(request, category_id='none', page_number=0):
 
                     return JsonResponse({"result": "success", "posts": allPosts, "pageNum": correctedPageNumber, "pageNumForView": 1 + correctedPageNumber, "hasNext": hasNext, "loadLimit": loadLimit})
                 except Exception as e:
-                    print(e)
+                    # print("Posts by category ...")
+                    # print(e)
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                
+                    logger.error("Posts by category ...")
+                    logger.error(str(exc_tb.tb_lineno)+":"+str(e))
                     return JsonResponse({"result": "failure", "posts": list()})
             elif request.POST['type'] == "like":
                 try:
@@ -1166,8 +1171,8 @@ def browse(request, searchTerm=""):
                             for wordID in wordPostIDs:
                                 for postID in wordPostIDs[wordID].items():
                                     postIDs[postID[0]] = "postID"
-
-                    # print(postIDs)  
+                        print("wordPostIDs")
+                        print(wordPostIDs)  
                     postIDs = sorted(postIDs)
 
                     maxPossiblePages = (len(postIDs) % loadLimit) + 1
