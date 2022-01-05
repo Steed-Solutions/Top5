@@ -669,6 +669,7 @@
                 android:text="@string/existing_acc"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
+                android:visibility="gone"
                 app:autoSizeMaxTextSize="12sp"
                 app:autoSizeMinTextSize="10sp"
                 app:autoSizeStepGranularity="0.8sp"

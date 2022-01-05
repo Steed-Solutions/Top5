@@ -1090,7 +1090,8 @@ nav {
 
 .item_details > div > p > span {
   color: black;
-  text-transform: lowercase;
+  text-transform: capitalize;
+  font-size: medium;
 }
 
 .item_details > p:nth-of-type(1) {

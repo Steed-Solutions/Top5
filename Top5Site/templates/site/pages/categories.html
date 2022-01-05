@@ -294,9 +294,9 @@
                 " fa-heart' style='" +
                 (postMap["isLiked"] ? "color: #D7443E" : "") +
                 "'></span><span {% if lang != 'en' %}style='direction: rtl;'{% endif %}>" +
-                postMap["likes"] +
+                postMap["likesCount"] +
                 " " +
-                (postMap["likes"] != 1 ? "{% if lang != 'en' %}{{ staticTextMap.likes_en }}{% else %}{{ staticTextMap.likes_fa }}{% endif %}" : "{% if lang != 'en' %}{{ staticTextMap.like_en }}{% else %}{{ staticTextMap.like_fa }}{% endif %}") +
+                (postMap["likesCount"] != 1 ? "{% if lang != 'en' %}{{ staticTextMap.likes_en }}{% else %}{{ staticTextMap.likes_fa }}{% endif %}" : "{% if lang != 'en' %}{{ staticTextMap.like_en }}{% else %}{{ staticTextMap.like_fa }}{% endif %}") +
                 "</span>";
 
                 postAction.appendChild(likeBtn);

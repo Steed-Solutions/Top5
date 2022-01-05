@@ -433,7 +433,7 @@ def home(request):
 
                                         likeStr += namedUsers[i]
 
-                                    likeStr += " and " + remainingLikes + \
+                                    likeStr += " and " + str(remainingLikes) + \
                                         " other like this" if remainingLikes > 0 else " like this"
                                 elif len(namedUsers) == 0:
                                     likeStr = "You like this"
@@ -523,7 +523,7 @@ def home(request):
 
                                         likeStr += namedUsers[i]
 
-                                    likeStr += " and " + remainingLikes + \
+                                    likeStr += " and " + str(remainingLikes) + \
                                         " other like this" if remainingLikes > 0 else " like this"
                                 elif len(namedUsers) == 0:
                                     likeStr = "Be the first to like this"
@@ -732,8 +732,10 @@ def categories(request, category_id='none', page_number=0):
 
                             likeStr = "You" if isLiked else ""
                             likes = db.child("likes/" + postID).get().val()
+                            post["likesCount"] = 0
                             if likes != None:
                                 likes = list(dict(likes).keys())
+                                post["likesCount"] = len(likes)
                                 likesCount = len(likes) + \
                                     (-1 if isLiked else 0)
                                 limit = 2 if isLiked else 3
@@ -996,7 +998,7 @@ def post(request, post_title_id):
 
                     likeStr += namedUsers[i]
 
-                likeStr += " and " + remainingLikes + \
+                likeStr += " and " + str(remainingLikes) + \
                     " other like this" if remainingLikes > 0 else " like this"
             elif len(namedUsers) == 0:
                 likeStr = "You like this"
@@ -1241,7 +1243,7 @@ def browse(request, searchTerm=""):
 
                                         likeStr += namedUsers[i]
 
-                                    likeStr += " and " + remainingLikes + \
+                                    likeStr += " and " + str(remainingLikes) + \
                                         " other like this" if remainingLikes > 0 else " like this"
                                 elif len(namedUsers) == 0:
                                     likeStr = "You like this"

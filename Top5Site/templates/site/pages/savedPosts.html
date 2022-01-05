@@ -18,7 +18,7 @@
                         <div name="category_{{ post.category.id }}">
                             <img src="{{ post.category.imgURL }}" alt="icon" onload="setCategoryIconBackground('{{ post.category.id }}', '{{ post.category.color }}')" />
                         </div>
-                        <p>{% if lang == 'en' %}{{ staticTextMap.saved_from_en }} {% endif %}<span>{{ post.category.name }} {% if not "vid" in post.type %}'s post{% endif %} {% if lang == 'fa' %}{{ staticTextMap.saved_from_fa }}{% endif %}</span></p>
+                        <p class="category_name">{% if lang == 'en' %}{{ staticTextMap.saved_from_en }} {% endif %}<span>{{ post.category.name }} {% if not "vid" in post.type %}'s post{% endif %} {% if lang == 'fa' %}{{ staticTextMap.saved_from_fa }}{% endif %}</span></p>
                     </div>
                 </div>
             </div>    
