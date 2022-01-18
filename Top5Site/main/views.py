@@ -982,10 +982,13 @@ def post(request, post_title_id):
 
                     namedUserName = db.child(
                         "users/regularUsers/" + likes[i] + "/name").get().val()
+                    # print("Named User "+namedUserName)
                     if namedUserName != None:
                         namedUsers.append(
                             db.child("users/regularUsers/" + likes[i] + "/name").get().val())
-
+                    
+                        
+            print(namedUsers)
             if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
                 remainingLikes = likesCount - len(namedUsers)
 
@@ -993,7 +996,8 @@ def post(request, post_title_id):
                     if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
                         likeStr += " and "
                     else:
-                        if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
+                        #not (remainingLikes > 0 and i == len(namedUsers) - 1) and
+                        if len(likeStr) > 0:
                             likeStr += ", "
 
                     likeStr += namedUsers[i]

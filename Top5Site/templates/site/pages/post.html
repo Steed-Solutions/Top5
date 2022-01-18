@@ -208,11 +208,19 @@
       let postMap = {{ postMap | safe }};
       const postID = postMap['id'];
 
-      $("#selectedPostContent > pre").html(postMap['text']);
+      $("#selectedPostContent > pre").html(decodeHTMLEntities(postMap['text']));
+
+      //document.querySelector("#selectedPostContent > pre").innerHTML = cleanHTML(postMap['text']);
 
       for(let i = 0; i < postMap["allComments"].length; i++){
         $("#" + postMap["allComments"][i]["id"] + " .comment_time").text({{ serverTime }} - timeSince(postMap["allComments"][i]["timestamp"]));
         $("#" + postMap["allComments"][i]["id"] + " .comment_time").css("opacity", 1);
+      }
+
+      function decodeHTMLEntities(text) {
+        var textArea = document.createElement('textarea');
+        textArea.innerHTML = text;
+        return textArea.value;
       }
 
       function likePost(targetElement, isLike) {
@@ -245,7 +253,7 @@
                 "#selectedPostActionAndComments [name='like_" +
                   postID +
                   "'] > span:last-child"
-              ).html(response.likes + " like" + (response.likes != 1 ? "s" : ""));
+              ).html(response.likesCount + " like" + (response.likesCount != 1 ? "s" : ""));
             }
           },
           error: (xhr, errmsg, err) => {

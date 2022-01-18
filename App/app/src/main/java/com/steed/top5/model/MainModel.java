@@ -268,6 +268,7 @@ public class MainModel {
 
                             if ((filter == 0 && hasCommonTags) || (filter == 1 && isRecentlyViewed) || (filter == 2 && (hasChance || hasCommonTags)) || filter == 3) {
                                 if (userCategories.contains(post.child("category").getValue().toString())) {
+                                    String postID = post.getKey();
                                     String postText = post.child("text").getValue().toString();
                                     String link = !post.child("type").getValue().toString().equals("txt") ? post.child("link").getValue().toString() : "";
                                     if (post.child("type").getValue().toString().equals("article") && postText.contains("<img")) {
@@ -288,6 +289,23 @@ public class MainModel {
                                             categoryIDToCategory.get(post.child("category").getValue().toString()),
                                             tags
                                     );
+
+
+                                    firebaseDatabase.child("likes").child(postID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                           if(snapshot.exists()){
+                                               final long likeCount = snapshot.getChildrenCount();
+                                               currPost.likes = likeCount;
+                                           }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
 
 
                                     firebaseDatabase.child("users").child("regularUsers").child(userSingleton.currentUser.uid).child("saved").child(currPost.id).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -564,7 +582,7 @@ public class MainModel {
 
                                                 }
 
-                                                likeStr[0] += namedUsers.get(j);
+                                                likeStr[0] += namedUsers.get(j)+", ";
                                             }
 
                                             if (remainingLikes > 0) {

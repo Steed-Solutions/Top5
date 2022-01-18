@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-
+    private String TAG = "HomeFragment";
     private FragmentHomeBinding binding;
     private NavController controller;
     private MainViewModel viewModel;
@@ -165,8 +166,11 @@ public class HomeFragment extends Fragment {
         preferenceItemsListAdapter = new PreferenceItemsListAdapter(getContext(), preferenceItems, new PreferenceItemsListItemClickListener() {
             @Override
             public void OnItemClicked(int index) {
-                viewModel.updateFiltersData(preferenceItems.get(index));
-                HomeFragmentDirections.ActionHomeFragmentToContentFragment action = HomeFragmentDirections.actionHomeFragmentToContentFragment().setPostArg(preferenceItems.get(index));
+                final Post post = preferenceItems.get(index);
+
+                Log.i(TAG, "Post Link "+post.link);
+                viewModel.updateFiltersData(post);
+                HomeFragmentDirections.ActionHomeFragmentToContentFragment action = HomeFragmentDirections.actionHomeFragmentToContentFragment().setPostArg(post);
                 controller.navigate(action);
             }
 

@@ -108,12 +108,28 @@
                         app:autoSizeStepGranularity="1sp"
                         app:autoSizeTextType="uniform" />
 
+
                     <WebView
                         android:id="@+id/webView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="true"
                         android:visibility="gone" />
+
+
+                    <TextView
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:fontFamily="@font/titillium_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="#000"
+                        app:autoSizeMaxTextSize="19sp"
+                        app:autoSizeMinTextSize="16sp"
+                        app:autoSizeStepGranularity="1.5sp"
+                        app:autoSizeTextType="uniform"
+                        tools:text="@string/bio_placeholder"/>
 
                     <View
                         android:layout_width="match_parent"

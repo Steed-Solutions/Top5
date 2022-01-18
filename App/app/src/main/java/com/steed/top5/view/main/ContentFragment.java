@@ -18,6 +18,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.text.Html;
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +62,7 @@ import java.util.Calendar;
  * A simple {@link Fragment} subclass.
  */
 public class ContentFragment extends Fragment {
+    private String TAG = "ContentFragment";
 
     private FragmentContentBinding binding;
     private NavController controller;
@@ -158,7 +163,10 @@ public class ContentFragment extends Fragment {
         binding.liked.setImageResource(post.isLiked ? R.drawable.ic_fav_true : R.drawable.ic_fav_false);
         binding.saveBtnImg.setImageResource(post.isSaved ? R.drawable.ic_download_true : R.drawable.ic_download_false);
 
-        if (post.type.contains("img")) {
+        Log.i(TAG, "Post Link "+post.link);
+        Log.i(TAG, "Post Type "+post.type);
+        // (post.type.equals("article") && !TextUtils.isEmpty(post.link))
+        if (post.type.contains("img") ) {
             binding.img.setVisibility(View.VISIBLE);
             Glide.with(this).load(post.link).listener(new RequestListener<Drawable>() {
                 @Override
@@ -180,7 +188,7 @@ public class ContentFragment extends Fragment {
             }).into(binding.img);
 
 
-        } else if (post.type.contains("vid")) {
+        }else if (post.type.contains("vid")) {
             hideSystemUi();
             initExoPlayer(post.type.contains("Txt") ? post.text : "");
 //            binding.video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -191,8 +199,9 @@ public class ContentFragment extends Fragment {
 //                    binding.video.start();
 //                }
 //            });
-        } else if (post.type.equals("article")) {
+        }else if (post.type.equals("article")) {
             binding.topBar.setBackgroundColor(Color.parseColor("#ffffff"));
+
             binding.webView.requestFocus();
             binding.webView.getSettings().setJavaScriptEnabled(true);
             binding.webView.getSettings().setUseWideViewPort(true);
@@ -201,8 +210,22 @@ public class ContentFragment extends Fragment {
             binding.webView.getSettings().setBuiltInZoomControls(true);
             binding.webView.getSettings().setDisplayZoomControls(false);
             binding.webView.setSoundEffectsEnabled(true);
-            binding.webView.loadData("<html><head><meta charset=\"UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>* {x margin: 0; padding: 0; box-sizing: border-box; outline: none; word-wrap: break-word; font-family: \"Poppins\"; } html, body { height: 100%; width: 100vw; } img, video { max-width: 95vw; }</style></head><body><pre style=\"white-space: normal; width:95vw; margin: auto;\">" + post.text + "</pre></body></html>",
-                    "text/html", "UTF-8");
+
+            //Log.i(TAG, post.text);
+
+            String data = "<html><head><meta charset=\"UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>* {x margin: 0; padding: 0; box-sizing: border-box; outline: none; word-wrap: break-word; font-family: \"Poppins\"; } html, body { height: 100%; width: 100vw; } img, video { max-width: 95vw; }</style></head><body><pre style=\"white-space: normal; width:95vw; margin: auto;\">" + post.text + "</pre></body></html>";
+            String encodedHtml = Base64.encodeToString(data.getBytes(), Base64.NO_PADDING);
+
+
+            binding.webView.loadData(data, "text/html; charset=utf-8", "UTF-8");
+
+
+
+
+            //binding.description.setText(Html.fromHtml(post.text ).);
+
+
+
             binding.webView.setWebChromeClient(new WebChromeClient() {
                 public void onProgressChanged(WebView view, int progress) {
                     if (progress == 100) {
