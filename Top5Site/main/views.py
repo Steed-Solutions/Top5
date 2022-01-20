@@ -890,7 +890,7 @@ def post(request, post_title_id):
         
                    
 
-                return JsonResponse({"result": "success", "likes": currLikeCount})
+                return JsonResponse({"result": "success", "likes": currLikeCount, "likesCount":currLikeCount})
             except:
                 return JsonResponse({"result": "failure"})
         elif request.POST['type'] == "comment":
@@ -987,8 +987,6 @@ def post(request, post_title_id):
                         namedUsers.append(
                             db.child("users/regularUsers/" + likes[i] + "/name").get().val())
                     
-                        
-            print(namedUsers)
             if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
                 remainingLikes = likesCount - len(namedUsers)
 
@@ -997,7 +995,7 @@ def post(request, post_title_id):
                         likeStr += " and "
                     else:
                         #not (remainingLikes > 0 and i == len(namedUsers) - 1) and
-                        if len(likeStr) > 0:
+                        if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
                             likeStr += ", "
 
                     likeStr += namedUsers[i]
