@@ -7,9 +7,11 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -18,6 +20,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -27,7 +30,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.MediaController;
 import android.widget.Toast;
 
@@ -154,6 +161,8 @@ public class ContentFragment extends Fragment {
 
         binding.postName.setText(post.name);
 
+
+
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(Constants.PREFERENCE_SHARED_PREF, Context.MODE_PRIVATE);
         boolean isLangEn = sharedPreferences.getString(Constants.PREFERRED_LANG_PREFERRED, "en").equals("en");
 
@@ -163,8 +172,8 @@ public class ContentFragment extends Fragment {
         binding.liked.setImageResource(post.isLiked ? R.drawable.ic_fav_true : R.drawable.ic_fav_false);
         binding.saveBtnImg.setImageResource(post.isSaved ? R.drawable.ic_download_true : R.drawable.ic_download_false);
 
-        Log.i(TAG, "Post Link "+post.link);
-        Log.i(TAG, "Post Type "+post.type);
+//        Log.i(TAG, "Post Link "+post.link);
+//        Log.i(TAG, "Post Type "+post.type);
         // (post.type.equals("article") && !TextUtils.isEmpty(post.link))
         if (post.type.contains("img") ) {
             binding.img.setVisibility(View.VISIBLE);
@@ -203,28 +212,56 @@ public class ContentFragment extends Fragment {
             binding.topBar.setBackgroundColor(Color.parseColor("#ffffff"));
 
             binding.webView.requestFocus();
-            binding.webView.getSettings().setJavaScriptEnabled(true);
-            binding.webView.getSettings().setUseWideViewPort(true);
-            binding.webView.getSettings().setLoadWithOverviewMode(true);
-            binding.webView.getSettings().setSupportZoom(true);
-            binding.webView.getSettings().setBuiltInZoomControls(true);
-            binding.webView.getSettings().setDisplayZoomControls(false);
+            final WebSettings webViewSettings = binding.webView.getSettings();
+
+            webViewSettings.setLoadsImagesAutomatically(true);
+            webViewSettings.setJavaScriptEnabled(true);
+            webViewSettings.setUseWideViewPort(true);
+            webViewSettings.setLoadWithOverviewMode(true);
+            webViewSettings.setSupportZoom(true);
+            webViewSettings.setBuiltInZoomControls(true);
+            webViewSettings.setDisplayZoomControls(false);
+            webViewSettings.setDomStorageEnabled(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                webViewSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+            }
+
+
             binding.webView.setSoundEffectsEnabled(true);
 
-            //Log.i(TAG, post.text);
+            String url = "https://www.irantop5.com/posts/"+post.id;
+            String url2="https://firebasestorage.googleapis.com/v0/b/top-50-9951b.appspot.com/o/content%2Fposts%2F-MaiTRHzUPqQ0PyuRnLd_img_0.jpg?alt=media&token=ca0777e6-18ac-430b-9d8c-07b6a344a54b";
+            String url3 = "https://img.olx.com.br/images/65/656074094777050.jpg";
+            //Log.i(TAG, "URL "+url);
 
-            String data = "<html><head><meta charset=\"UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>* {x margin: 0; padding: 0; box-sizing: border-box; outline: none; word-wrap: break-word; font-family: \"Poppins\"; } html, body { height: 100%; width: 100vw; } img, video { max-width: 95vw; }</style></head><body><pre style=\"white-space: normal; width:95vw; margin: auto;\">" + post.text + "</pre></body></html>";
-            String encodedHtml = Base64.encodeToString(data.getBytes(), Base64.NO_PADDING);
-
-
-            binding.webView.loadData(data, "text/html; charset=utf-8", "UTF-8");
-
-
-
-
-            //binding.description.setText(Html.fromHtml(post.text ).);
+            String data = "<html><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>* {x margin: 0; padding: 0; box-sizing: border-box; outline: none; word-wrap: break-word; font-family: \"Poppins\"; } html, body { height: 100%; width: 100vw; } img, video { max-width: 95vw; }</style></head><body><pre style=\"white-space: normal; width:95vw; margin: auto;\">" + post.text + "</pre></body></html>";
+            binding.webView.loadData(data, "text/html; charset=utf-8", "utf-8");
+            //https://stackoverflow.com/questions/9238277/url-with-parameter-in-webview-not-working-in-android
+            //String imgData ="<img src=\""+url2+"\"/>";
+            //binding.webView.loadData(imgData, "text/html; charset=UTF-8", "UTF-8");
 
 
+
+            //binding.webView.loadUrl(url2);
+
+
+
+            binding.webView.setWebViewClient(new WebViewClient(){
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                    super.onReceivedError(view, request, error);
+                    final CharSequence description = error.getDescription();
+
+                    Log.i(TAG, "WebView : "+description.toString());
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                }
+            });
 
             binding.webView.setWebChromeClient(new WebChromeClient() {
                 public void onProgressChanged(WebView view, int progress) {

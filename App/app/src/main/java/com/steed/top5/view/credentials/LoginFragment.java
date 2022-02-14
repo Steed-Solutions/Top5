@@ -57,8 +57,8 @@ public class LoginFragment extends Fragment {
 
         controller = NavHostFragment.findNavController(this);
 
-//        binding.emailInp.setText("wafulaantony88@gmail.com");
-//        binding.passwordInp.setText("vLsu=r1daxa4o7");
+        binding.emailInp.setText("wafulaantony88@gmail.com");
+        binding.passwordInp.setText("vLsu=r1daxa4o7");
 
         initViewModel();
         initClickListeners();
