@@ -75,7 +75,7 @@
           <img src="{% static 'site/img/user_avatar.png' %}" alt="user" />
           <img src="{% static 'site/img/user_avatar.png' %}" alt="user" />
         </div>
-        <span style="transform: inherit">{{ post.likeStr }}</span>
+        <span id="likeStrWtRefresh" style="transform: inherit">{{ post.likeStr }}</span>
       </div>
       <div id="comments_{{ post.id }}" class="comments">
         {% for comment in post.allComments %}
@@ -237,6 +237,7 @@
           success: (response) => {
             targetElement.disabled= false;
             if (response.result == "success") {
+              $("#likeStrWtRefresh").html(""+response.likeStrWR+"");
               $(
                 "#selectedPostActionAndComments [name='like_" +
                   postID +

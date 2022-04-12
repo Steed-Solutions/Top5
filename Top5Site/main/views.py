@@ -405,7 +405,7 @@ def home(request):
                                 "likes/" + post['id'] + "/" + request.session['uid']).get().val() != None
                             post["isLiked"] = 1 if isLiked else 0
 
-                            likeStr = "You" if isLiked else ""
+                            likeStr = "You and Others Liked this." if isLiked else ""
                             likes = db.child("likes/" + post['id']).get().val()
                             if likes != None:
                                 likes = list(dict(likes).keys())
@@ -429,14 +429,14 @@ def home(request):
                                             likeStr += " and "
                                         else:
                                             if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
-                                                likeStr += ", "
+                                                likeStr += " , "
 
                                         likeStr += namedUsers[i]
 
                                     likeStr += " and " + str(remainingLikes) + \
                                         " other like this" if remainingLikes > 0 else " like this"
                                 elif len(namedUsers) == 0:
-                                    likeStr = "You like this"
+                                    likeStr = "You liked this"
 
                                 post["likeStr"] = likeStr
 
@@ -730,7 +730,7 @@ def categories(request, category_id='none', page_number=0):
                                 "likes/" + postID + "/" + request.session['uid']).get().val() != None
                             post["isLiked"] = 1 if isLiked else 0
 
-                            likeStr = "You" if isLiked else ""
+                            likeStr = "You and Others Liked this" if isLiked else ""
                             likes = db.child("likes/" + postID).get().val()
                             post["likesCount"] = 0
                             if likes != None:
@@ -768,7 +768,7 @@ def categories(request, category_id='none', page_number=0):
                                     likeStr += " and " + str(remainingLikes) + \
                                         " other like this" if remainingLikes > 0 else " like this"
                                 elif len(namedUsers) == 0:
-                                    likeStr = "You like this"
+                                    likeStr = "You liked this"
 
                                 post["likeStr"] = likeStr
 
@@ -872,6 +872,14 @@ def post(request, post_title_id):
                 "likes/" + postID + "/" + request.session['uid']).get().val() != None
                 if request.POST["isLike"] == "true" and not hasLiked:
                     currLikeCount += 1
+                    if currLikeCount == 0:
+                        likeStr = "Be the first to like this."
+                    elif currLikeCount ==1:
+                        likeStr = "You liked this."
+                    elif currLikeCount > 0:
+                        likeStr = "You and Others liked this"
+                    else:
+                        likeStr = ""
 
                     db.child(
                         "likes/" + postID + "/" + request.session['uid']).set("userID")
@@ -879,18 +887,15 @@ def post(request, post_title_id):
                 if request.POST["isLike"] == "false" and hasLiked:
                     if currLikeCount > 0:
                         currLikeCount -= 1
+                        likeStr = "You disliked this."
 
                         db.child(
                         "likes/" + postID + "/" + request.session['uid']).remove()
-
-
+                    
                 db.child("content/posts/" +
                          postID + "/likes").set(currLikeCount)
-
-        
-                   
-
-                return JsonResponse({"result": "success", "likes": currLikeCount, "likesCount":currLikeCount})
+                # likeStr
+                return JsonResponse({"result": "success", "likes": currLikeCount, "likesCount":currLikeCount, "likeStrWR":likeStr})
             except:
                 return JsonResponse({"result": "failure"})
         elif request.POST['type'] == "comment":
@@ -963,7 +968,7 @@ def post(request, post_title_id):
             "likes/" + postID + "/" + request.session['uid']).get().val() != None
         post["isLiked"] = 1 if isLiked else 0
 
-        likeStr = "You" if isLiked else ""
+        likeStr = "You liked this" if isLiked else ""
         likes = db.child("likes/" + postID).get().val()
         post["likesCount"] = 0
         if likes != None:
@@ -998,7 +1003,7 @@ def post(request, post_title_id):
                         if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
                             likeStr += ", "
 
-                    likeStr += namedUsers[i]
+                    likeStr += f"{namedUsers[i]}, "
 
                 likeStr += " and " + str(remainingLikes) + \
                     " other like this" if remainingLikes > 0 else " like this"
@@ -1212,7 +1217,7 @@ def browse(request, searchTerm=""):
                                 "likes/" + postID + "/" + request.session['uid']).get().val() != None
                             post["isLiked"] = 1 if isLiked else 0
 
-                            likeStr = "You" if isLiked else ""
+                            likeStr = "You and Others Liked this." if isLiked else ""
                             likes = db.child("likes/" + postID).get().val()
                             if likes != None:
                                 likes = list(dict(likes).keys())
@@ -1241,14 +1246,14 @@ def browse(request, searchTerm=""):
                                             likeStr += " and "
                                         else:
                                             if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
-                                                likeStr += ", "
+                                                likeStr += " , "
 
                                         likeStr += namedUsers[i]
 
                                     likeStr += " and " + str(remainingLikes) + \
                                         " other like this" if remainingLikes > 0 else " like this"
                                 elif len(namedUsers) == 0:
-                                    likeStr = "You like this"
+                                    likeStr = "You liked this"
 
                                 post["likeStr"] = likeStr
 
