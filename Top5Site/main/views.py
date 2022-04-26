@@ -1,5 +1,6 @@
 import logging
-import sys, os
+import sys
+import os
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
@@ -24,7 +25,8 @@ logger = logging.getLogger(__name__)
 
 
 if not firebase_admin._apps:
-    cred = adminCredentials.Certificate(finders.find('site/key/top-50-9951b-firebase-adminsdk-6n5a9-5a5dfe7f4d.json'))
+    cred = adminCredentials.Certificate(finders.find(
+        'site/key/top-50-9951b-firebase-adminsdk-6n5a9-5a5dfe7f4d.json'))
     firebase_admin.initialize_app(cred)
 
 config = {
@@ -146,8 +148,8 @@ engAndPersianStaticText = {
     'no_posts_available_en': 'No Posts Available',
     'no_posts_available_fa': 'هیچ پستی موجود نیست',
 
-    'no_search_results_heading_en':'No results containing all your search terms were found.',
-    'no_search_results_heading_fa':'No results containing all your search terms were found.',
+    'no_search_results_heading_en': 'No results containing all your search terms were found.',
+    'no_search_results_heading_fa': 'No results containing all your search terms were found.',
 
     'no_search_results_en': 'Your search term did not match any posts',
     'no_search_results_fa': 'Your search term did not match any posts',
@@ -156,14 +158,14 @@ engAndPersianStaticText = {
     'no_search_suggestions_fa': 'Suggestions',
 
 
-    'search_suggestions_one_en':'- Make sure that all words are spelled correctly.',
-    'search_suggestions_one_fa':'- Make sure that all words are spelled correctly.',
+    'search_suggestions_one_en': '- Make sure that all words are spelled correctly.',
+    'search_suggestions_one_fa': '- Make sure that all words are spelled correctly.',
 
-    'search_suggestions_two_en':'- Try different keywords.',
-    'search_suggestions_two_fa':'- Try different keywords.',
+    'search_suggestions_two_en': '- Try different keywords.',
+    'search_suggestions_two_fa': '- Try different keywords.',
 
-    'search_suggestions_three_en':'- Try more general keywords.',
-    'search_suggestions_three_fa':'- Try more general keywords.',
+    'search_suggestions_three_en': '- Try more general keywords.',
+    'search_suggestions_three_fa': '- Try more general keywords.',
 
     'no_saved_posts_en': 'No Saved Posts',
     'no_saved_posts_fa': 'بدون ارسال ذخیره شده',
@@ -225,7 +227,7 @@ def credentials(request):
 
                     redirect_to = request.POST.get('redirect_to', '')
 
-                    return JsonResponse({"result": "success", "redirect_to":redirect_to})
+                    return JsonResponse({"result": "success", "redirect_to": redirect_to})
                 except Exception as e:
                     print(e)
                     return JsonResponse({"result": "failure"})
@@ -278,9 +280,9 @@ def credentials(request):
 
     # redirect_to = request.GET.get('next', '')
     # if redirect_to:
-    #     return redirect(redirect_to) 
+    #     return redirect(redirect_to)
 
-    return render(request, "credentials/credentials.html", {"categories": categories,"redirect_to":redirect_to})
+    return render(request, "credentials/credentials.html", {"categories": categories, "redirect_to": redirect_to})
 
 
 def home(request):
@@ -324,7 +326,7 @@ def home(request):
 
                         userPrefCategories = db.child(
                             "users/regularUsers/" + request.session['uid'] + "/preferences/categories").get().val()
-                        
+
                         userPrefCategories = [] if userPrefCategories == None else userPrefCategories
                         # print(userPrefCategories)
                         if len(loggedInUserCategoricalPosts) == 0:
@@ -338,9 +340,9 @@ def home(request):
 
                                         # logger.info("===Categorical Posts ======")
                                         # logger.info("Category Post Size "+str(len(categoricalPosts)))
-                                        
+
                                         if len(categoricalPosts):
-                                            if isinstance(categoricalPosts, dict):                                       
+                                            if isinstance(categoricalPosts, dict):
                                                 # print("Dict Boss ")
                                                 # print(type(categoricalPosts))
                                                 allCategoricalPosts.update(
@@ -353,9 +355,10 @@ def home(request):
                                                         {k: v for k, v in catPost.items()})
                                     except IndexError as ie:
                                         exc_type, exc_obj, exc_tb = sys.exc_info()
-                
+
                                         logger.error("Category Log ERROR ...")
-                                        logger.error(str(exc_tb.tb_lineno)+":"+str(ie))
+                                        logger.error(
+                                            str(exc_tb.tb_lineno)+":"+str(ie))
                                         continue
                                     # logger.info("===allCategoricalPosts ======")
                                     # logger.info(allCategoricalPosts)
@@ -379,7 +382,7 @@ def home(request):
                             isRecentlyViewed = postID in userRecentlyViewed.values()
                             hasChance = random.randint(1, 3) % 3 == 0
 
-                            #if (userPrefFilter == 0 and hasCommonTags) or (userPrefFilter == 1 and isRecentlyViewed) or (userPrefFilter == 2 and (hasChance or hasCommonTags)) or (userPrefFilter == 3):
+                            # if (userPrefFilter == 0 and hasCommonTags) or (userPrefFilter == 1 and isRecentlyViewed) or (userPrefFilter == 2 and (hasChance or hasCommonTags)) or (userPrefFilter == 3):
                             validPosts.append(post)
 
                         startAt = page_number * loadLimit
@@ -555,7 +558,7 @@ def home(request):
                     return JsonResponse({"result": "success", "posts": []})
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
-                
+
                 logger.error("Home Posts ERROR ...")
                 logger.error(str(exc_tb.tb_lineno)+":"+str(e))
 
@@ -565,7 +568,6 @@ def home(request):
                 currLikeCount = db.child(
                     "content/posts/" + request.POST["postID"] + "/likes").get().val()
                 currLikeCount = 0 if currLikeCount == None else currLikeCount
-
 
                 if request.POST["isLike"] == "true":
                     currLikeCount += 1
@@ -809,7 +811,7 @@ def categories(request, category_id='none', page_number=0):
                     # print("Posts by category ...")
                     # print(e)
                     exc_type, exc_obj, exc_tb = sys.exc_info()
-                
+
                     logger.error("Posts by category ...")
                     logger.error(str(exc_tb.tb_lineno)+":"+str(e))
                     return JsonResponse({"result": "failure", "posts": list()})
@@ -867,14 +869,14 @@ def post(request, post_title_id):
                     "content/posts/" + postID + "/likes").get().val()
                 currLikeCount = 0 if currLikeCount == None else currLikeCount
 
-                #TODO:Check if user has liked post already
+                # TODO:Check if user has liked post already
                 hasLiked = False if not "user" in request.session else db.child(
                 "likes/" + postID + "/" + request.session['uid']).get().val() != None
                 if request.POST["isLike"] == "true" and not hasLiked:
                     currLikeCount += 1
                     if currLikeCount == 0:
                         likeStr = "Be the first to like this."
-                    elif currLikeCount ==1:
+                    elif currLikeCount == 1:
                         likeStr = "You liked this."
                     elif currLikeCount > 0:
                         likeStr = "You and Others liked this"
@@ -887,15 +889,15 @@ def post(request, post_title_id):
                 if request.POST["isLike"] == "false" and hasLiked:
                     if currLikeCount > 0:
                         currLikeCount -= 1
-                        likeStr = "You disliked this."
+                        likeStr = request.session['allLike']
 
                         db.child(
                         "likes/" + postID + "/" + request.session['uid']).remove()
-                    
+
                 db.child("content/posts/" +
                          postID + "/likes").set(currLikeCount)
                 # likeStr
-                return JsonResponse({"result": "success", "likes": currLikeCount, "likesCount":currLikeCount, "likeStrWR":likeStr})
+                return JsonResponse({"result": "success", "likes": currLikeCount, "likesCount": currLikeCount, "likeStrWR": likeStr})
             except:
                 return JsonResponse({"result": "failure"})
         elif request.POST['type'] == "comment":
@@ -971,14 +973,14 @@ def post(request, post_title_id):
         likeStr = "You liked this" if isLiked else ""
         likes = db.child("likes/" + postID).get().val()
         post["likesCount"] = 0
+        
         if likes != None:
             likes = list(dict(likes).keys())
             # print("Like Count is  "+str(len(likes)))
             post["likesCount"] = len(likes)
             likesCount = len(likes) + (-1 if isLiked else 0)
             limit = 2 if isLiked else 3
-
-
+            print(len(likes))
             namedUsers = []
             for i in range(0, limit):
                 if i < len(likes):
@@ -991,22 +993,25 @@ def post(request, post_title_id):
                     if namedUserName != None:
                         namedUsers.append(
                             db.child("users/regularUsers/" + likes[i] + "/name").get().val())
-                    
+
             if len(namedUsers) == limit or likesCount - len(namedUsers) <= 0:
                 remainingLikes = likesCount - len(namedUsers)
-
+                print(likesCount)
                 for i in range(0, len(namedUsers)):
                     if i != 0 and i == len(namedUsers) - 1 and remainingLikes == 0:
                         likeStr += " and "
                     else:
-                        #not (remainingLikes > 0 and i == len(namedUsers) - 1) and
+                        # not (remainingLikes > 0 and i == len(namedUsers) - 1) and
                         if not (remainingLikes > 0 and i == len(namedUsers) - 1) and len(likeStr) > 0:
-                            likeStr += ", "
+                            likeStr += " "
 
                     likeStr += f"{namedUsers[i]}, "
 
                 likeStr += " and " + str(remainingLikes) + \
                     " other like this" if remainingLikes > 0 else " like this"
+
+
+                request.session['allLike'] = likeStr
             elif len(namedUsers) == 0:
                 likeStr = "You like this"
 

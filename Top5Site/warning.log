@@ -150,3 +150,84 @@ Traceback (most recent call last):
     return JsonResponse({"result": "failure","likeStrWR":likeStr,})
 UnboundLocalError: local variable 'likeStr' referenced before assignment
 ERROR 2022-04-08 13:27:16,624 C:\Users\Ritik\AppData\Local\Programs\Python\Python39\lib\site-packages\django\core\servers\basehttp.py "POST /posts/-MzTr1-9IKMsAMdesMyE/ HTTP/1.1" 500 25734
+ERROR 2022-04-26 08:42:17,904 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 976, in post
+    print(likesCount)
+UnboundLocalError: local variable 'likesCount' referenced before assignment
+ERROR 2022-04-26 08:42:17,906 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 101183
+ERROR 2022-04-26 08:43:51,792 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 999, in post
+    print('New like count' + likesCount)
+TypeError: can only concatenate str (not "int") to str
+ERROR 2022-04-26 08:43:51,793 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 102173
+ERROR 2022-04-26 08:57:21,205 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 977, in post
+    print(len(likes))
+TypeError: object of type 'int' has no len()
+ERROR 2022-04-26 08:57:21,207 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 100634
+ERROR 2022-04-26 08:57:44,483 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 979, in post
+    likes = list(dict(likes).keys())
+TypeError: 'int' object is not iterable
+ERROR 2022-04-26 08:57:44,485 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 100497
+ERROR 2022-04-26 08:59:19,858 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 979, in post
+    likes = list(dict(str(likes)).keys())
+ValueError: dictionary update sequence element #0 has length 1; 2 is required
+ERROR 2022-04-26 08:59:19,860 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 100621
+ERROR 2022-04-26 09:04:12,609 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'postID'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 975, in post
+    request.POST["postID"] + "/likes").get().val()
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'postID'
+ERROR 2022-04-26 09:04:12,623 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 108730

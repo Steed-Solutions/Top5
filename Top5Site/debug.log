@@ -212,3 +212,173 @@ INFO 2022-04-11 15:46:02,744 C:\Users\Ritik\AppData\Local\Programs\Python\Python
 INFO 2022-04-11 15:46:43,218 C:\Users\Ritik\AppData\Local\Programs\Python\Python39\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
 INFO 2022-04-12 20:58:13,208 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
 INFO 2022-04-12 21:23:34,180 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:21:08,491 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:25:06,513 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:25:07,511 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:25:38,038 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:25:39,744 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:25:49,353 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:25:51,444 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:25:57,654 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:25:58,433 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:26:01,950 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:26:02,850 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:26:15,044 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:26:15,951 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:26:19,996 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:26:20,807 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:26:28,037 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:26:28,879 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:26:40,619 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:26:41,576 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:28:48,176 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:28:49,109 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:28:56,278 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:28:57,062 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:29:06,512 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:29:07,313 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:29:21,342 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:29:22,167 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:29:30,469 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:29:31,572 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:29:48,996 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:29:50,908 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:30:14,551 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:30:15,433 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:30:20,332 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:30:21,892 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:30:48,521 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:30:50,147 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:30:58,578 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:31:00,845 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:31:21,747 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:31:22,900 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:38:43,996 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:38:45,665 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:38:54,063 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:38:56,141 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:39:30,000 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:39:31,325 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:41:30,479 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:41:32,633 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:42:00,492 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:42:02,177 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+ERROR 2022-04-26 08:42:17,904 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 976, in post
+    print(likesCount)
+UnboundLocalError: local variable 'likesCount' referenced before assignment
+ERROR 2022-04-26 08:42:17,906 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 101183
+INFO 2022-04-26 08:42:31,423 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:42:33,392 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:43:40,226 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:43:42,242 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+ERROR 2022-04-26 08:43:51,792 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 999, in post
+    print('New like count' + likesCount)
+TypeError: can only concatenate str (not "int") to str
+ERROR 2022-04-26 08:43:51,793 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 102173
+INFO 2022-04-26 08:44:08,164 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:44:09,966 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:45:58,839 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:46:01,507 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:46:10,732 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:46:12,104 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:47:09,014 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:47:10,965 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:47:44,478 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:53:46,198 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:54:14,614 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:54:16,936 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:54:41,299 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:54:42,511 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:56:50,203 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:56:54,229 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:57:05,546 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:57:10,193 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+ERROR 2022-04-26 08:57:21,205 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 977, in post
+    print(len(likes))
+TypeError: object of type 'int' has no len()
+ERROR 2022-04-26 08:57:21,207 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 100634
+INFO 2022-04-26 08:57:28,892 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:57:31,375 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+ERROR 2022-04-26 08:57:44,483 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 979, in post
+    likes = list(dict(likes).keys())
+TypeError: 'int' object is not iterable
+ERROR 2022-04-26 08:57:44,485 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 100497
+INFO 2022-04-26 08:58:29,437 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:58:31,207 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:59:06,083 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:59:10,724 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+ERROR 2022-04-26 08:59:19,858 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 979, in post
+    likes = list(dict(str(likes)).keys())
+ValueError: dictionary update sequence element #0 has length 1; 2 is required
+ERROR 2022-04-26 08:59:19,860 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 100621
+INFO 2022-04-26 08:59:32,902 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:59:36,616 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 08:59:49,333 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 08:59:51,467 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 09:00:46,041 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 09:00:50,860 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+INFO 2022-04-26 09:03:59,488 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 09:04:02,207 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
+ERROR 2022-04-26 09:04:12,609 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\log.py Internal Server Error: /posts/-N-RO3kHZu96zLT63EVW/
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\datastructures.py", line 76, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'postID'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py", line 975, in post
+    request.POST["postID"] + "/likes").get().val()
+  File "C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\datastructures.py", line 78, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'postID'
+ERROR 2022-04-26 09:04:12,623 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\servers\basehttp.py "GET /posts/-N-RO3kHZu96zLT63EVW/ HTTP/1.1" 500 108730
+INFO 2022-04-26 09:04:50,757 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py C:\Users\Shudhanshu\Documents\GitHub\Top5\Top5Site\main\views.py changed, reloading.
+INFO 2022-04-26 09:04:54,722 C:\Users\Shudhanshu\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\autoreload.py Watching for file changes with StatReloader
